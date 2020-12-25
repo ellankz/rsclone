@@ -1,0 +1,33 @@
+{
+  "env": {
+      "browser": true,
+      "es2020": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "ts": "never"
+        }
+    ],
+    "@typescript-eslint/no-unused-vars": 0
+   },
+   "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
+  "ignorePatterns": [ "dist/*" ]
+}
+
