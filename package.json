@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/ellankz/rsclone#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.12.11",
     "@types/node": "^14.14.16",
     "@types/webpack": "^4.41.25",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
