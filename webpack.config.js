@@ -5,8 +5,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = {
-  mode: 'development',
+module.exports = (env) => ({
+  mode: env.production ? 'production' : 'development',
   entry: './src/index.ts',
   devtool: 'inline-source-map',
   devServer: {
@@ -97,4 +97,4 @@ module.exports = {
       name: false,
     },
   },
-};
+});
