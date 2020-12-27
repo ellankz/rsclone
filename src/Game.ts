@@ -6,6 +6,6 @@ export default class Calculator {
   }
 
   sayName() {
-    console.log(this.name);
+    console.dir(this.name);
   }
 }

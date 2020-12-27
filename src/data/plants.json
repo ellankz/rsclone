@@ -1,0 +1,24 @@
+{
+  "peashooter": {
+    "cost": 100,
+    "damage": 20,
+    "recharge": 2,
+    "sunProduction": 0,
+    "health": 100,
+    "width": 70,
+    "height": 70,
+    "image": "./assets/images/peashooter.png",
+    "name": "peashooter"
+  },
+  "sunflower": {
+    "cost": 50,
+    "damage": 0,
+    "recharge": 25,
+    "sunProduction": 50,
+    "health": 100,
+    "width": 60,
+    "height": 70,
+    "image": "./assets/images/sunflower.png",
+    "name": "peashooter"
+  }
+}
