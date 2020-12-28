@@ -1,0 +1,10 @@
+{
+  "basic": {
+    "speed": 5,
+    "health": 190,
+    "width": 60,
+    "height": 100,
+    "image": "./assets/images/zombie.png",
+    "name": "basic"
+  }
+}

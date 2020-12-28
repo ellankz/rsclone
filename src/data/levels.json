@@ -1,0 +1,26 @@
+[
+  {
+    "zombies": [{
+      "type": "basic",
+      "startDelay": 50,
+      "row": 3
+    }, {
+      "type": "basic",
+      "startDelay": 120,
+      "row": 1
+    }, {
+      "type": "basic",
+      "startDelay": 155,
+      "row": 5
+    }, {
+      "type": "basic",
+      "startDelay": 30,
+      "row": 2
+    }
+    ],
+    "plantTypes": [
+      "sunflower",
+      "peashooter"
+    ]
+  }
+]
