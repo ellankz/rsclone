@@ -1,7 +1,7 @@
 import './style/main.scss';
 
-import App from './App';
+import Game from './Game';
 
-const app = new App();
+const game = new Game();
 
-app.sayName();
+game.sayName();
