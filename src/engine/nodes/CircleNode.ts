@@ -1,4 +1,4 @@
-import { ICircleNode, CircleNodeConfig } from '../types';
+import { ICircleNode, CircleNodeConfig, NodesType } from '../types';
 import Node from './Node';
 import Vector from '../core/Vector';
 
@@ -7,15 +7,15 @@ export default class CircleNode extends Node implements ICircleNode {
 
   radius: number;
 
-  constructor(params: CircleNodeConfig) {
-    super(params);
+  constructor(params: CircleNodeConfig, update?: (node: NodesType) => void) {
+    super(params, update);
     this.type = 'CircleNode';
     this.color = params.color || '#000';
     this.radius = params.radius;
     this.size = new Vector();
   }
 
-  public update() {
+  public _update() {
     this.size.x = this.radius * 2;
     this.size.y = this.radius * 2;
   }

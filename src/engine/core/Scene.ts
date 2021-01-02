@@ -5,6 +5,9 @@ export default class Scene implements IScene {
 
   constructor(scene: SceneConfig) {
     this.scene = scene;
+    if (!this.scene.nodes) {
+      this.scene.nodes = [];
+    }
   }
 
   public init() {
@@ -15,9 +18,9 @@ export default class Scene implements IScene {
 
   public updateNodes() {
     this.scene.nodes.forEach((node) => {
-      if (node && 'update' in node) {
-        node.update();
-      }
+      if (!node) return;
+      if ('_update' in node) node._update();
+      if ('update' in node) node.update(node);
     });
   }
 

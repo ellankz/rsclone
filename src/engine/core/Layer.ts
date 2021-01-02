@@ -2,6 +2,8 @@ import {
   CircleConfig,
   ILayer,
   ImageConfig,
+  IVector,
+  IView,
   NodesType,
   RectConfig,
   TextConfig,
@@ -14,15 +16,15 @@ export default class Layer implements ILayer {
 
   ctx: CanvasRenderingContext2D;
 
-  size: Vector;
+  size: IVector;
 
-  offset: Vector;
+  offset: IVector;
 
-  view: View;
+  view: IView;
 
   nodes: NodesType[];
 
-  constructor(index: number, size: Vector, container: HTMLElement, offset: Vector, view?: View) {
+  constructor(index: number, size: IVector, container: HTMLElement, offset: IVector, view?: IView) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = `position: absolute; left: ${offset.x}px; top: ${offset.y}px`;
     canvas.width = size.x;
@@ -35,12 +37,17 @@ export default class Layer implements ILayer {
     this.ctx = canvas.getContext('2d');
     this.size = size;
     this.offset = offset;
-    this.view = view || new View({}, {});
+    this.view = view || new View([this]);
     this.nodes = [];
   }
 
   public clear() {
     this.ctx.clearRect(0, 0, this.size.x, this.size.y);
+  }
+
+  public update() {
+    this.clear();
+    this.nodes.forEach((node) => node.draw());
   }
 
   public drawRect(params: RectConfig) {
@@ -52,7 +59,7 @@ export default class Layer implements ILayer {
     }
 
     if (params.border) {
-      this.ctx.strokeStyle = params.border;
+      Layer.setBorder(params.border, this.ctx);
       this.ctx.strokeRect(pos.x, pos.y, params.width, params.height);
     }
   }
@@ -76,7 +83,7 @@ export default class Layer implements ILayer {
     }
 
     if (params.border) {
-      this.ctx.strokeStyle = params.border;
+      Layer.setBorder(params.border, this.ctx);
       this.ctx.stroke();
     }
   }
@@ -84,7 +91,7 @@ export default class Layer implements ILayer {
   public drawText(params: TextConfig) {
     const pos = this.view.getPosition(new Vector(params.x, params.y));
 
-    this.ctx.font = `${params.size || 30}px ${params.font || 'serif'}`;
+    this.ctx.font = `${params.size}px ${params.font}`;
     this.ctx.textBaseline = 'top';
 
     if (params.color) {
@@ -92,6 +99,11 @@ export default class Layer implements ILayer {
     }
 
     this.ctx.fillText(params.text, pos.x, pos.y);
+
+    if (params.border) {
+      Layer.setBorder(params.border, this.ctx);
+      this.ctx.strokeText(params.text, pos.x, pos.y);
+    }
   }
 
   public drawImage(params: ImageConfig) {
@@ -110,8 +122,16 @@ export default class Layer implements ILayer {
     );
 
     if (params.border) {
-      this.ctx.strokeStyle = params.border;
+      Layer.setBorder(params.border, this.ctx);
       this.ctx.strokeRect(pos.x, pos.y, params.dw, params.dh);
     }
+  }
+
+  private static setBorder(border: string, ctx: CanvasRenderingContext2D) {
+    const borderParams = border.split(' ');
+    const width = parseInt(borderParams[0], 10);
+    const color = borderParams[borderParams.length - 1];
+    ctx.lineWidth = width || 1;
+    ctx.strokeStyle = color || '#000';
   }
 }

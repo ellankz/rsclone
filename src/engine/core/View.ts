@@ -1,27 +1,25 @@
 import Vector from './Vector';
-import Layer from './Layer';
-import Scene from './Scene';
-import { IView } from '../types';
+import { IView, ILayer, IVector } from '../types';
 
 export default class View implements IView {
-  position: Vector;
+  position: IVector;
 
-  layers: { [key: string]: Layer };
+  layers: ILayer[];
 
-  scenes: { [key: string]: Scene };
-
-  constructor(layers: { [key: string]: Layer }, scenes: { [key: string]: Scene }) {
+  constructor(layers: ILayer[]) {
     this.position = new Vector();
     this.layers = layers;
-    this.scenes = scenes;
+    this.layers.forEach((layer) => {
+      const targetLayer = layer;
+      targetLayer.view = this;
+    });
   }
 
-  move(v: Vector) {
+  move(v: IVector) {
     this.position.plus(v);
 
-    [...Object.values(this.layers)].forEach((layer) => layer.clear());
-    [...Object.values(this.scenes)].forEach((scene) => scene.init());
+    this.layers.forEach((layer) => layer.update());
   }
 
-  getPosition = (v: Vector) => v.minus(this.position);
+  getPosition = (v: IVector) => v.minus(this.position);
 }

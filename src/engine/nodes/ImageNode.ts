@@ -1,4 +1,4 @@
-import { ImageNodeConfig, IImageNode } from '../types';
+import { ImageNodeConfig, IImageNode, NodesType } from '../types';
 import Node from './Node';
 
 export default class ImageNode extends Node implements IImageNode {
@@ -12,8 +12,8 @@ export default class ImageNode extends Node implements IImageNode {
 
   dw: number;
 
-  constructor(params: ImageNodeConfig) {
-    super(params);
+  constructor(params: ImageNodeConfig, update?: (node: NodesType) => void) {
+    super(params, update);
     this.type = 'ImageNode';
     this.img = params.img;
     this.srcX = params.srcPosition.x;

@@ -1,4 +1,4 @@
-import { NodeConfig, INode, NodesTypeName } from '../types';
+import { NodeConfig, INode, NodesTypeName, NodesType } from '../types';
 import Vector from '../core/Vector';
 import Layer from '../core/Layer';
 
@@ -11,14 +11,33 @@ export default class Node implements INode {
 
   layer: Layer;
 
-  border: string;
+  sceneName: string;
 
-  constructor(params: NodeConfig) {
+  border?: string;
+
+  addTo: (sceneName: string) => void;
+
+  destroy: () => void;
+
+  update?: (node: NodesType) => void;
+
+  constructor(params: NodeConfig, update?: (node: NodesType) => void) {
     this.position = params.position;
     this.size = params.size;
     this.type = 'Node';
     this.layer = params.layer;
-    this.border = params.border;
+    this.sceneName = '';
+
+    if (params.border) {
+      this.border = params.border;
+    }
+
+    this.addTo = null;
+    this.destroy = null;
+
+    if (update) {
+      this.update = update;
+    }
   }
 
   public move(v: Vector) {

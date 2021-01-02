@@ -9,6 +9,6 @@ const container = document.createElement('div');
 container.id = 'game';
 document.body.appendChild(container);
 
-const engine = new Engine(container, ['main']);
+const engine = new Engine(container);
 
 game.sayName();

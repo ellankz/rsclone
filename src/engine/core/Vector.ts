@@ -10,13 +10,13 @@ export default class Vector implements IVector {
     this.y = y || 0;
   }
 
-  plus(v: Vector) {
+  plus(v: IVector) {
     this.x += v.x;
     this.y += v.y;
     return this;
   }
 
-  minus(v: Vector) {
+  minus(v: IVector) {
     this.x -= v.x;
     this.y -= v.y;
     return this;

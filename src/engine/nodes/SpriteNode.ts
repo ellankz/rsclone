@@ -1,4 +1,4 @@
-import { ISpriteNode, SpriteNodeConfig } from '../types';
+import { ISpriteNode, SpriteNodeConfig, NodesType } from '../types';
 import Node from './Node';
 
 export default class SpriteNode extends Node implements ISpriteNode {
@@ -24,8 +24,8 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   private animation = false;
 
-  constructor(params: SpriteNodeConfig) {
-    super(params);
+  constructor(params: SpriteNodeConfig, update?: (node: NodesType) => void) {
+    super(params, update);
     this.type = 'SpriteNode';
     this.img = params.img;
     this.frames = params.frames;
@@ -48,7 +48,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
     }
   }
 
-  public update() {
+  public _update() {
     if (this.animation) return;
 
     this.srcX = (this.srcX + this.frameW) % this.size.x;

@@ -3,22 +3,23 @@ export interface Engine {
   canvasOffset: IVector;
   activeScene: IScene;
   layers: { [key: string]: ILayer };
-  scenes: { [key: string]: IScene };
-  view: IView;
   container: HTMLElement;
   readonly running: boolean;
   readonly stopped: boolean;
 
-  init: (_box: string | HTMLElement, layersConfig: string[]) => void;
+  vector: (x?: number, y?: number) => IVector;
+
+  init: (_box: string | HTMLElement, layersConfig?: string[]) => void;
   start: (name: string) => void;
   stop: () => void;
 
   createLayer: (name: string, index: number) => void;
   getLayer: (name: string) => ILayer;
 
-  createScene: (name: string, Construct: any) => void;
-  setScene: (name: string) => boolean;
+  createScene: (name: string, Construct?: any) => void;
   createNode: (scene: SceneConfig, params: any) => INode;
+
+  createView: (layers: ILayer[]) => IView;
 }
 
 export interface IVector {
@@ -29,17 +30,27 @@ export interface IVector {
   minus: (IVector: any) => IVector;
 }
 
-export type NodesTypeName = 'Node' | 'RectNode' | 'CircleNode' | 'ImageNode' | 'SpriteNode';
-export type NodesType = IRectNode | ICircleNode | ISpriteNode;
+export type NodesTypeName =
+  | 'Node'
+  | 'RectNode'
+  | 'CircleNode'
+  | 'TextNode'
+  | 'ImageNode'
+  | 'SpriteNode';
+export type NodesType = IRectNode | ICircleNode | ITextNode | ISpriteNode;
 
 export interface INode {
   position: IVector;
   size: IVector;
   type: NodesTypeName;
   layer: ILayer;
-  border: string;
+  sceneName: string;
+  border?: string;
 
   move: (IVector: any) => void;
+  addTo: (sceneName: string) => void;
+  update?: (node: NodesType) => void;
+  destroy: () => void;
   clearLayer: () => void;
 }
 
@@ -54,7 +65,16 @@ export interface ICircleNode extends INode {
   radius: number;
 
   draw: () => void;
-  update: () => void;
+  _update: () => void;
+}
+
+export interface ITextNode extends INode {
+  color: string;
+  font: string;
+  fontSize: number;
+  text: string;
+
+  draw: () => void;
 }
 
 export interface IImageNode extends INode {
@@ -80,7 +100,7 @@ export interface ISpriteNode extends INode {
   speed: number;
 
   draw: () => void;
-  update: () => void;
+  _update: () => void;
 }
 
 export interface IScene {
@@ -108,12 +128,12 @@ export interface ILayer {
   drawText: (TextConfig: any) => void;
   drawImage: (ImageConfig: any) => void;
   clear: () => void;
+  update: () => void;
 }
 
 export interface IView {
   position: IVector;
-  layers: { [key: string]: ILayer };
-  scenes: { [key: string]: IScene };
+  layers: ILayer[];
 
   move: (IVector: any) => void;
   getPosition: (IVector: any) => IVector;
@@ -134,6 +154,13 @@ export interface RectNodeConfig extends NodeConfig {
 export interface CircleNodeConfig extends NodeConfig {
   color?: string;
   radius: number;
+}
+
+export interface TextNodeConfig extends NodeConfig {
+  color?: string;
+  font?: string;
+  fontSize?: number;
+  text: string;
 }
 
 export interface ImageNodeConfig extends NodeConfig {
@@ -174,6 +201,7 @@ export interface TextConfig {
   font?: string;
   size?: number;
   color?: string;
+  border?: string;
 }
 
 export interface ImageConfig {
