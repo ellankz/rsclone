@@ -1,4 +1,9 @@
-import { NodeConfig, INode, NodesTypeName, NodesType } from '../types';
+import {
+  NodeConfig,
+  INode,
+  NodesTypeName,
+  NodesType,
+} from '../types';
 import Vector from '../core/Vector';
 import Layer from '../core/Layer';
 

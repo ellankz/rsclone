@@ -137,7 +137,7 @@ export default class Engine {
 
   //   Nodes
   private static createNodeType(params: NodeConfig, update?: (node: NodesType) => void) {
-    const type: NodesTypeName = params.type;
+    const { type } = params as { type: NodesTypeName };
 
     switch (type) {
       case 'RectNode': {
@@ -173,8 +173,8 @@ export default class Engine {
 
     node.draw();
 
-    node.addTo = (sceneName: string) => {
-      if (!sceneName) return;
+    function addTo(sceneName: string) {
+      if (!sceneName) return null;
       if (node.sceneName) {
         const sceneNodes = this.scenes[node.sceneName].scene.nodes;
         const sceneIdx = sceneNodes.indexOf(node);
@@ -184,12 +184,12 @@ export default class Engine {
       }
       node.sceneName = sceneName;
       const curScene = this.scenes[sceneName];
-      if (!curScene) return;
+      if (!curScene) return null;
       curScene.scene.nodes.push(node);
       return node;
-    };
+    }
 
-    node.destroy = () => {
+    function destroy() {
       const sceneNodes = this.scenes[node.sceneName].scene.nodes;
       const sceneIdx = sceneNodes.indexOf(node);
       const layerIdx = node.layer.nodes.indexOf(node);
@@ -199,13 +199,17 @@ export default class Engine {
       if (layerIdx !== -1) {
         node.layer.nodes.splice(layerIdx, 1);
       }
-    };
+    }
+
+    node.addTo = addTo.bind(this);
+    node.destroy = destroy.bind(this);
 
     return node;
   }
 
   //   View
-  public addView(layers: Layer[]) {
+  public addView(layersNames: string[]) {
+    const layers: Layer[] = layersNames.map((name) => this.layers[name]);
     return new View(layers);
   }
 }

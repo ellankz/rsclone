@@ -19,7 +19,7 @@ export interface Engine {
   createScene: (name: string, Construct?: any) => void;
   createNode: (scene: SceneConfig, params: any) => INode;
 
-  createView: (layers: ILayer[]) => IView;
+  createView: (layersNames: string[]) => IView;
 }
 
 export interface IVector {
@@ -65,7 +65,7 @@ export interface ICircleNode extends INode {
   radius: number;
 
   draw: () => void;
-  _update: () => void;
+  innerUpdate: () => void;
 }
 
 export interface ITextNode extends INode {
@@ -100,7 +100,7 @@ export interface ISpriteNode extends INode {
   speed: number;
 
   draw: () => void;
-  _update: () => void;
+  innerUpdate: () => void;
 }
 
 export interface IScene {

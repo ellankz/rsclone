@@ -19,7 +19,7 @@ export default class Scene implements IScene {
   public updateNodes() {
     this.scene.nodes.forEach((node) => {
       if (!node) return;
-      if ('_update' in node) node._update();
+      if ('innerUpdate' in node) node.innerUpdate();
       if ('update' in node) node.update(node);
     });
   }

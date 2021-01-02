@@ -48,7 +48,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
     }
   }
 
-  public _update() {
+  public innerUpdate() {
     if (this.animation) return;
 
     this.srcX = (this.srcX + this.frameW) % this.size.x;

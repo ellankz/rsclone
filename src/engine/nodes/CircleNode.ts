@@ -15,7 +15,7 @@ export default class CircleNode extends Node implements ICircleNode {
     this.size = new Vector();
   }
 
-  public _update() {
+  public innerUpdate() {
     this.size.x = this.radius * 2;
     this.size.y = this.radius * 2;
   }
