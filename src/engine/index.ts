@@ -110,7 +110,16 @@ export default class Engine {
   public createLayer(name: string, index?: number) {
     if (this.layers[name]) return;
     const idx = index && index !== 0 ? index : Object.keys(this.layers).length;
-    this.layers[name] = new Layer(idx as number, this.size, this.container, this.canvasOffset);
+    const layer = new Layer(idx as number, this.size, this.container, this.canvasOffset);
+    this.layers[name] = layer;
+
+    layer.update = () => {
+      layer.nodes.forEach((node) => {
+        if (!this.activeScene || !this.activeScene.scene.nodes.includes(node)) {
+          node.draw();
+        }
+      });
+    };
   }
 
   public getLayer(name: string) {
@@ -220,6 +229,7 @@ export default class Engine {
     const layers: Layer[] = layersNames.map((name) => this.layers[name]);
     if (layers.every((layer) => !layer === false)) {
       return new View(layers);
-    } else return null;
+    }
+    return null;
   }
 }

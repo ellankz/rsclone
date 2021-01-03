@@ -24,6 +24,8 @@ export default class Layer implements ILayer {
 
   nodes: NodesType[];
 
+  update: () => void;
+
   constructor(index: number, size: IVector, container: HTMLElement, offset: IVector, view?: IView) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = `position: absolute; left: ${offset.x}px; top: ${offset.y}px`;
@@ -39,15 +41,11 @@ export default class Layer implements ILayer {
     this.offset = offset;
     this.view = view || new View([this]);
     this.nodes = [];
+    this.update = null;
   }
 
   public clear() {
     this.ctx.clearRect(0, 0, this.size.x, this.size.y);
-  }
-
-  public update() {
-    this.clear();
-    this.nodes.forEach((node) => node.draw());
   }
 
   public drawRect(params: RectConfig) {
@@ -109,22 +107,30 @@ export default class Layer implements ILayer {
   public drawImage(params: ImageConfig) {
     const pos = this.view.getPosition(new Vector(params.x, params.y));
 
-    this.ctx.drawImage(
-      params.img,
-      params.srcX,
-      params.srcY,
-      params.width,
-      params.height,
-      pos.x,
-      pos.y,
-      params.dw,
-      params.dh,
-    );
+    const isLoaded = params.img.complete && params.img.naturalHeight !== 0;
 
-    if (params.border) {
-      Layer.setBorder(params.border, this.ctx);
-      this.ctx.strokeRect(pos.x, pos.y, params.dw, params.dh);
-    }
+    const draw = () => {
+      this.ctx.drawImage(
+        params.img,
+        params.srcX,
+        params.srcY,
+        params.width,
+        params.height,
+        pos.x,
+        pos.y,
+        params.dw,
+        params.dh,
+      );
+
+      if (params.border) {
+        Layer.setBorder(params.border, this.ctx);
+        this.ctx.strokeRect(pos.x, pos.y, params.dw, params.dh);
+      }
+    };
+
+    if (!isLoaded) {
+      params.img.addEventListener('load', draw);
+    } else draw();
   }
 
   private static setBorder(border: string, ctx: CanvasRenderingContext2D) {

@@ -51,5 +51,6 @@ export default class Node implements INode {
 
   public clearLayer() {
     this.layer.clear();
+    this.layer.update();
   }
 }
