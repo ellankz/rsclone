@@ -14,6 +14,8 @@ export interface Engine {
   getLayer: (name: string) => ILayer;
 
   createScene: (name: string, Construct?: any) => void;
+  getSceneNodes: (name: string) => NodesType[];
+
   createNode: (params: any, update?: () => void) => NodesType;
 
   createView: (layersNames: string[]) => IView;

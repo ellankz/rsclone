@@ -123,6 +123,11 @@ export default class Engine {
     this.scenes[name] = new Scene(Construct ? new Construct() : {});
   }
 
+  public getSceneNodes(name: string) {
+    if (!name || !this.scenes[name]) return null;
+    return this.scenes[name].scene.nodes;
+  }
+
   private setScene(name: string) {
     if (!name || !this.scenes[name]) return false;
 
@@ -190,13 +195,16 @@ export default class Engine {
     }
 
     function destroy() {
-      const sceneNodes = this.scenes[node.sceneName].scene.nodes;
-      const sceneIdx = sceneNodes.indexOf(node);
-      const layerIdx = node.layer.nodes.indexOf(node);
-      if (sceneIdx !== -1) {
-        sceneNodes.splice(sceneIdx, 1);
+      if (node.sceneName) {
+        const sceneNodes = this.scenes[node.sceneName].scene.nodes;
+        const sceneIdx = sceneNodes.indexOf(node);
+        if (sceneIdx !== -1) {
+          sceneNodes.splice(sceneIdx, 1);
+        }
       }
+      const layerIdx = node.layer.nodes.indexOf(node);
       if (layerIdx !== -1) {
+        node.clearLayer();
         node.layer.nodes.splice(layerIdx, 1);
       }
     }
@@ -208,8 +216,10 @@ export default class Engine {
   }
 
   //   View
-  public addView(layersNames: string[]) {
+  public createView(layersNames: string[]) {
     const layers: Layer[] = layersNames.map((name) => this.layers[name]);
-    return new View(layers);
+    if (layers.every((layer) => !layer === false)) {
+      return new View(layers);
+    } else return null;
   }
 }
