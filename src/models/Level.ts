@@ -1,4 +1,4 @@
-import { LevelConfig, plantType, ZombieConfig } from '../types';
+import { LevelConfig, PlantType, ZombieConfig } from '../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
 
@@ -18,7 +18,7 @@ export default class Level {
 
   private zombiesConfig: ZombieConfig[];
 
-  public plantTypes: plantType[];
+  public plantTypes: PlantType[];
 
   constructor(levelConfig: LevelConfig) {
     this.zombiesConfig = levelConfig.zombies;
@@ -38,7 +38,7 @@ export default class Level {
     return this.plantsArr;
   }
 
-  public createPlant(type: plantType) {
+  public createPlant(type: PlantType) {
     const newPlant = new Plant({ type });
     this.plantsArr.push(newPlant);
   }

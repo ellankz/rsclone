@@ -7,10 +7,10 @@ export interface ZombiePreset {
   name: string;
 }
 
-export type zombieType = 'basic' | 'cone' | 'bucket';
+export type ZombieType = 'basic' | 'cone' | 'bucket';
 
 export interface ZombieConfig {
-  type: zombieType;
+  type: ZombieType;
   startDelay: number;
   row: number;
 }
@@ -27,13 +27,13 @@ export interface PlantPreset {
   name: string;
 }
 
-export type plantType = 'sunflower' | 'peashooter';
+export type PlantType = 'sunflower' | 'peashooter';
 
 export interface PlantConfig {
-  type: plantType;
+  type: PlantType;
 }
 
 export interface LevelConfig {
   zombies: ZombieConfig[];
-  plantTypes: plantType[];
+  plantTypes: PlantType[];
 }
