@@ -7,13 +7,13 @@ const X_SIZE_COEF = 0.079;
 const Y_SIZE_COEF = 0.167;
 
 export default class Cell {
-  position: {x: number, y: number};
+  public position: {x: number, y: number};
 
-  engine: Engine;
+  private engine: Engine;
 
-  cellOffset: Vector;
+  private cellOffset: Vector;
 
-  cellSize: Vector;
+  private cellSize: Vector;
 
   constructor(position: {x: number, y: number}, engine: Engine) {
     this.position = position;
@@ -28,7 +28,7 @@ export default class Cell {
     ); // 81 * 100
   }
 
-  draw() {
+  public draw() {
     this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(
@@ -39,5 +39,21 @@ export default class Cell {
       layer: 'main',
       color: 'rgba(255, 255, 255, 0.7)',
     });
+  }
+
+  public getTop() {
+    return this.cellOffset.x;
+  }
+
+  public getBottom() {
+    return this.cellOffset.x + this.cellSize.x;
+  }
+
+  public getLeft() {
+    return this.cellOffset.y;
+  }
+
+  public getRight() {
+    return this.cellOffset.y + this.cellSize.y;
   }
 }
