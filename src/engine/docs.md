@@ -572,7 +572,7 @@ engine.createScene('scene', function Scene() {
         fontSize: 60,
         border: '1px white', // add weight to text
         position: engine.vector(engine.size.x / 2 - 170, engine.size.y / 2 - 50), // center text
-        text: 'Your are win!',
+        text: 'You won!',
         font: 'Roboto, sans-serif',
         color: '#fff',
         layer: 'main',
