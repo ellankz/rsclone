@@ -23,15 +23,15 @@ export default class Engine {
 
   canvasOffset: Vector;
 
-  running: boolean;
-
-  stopped: boolean;
-
-  activeScene: Scene;
-
   layers: { [key: string]: Layer };
 
+  private running: boolean;
+
+  private stopped: boolean;
+
   private scenes: { [key: string]: Scene };
+
+  private activeScene: Scene;
 
   event: Event;
 
@@ -123,7 +123,7 @@ export default class Engine {
     this.scenes[name] = new Scene(Construct ? new Construct() : {});
   }
 
-  public setScene(name: string) {
+  private setScene(name: string) {
     if (!name || !this.scenes[name]) return false;
 
     if (this.activeScene) {

@@ -16,8 +16,14 @@ export default class ImageNode extends Node implements IImageNode {
     super(params, update);
     this.type = 'ImageNode';
     this.img = params.img;
-    this.srcX = params.srcPosition.x;
-    this.srcY = params.srcPosition.y;
+    if (params.srcPosition) {
+      this.srcX = params.srcPosition.x;
+      this.srcY = params.srcPosition.y;
+    } else {
+      this.srcX = 0;
+      this.srcY = 0;
+    }
+
     this.dh = params.dh || this.size.y;
     this.border = params.border;
 

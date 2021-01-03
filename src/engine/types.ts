@@ -1,11 +1,8 @@
 export interface Engine {
   size: IVector;
   canvasOffset: IVector;
-  activeScene: IScene;
   layers: { [key: string]: ILayer };
   container: HTMLElement;
-  readonly running: boolean;
-  readonly stopped: boolean;
 
   vector: (x?: number, y?: number) => IVector;
 
@@ -17,7 +14,7 @@ export interface Engine {
   getLayer: (name: string) => ILayer;
 
   createScene: (name: string, Construct?: any) => void;
-  createNode: (scene: SceneConfig, params: any) => INode;
+  createNode: (params: any, update?: () => void) => NodesType;
 
   createView: (layersNames: string[]) => IView;
 }
@@ -48,7 +45,7 @@ export interface INode {
   border?: string;
 
   move: (IVector: any) => void;
-  addTo: (sceneName: string) => void;
+  addTo: (sceneName: string) => NodesType;
   update?: (node: NodesType) => void;
   destroy: () => void;
   clearLayer: () => void;
@@ -165,7 +162,7 @@ export interface TextNodeConfig extends NodeConfig {
 
 export interface ImageNodeConfig extends NodeConfig {
   img: HTMLImageElement;
-  srcPosition: IVector;
+  srcPosition?: IVector;
   dh?: number;
 }
 

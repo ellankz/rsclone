@@ -20,7 +20,7 @@ export default class Node implements INode {
 
   border?: string;
 
-  addTo: (sceneName: string) => void;
+  addTo: (sceneName: string) => NodesType;
 
   destroy: () => void;
 
