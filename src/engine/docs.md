@@ -590,7 +590,7 @@ for (let i = 0; i < 60; i++) {
         Math.abs(getNumber(engine.size.x - 100)), // select random size from positive integers with some distation
         Math.abs(getNumber(engine.size.y - 100)),
       ),
-      radius: Math.floor(Math.random() * 30) + 15, // random positive radius
+      radius: Math.floor(Math.random() * 28) + 12, // random positive radius
       color: colors[Math.floor(Math.random() * 2)], // select random color
       layer: 'main',
     })
