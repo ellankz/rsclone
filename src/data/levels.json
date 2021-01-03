@@ -19,8 +19,8 @@
     }
     ],
     "plantTypes": [
-      "sunflower",
-      "peashooter"
+      "SunFlower",
+      "Peashooter"
     ]
   }
 ]

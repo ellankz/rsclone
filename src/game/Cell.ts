@@ -1,9 +1,9 @@
 import Vector from '../engine/core/Vector';
 import { Engine } from '../engine/types';
 
-const X_OFFSET_COEF = 0.243;
+const X_OFFSET_COEF = 0.271;
 const Y_OFFSET_COEF = 0.127;
-const X_SIZE_COEF = 0.079;
+const X_SIZE_COEF = 0.088;
 const Y_SIZE_COEF = 0.167;
 
 export default class Cell {

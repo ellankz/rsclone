@@ -1,5 +1,9 @@
 import Engine from '../engine';
+import Level from '../models/Level';
 import Cell from './Cell';
+
+import levels from '../data/levels.json';
+import { LevelConfig } from '../types';
 
 const backgroundUrl = require('../assets/images/interface/background1.jpg');
 
@@ -7,17 +11,21 @@ const ROWS_NUM = 5;
 const COLS_NUM = 9;
 
 export default class Game {
-  engine: Engine;
+  private engine: Engine;
 
-  cells: Cell[][];
+  private cells: Cell[][];
+
+  private currentLevel: Level;
 
   constructor(engine: Engine) {
     this.engine = engine;
     this.cells = [];
   }
 
-  init() {
+  public init() {
     const { engine } = this;
+    engine.createView(['back', 'main']);
+    engine.getLayer('main').view.move(engine.vector(110, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
         // code
@@ -26,7 +34,7 @@ export default class Game {
 
     this.addBackground();
     this.createCells();
-
+    this.createLevel(0);
     this.engine.start('scene');
   }
 
@@ -57,5 +65,10 @@ export default class Game {
       }
       this.cells.push(row);
     }
+  }
+
+  createLevel(levelIndex: number) {
+    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine);
+    this.currentLevel.init();
   }
 }
