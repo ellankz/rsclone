@@ -505,7 +505,9 @@ setTimeout(() => {
 
 ## Examples
 
-1. [Demo]('https://engine-demo1.netlify.app/')
+1. Demo: https://engine-demo1.netlify.app/
+
+   Простой пример работы со сценой
 
 ```javascript
 // будет двигать прямоугольник при каждом обновлении влево на 1px и 0.3px вниз
@@ -546,9 +548,9 @@ const rect = engine
 engine.start('scene');
 ```
 
-2. Простая игра с интересной анимацией. Пример изменения функции update у узлов, и отслеживания кликов
+2. Demo: https://engine-demo2.netlify.app/
 
-   [Demo]('https://engine-demo1.netlify.app/')
+   Простая игра с интересной анимацией. Пример изменения функции update у узлов, и отслеживания кликов.
 
 ```javascript
 const engine = new Engine(container, ['main']);
