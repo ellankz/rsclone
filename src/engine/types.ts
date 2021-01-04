@@ -36,7 +36,7 @@ export type NodesTypeName =
   | 'TextNode'
   | 'ImageNode'
   | 'SpriteNode';
-export type NodesType = IRectNode | ICircleNode | ITextNode | ISpriteNode;
+export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode;
 
 export interface INode {
   position: IVector;

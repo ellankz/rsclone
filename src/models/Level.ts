@@ -32,6 +32,8 @@ export default class Level {
 
   private occupiedCells: Map<Cell, Plant>;
 
+  private sunCounter: SunCount;
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
@@ -65,8 +67,8 @@ export default class Level {
   }
 
   private createSunCount() {
-    const sunCounter = new SunCount(this.engine, this.sunCount, this.updateSunCount);
-    sunCounter.draw();
+    this.sunCounter = new SunCount(this.engine, this.sunCount, this.updateSunCount.bind(this));
+    this.sunCounter.draw();
   }
 
   public updateSunCount(newCount:number) {
@@ -94,14 +96,20 @@ export default class Level {
   private listenCellClicks() {
     for (let x = 0; x < this.cells.length; x += 1) {
       for (let y = 0; y < this.cells[x].length; y += 1) {
-        this.engine.on(this.cells[x][y].node, 'click', () => {
-          const cell = this.cells[x][y];
+        const cell = this.cells[x][y];
+        this.engine.on(cell.node, 'click', () => {
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             const plant = this.createPlant(this.preparedToPlant);
             plant.draw(cell);
+
             this.occupiedCells.set(cell, plant);
-            const newSunCount = this.sunCount.suns - plant.cost;
-            this.updateSunCount(newSunCount);
+
+            this.updateSunCount(this.sunCount.suns - plant.cost);
+
+            this.plantCards.forEach((card) => {
+              card.updateCardState();
+            });
+            this.sunCounter.update();
             this.preparedToPlant = null;
           }
         });

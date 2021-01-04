@@ -5,7 +5,7 @@ import {
   TOP_OFFSET_COEF,
 } from '../constats';
 import Engine from '../engine';
-import { NodesType } from '../engine/types';
+import TextNode from '../engine/nodes/TextNode';
 
 const sunBack = require('../assets/images/interface/SunBack.png');
 
@@ -18,7 +18,7 @@ export default class SunCount {
 
   updateCountInLevel: (newCount: number) => void;
 
-  textNode: NodesType;
+  textNode: TextNode;
 
   localCount: number;
 
@@ -45,11 +45,10 @@ export default class SunCount {
         ),
         text: this.count.suns.toString(),
         layer: 'main',
-        font: 'serif',
+        font: 'sans-serif',
         fontSize: 50,
         color: 'black',
-      })
-        .addTo('scene');
+      }) as TextNode;
 
       const sunCounter = this;
       this.textNode.update = function upddateSunCounterText() {
@@ -82,7 +81,7 @@ export default class SunCount {
 
   public update() {
     this.updateCountInLevel(this.count.suns);
-    this.drawText();
+    this.textNode.text = this.count.suns.toString();
   }
 
   public addSunCount(number: number) {

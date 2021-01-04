@@ -3,9 +3,9 @@ import { PlantPreset } from '../types';
 import plantsData from '../data/plants.json';
 import Engine from '../engine';
 import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_HEIGHT_COEF, PLANT_CARD_WIDTH_COEF } from '../constats';
+import { IImageNode, NodesType } from '../engine/types';
 
 require.context('../assets/images/cards', true, /\.(png|jpg)$/);
-
 export default class PlantCard {
   public plant: Plant;
 
@@ -25,6 +25,8 @@ export default class PlantCard {
 
   private prepareToPlant: (plantType: string) => void;
 
+  private node: IImageNode;
+
   constructor(
     type: string, orderNum: number, engine: Engine, sunCount: {suns: number},
     prepareToPlant: (plantType: string) => void,
@@ -41,12 +43,12 @@ export default class PlantCard {
   public getSrcPos = () => (this.isActive ? 0 : this.engine.size.y * PLANT_CARD_HEIGHT_COEF);
 
   draw() {
-    this.updateCardState(this.sunCount.suns);
+    this.isActive = this.sunCount.suns >= this.plantData.cost;
     const image = new Image();
     image.src = `assets/images/cards/${this.type}.png`;
 
     const srcPos = this.getSrcPos();
-    const node = this.engine.createNode(
+    this.node = this.engine.createNode(
       {
         type: 'ImageNode',
         position: this.engine.vector(
@@ -61,29 +63,18 @@ export default class PlantCard {
         dh: this.engine.size.y * PLANT_CARD_HEIGHT_COEF * 1.1,
         srcPosition: this.engine.vector(0, srcPos),
       },
-    ).addTo('scene');
-    let callback: () => void = null;
-    this.engine.on(node, 'click', () => {
+    ) as IImageNode;
+    this.engine.on(this.node as NodesType, 'click', () => {
       if (this.sunCount.suns >= this.plantData.cost) {
-        callback = () => {
-          this.prepareToPlant(this.type);
-          callback = null;
-        };
+        this.prepareToPlant(this.type);
       }
     });
-    const plantCard = this;
-    node.update = function updateCard() {
-      if (callback) callback();
-      plantCard.updateCardState(plantCard.sunCount.suns);
-      this.srcY = plantCard.getSrcPos();
-    };
   }
 
-  public updateCardState(sunsAvailable: number) {
-    if (sunsAvailable >= this.plantData.cost) {
-      this.isActive = true;
-    } else {
-      this.isActive = false;
-    }
+  public updateCardState() {
+    this.isActive = this.sunCount.suns >= this.plantData.cost;
+    const srcPos = this.getSrcPos();
+    this.node.srcY = srcPos;
+    this.node.clearLayer();
   }
 }
