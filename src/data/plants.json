@@ -8,7 +8,9 @@
     "width": 70,
     "height": 70,
     "image": "./assets/images/peashooter.png",
-    "name": "Peashooter"
+    "name": "Peashooter",
+    "frames": 13,
+    "speed": 100
   },
   "SunFlower": {
     "cost": 50,
@@ -19,6 +21,8 @@
     "width": 60,
     "height": 70,
     "image": "./assets/images/sunflower.png",
-    "name": "SunFlower"
+    "name": "SunFlower",
+    "frames": 18,
+    "speed": 70
   }
 }
