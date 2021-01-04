@@ -38,12 +38,14 @@ export default class PlantCard {
     this.prepareToPlant = prepareToPlant;
   }
 
+  public getSrcPos = () => (this.isActive ? 0 : this.engine.size.y * PLANT_CARD_HEIGHT_COEF);
+
   draw() {
     this.updateCardState(this.sunCount.suns);
     const image = new Image();
     image.src = `assets/images/cards/${this.type}.png`;
 
-    const srcPos = this.isActive ? 0 : this.engine.size.y * PLANT_CARD_HEIGHT_COEF;
+    const srcPos = this.getSrcPos();
     const node = this.engine.createNode(
       {
         type: 'ImageNode',
@@ -69,8 +71,11 @@ export default class PlantCard {
         };
       }
     });
-    node.update = () => {
+    const plantCard = this;
+    node.update = function updateCard() {
       if (callback) callback();
+      plantCard.updateCardState(plantCard.sunCount.suns);
+      this.srcY = plantCard.getSrcPos();
     };
   }
 

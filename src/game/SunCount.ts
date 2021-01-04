@@ -51,9 +51,11 @@ export default class SunCount {
       })
         .addTo('scene');
 
-      this.textNode.update = () => {
-        if (this.localCount !== this.count.suns) {
-          this.localCount = this.count.suns;
+      const sunCounter = this;
+      this.textNode.update = function upddateSunCounterText() {
+        if (sunCounter.localCount !== sunCounter.count.suns) {
+          sunCounter.localCount = sunCounter.count.suns;
+          this.text = sunCounter.count.suns;
         }
       };
     });

@@ -12,7 +12,7 @@ export default class Level {
 
   private plantsArr: Plant[] = [];
 
-  public sunCount: {suns: number} = { suns: 50 };
+  public sunCount: {suns: number} = { suns: 500 };
 
   public width: number = COLS_NUM;
 
