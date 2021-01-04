@@ -1,14 +1,12 @@
 import './style/main.scss';
 
-import Game from './Game';
+import Game from './game/index';
 import Engine from './engine';
-
-const game = new Game();
 
 const container = document.createElement('div');
 container.id = 'game';
 document.body.appendChild(container);
 
-const engine = new Engine(container);
-
-game.sayName();
+const engine = new Engine(container, ['back', 'main']);
+const game = new Game(engine);
+game.init();

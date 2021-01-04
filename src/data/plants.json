@@ -1,5 +1,5 @@
 {
-  "peashooter": {
+  "Peashooter": {
     "cost": 100,
     "damage": 20,
     "recharge": 2,
@@ -8,9 +8,11 @@
     "width": 70,
     "height": 70,
     "image": "./assets/images/peashooter.png",
-    "name": "peashooter"
+    "name": "Peashooter",
+    "frames": 13,
+    "speed": 100
   },
-  "sunflower": {
+  "SunFlower": {
     "cost": 50,
     "damage": 0,
     "recharge": 25,
@@ -19,6 +21,8 @@
     "width": 60,
     "height": 70,
     "image": "./assets/images/sunflower.png",
-    "name": "peashooter"
+    "name": "SunFlower",
+    "frames": 18,
+    "speed": 70
   }
 }

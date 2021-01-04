@@ -25,9 +25,11 @@ export interface PlantPreset {
   height: number;
   image: string;
   name: string;
+  frames: number;
+  speed: number;
 }
 
-export type PlantType = 'sunflower' | 'peashooter';
+export type PlantType = 'SunFlower' | 'Peashooter';
 
 export interface PlantConfig {
   type: PlantType;
