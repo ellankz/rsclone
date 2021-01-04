@@ -18,7 +18,10 @@ export default class View implements IView {
   move(v: IVector) {
     this.position.plus(v);
 
-    this.layers.forEach((layer) => layer.update());
+    this.layers.forEach((layer) => {
+      layer.clear();
+      layer.update();
+    });
   }
 
   getPosition = (v: IVector) => v.minus(this.position);
