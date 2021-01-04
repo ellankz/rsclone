@@ -7,3 +7,6 @@ export const PLANT_CARD_WIDTH_COEF = 0.109;
 export const PLANT_CARD_HEIGHT_COEF = 0.1;
 
 export const TOP_OFFSET_COEF = 0.008;
+
+export const ROWS_NUM = 5;
+export const COLS_NUM = 9;

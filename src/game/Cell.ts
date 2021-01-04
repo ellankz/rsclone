@@ -1,5 +1,5 @@
 import Vector from '../engine/core/Vector';
-import { Engine } from '../engine/types';
+import { Engine, NodesType } from '../engine/types';
 
 const X_OFFSET_COEF = 0.271;
 const Y_OFFSET_COEF = 0.127;
@@ -13,7 +13,9 @@ export default class Cell {
 
   private cellOffset: Vector;
 
-  private cellSize: Vector;
+  public cellSize: Vector;
+
+  public node: NodesType;
 
   constructor(position: {x: number, y: number}, engine: Engine) {
     this.position = position;
@@ -29,7 +31,7 @@ export default class Cell {
   }
 
   public draw() {
-    this.engine.createNode({
+    this.node = this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(
         this.cellOffset.x + this.position.x * this.cellSize.x,
@@ -42,18 +44,18 @@ export default class Cell {
   }
 
   public getTop() {
-    return this.cellOffset.x;
+    return this.cellOffset.y + this.position.y * this.cellSize.y;
   }
 
   public getBottom() {
-    return this.cellOffset.x + this.cellSize.x;
+    return this.cellOffset.y + (this.position.y + 1) * this.cellSize.y;
   }
 
   public getLeft() {
-    return this.cellOffset.y;
+    return this.cellOffset.x + this.position.x * this.cellSize.x;
   }
 
   public getRight() {
-    return this.cellOffset.y + this.cellSize.y;
+    return this.cellOffset.x + (this.position.x + 1) * this.cellSize.x;
   }
 }

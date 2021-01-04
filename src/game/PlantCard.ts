@@ -21,23 +21,30 @@ export default class PlantCard {
 
   private engine: Engine;
 
-  private sunCount: number;
+  private sunCount: {suns: number};
 
-  constructor(type: string, orderNum: number, engine: Engine, sunCount: number) {
+  private prepareToPlant: (plantType: string) => void;
+
+  constructor(
+    type: string, orderNum: number, engine: Engine, sunCount: {suns: number},
+    prepareToPlant: (plantType: string) => void,
+  ) {
     this.type = type;
     this.isActive = false;
     this.orderNum = orderNum;
     this.plantData = this.plantsData[type] as PlantPreset;
     this.engine = engine;
     this.sunCount = sunCount;
+    this.prepareToPlant = prepareToPlant;
   }
 
   draw() {
-    this.updateCardState(this.sunCount);
+    this.updateCardState(this.sunCount.suns);
     const image = new Image();
-    image.src = `../assets/images/cards/${this.type}.png`;
+    image.src = `assets/images/cards/${this.type}.png`;
+
     const srcPos = this.isActive ? 0 : this.engine.size.y * PLANT_CARD_HEIGHT_COEF;
-    this.engine.createNode(
+    const node = this.engine.createNode(
       {
         type: 'ImageNode',
         position: this.engine.vector(
@@ -52,7 +59,19 @@ export default class PlantCard {
         dh: this.engine.size.y * PLANT_CARD_HEIGHT_COEF * 1.1,
         srcPosition: this.engine.vector(0, srcPos),
       },
-    );
+    ).addTo('scene');
+    let callback: () => void = null;
+    this.engine.on(node, 'click', () => {
+      if (this.sunCount.suns >= this.plantData.cost) {
+        callback = () => {
+          this.prepareToPlant(this.type);
+          callback = null;
+        };
+      }
+    });
+    node.update = () => {
+      if (callback) callback();
+    };
   }
 
   public updateCardState(sunsAvailable: number) {

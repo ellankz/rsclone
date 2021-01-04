@@ -5,11 +5,12 @@ import {
   TOP_OFFSET_COEF,
 } from '../constats';
 import Engine from '../engine';
+import { NodesType } from '../engine/types';
 
 const sunBack = require('../assets/images/interface/SunBack.png');
 
 export default class SunCount {
-  count: number;
+  count: {suns: number};
 
   engine: Engine;
 
@@ -17,11 +18,16 @@ export default class SunCount {
 
   updateCountInLevel: (newCount: number) => void;
 
-  constructor(engine: Engine, sunCount: number, countUpdateCB: (newCount: number) => void) {
+  textNode: NodesType;
+
+  localCount: number;
+
+  constructor(engine: Engine, sunCount: {suns: number}, countUpdateCB: (newCount: number) => void) {
     this.count = sunCount;
     this.engine = engine;
     this.bgImage = new Image();
     this.updateCountInLevel = countUpdateCB;
+    this.localCount = sunCount.suns;
   }
 
   public draw() {
@@ -31,19 +37,25 @@ export default class SunCount {
 
   private drawText() {
     this.bgImage.addEventListener('load', () => {
-      this.engine.createNode({
+      this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
           this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.5,
           this.engine.size.y * TOP_OFFSET_COEF * 2,
         ),
-        text: this.count.toString(),
+        text: this.count.suns.toString(),
         layer: 'main',
         font: 'serif',
         fontSize: 50,
         color: 'black',
       })
         .addTo('scene');
+
+      this.textNode.update = () => {
+        if (this.localCount !== this.count.suns) {
+          this.localCount = this.count.suns;
+        }
+      };
     });
   }
 
@@ -67,18 +79,18 @@ export default class SunCount {
   }
 
   public update() {
-    this.updateCountInLevel(this.count);
+    this.updateCountInLevel(this.count.suns);
     this.drawText();
   }
 
   public addSunCount(number: number) {
-    this.count += number;
+    this.count.suns += number;
     this.update();
     return this.count;
   }
 
   public substractSunCount(number: number) {
-    this.count -= number;
+    this.count.suns -= number;
     this.update();
     return this.count;
   }

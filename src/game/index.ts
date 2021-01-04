@@ -1,14 +1,12 @@
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
-
-import levels from '../data/levels.json';
 import { LevelConfig } from '../types';
 
-const backgroundUrl = require('../assets/images/interface/background1.jpg');
+import levels from '../data/levels.json';
+import { COLS_NUM, ROWS_NUM } from '../constats';
 
-const ROWS_NUM = 5;
-const COLS_NUM = 9;
+const backgroundUrl = require('../assets/images/interface/background1.jpg');
 
 export default class Game {
   private engine: Engine;
@@ -68,7 +66,7 @@ export default class Game {
   }
 
   createLevel(levelIndex: number) {
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine);
+    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
   }
 }
