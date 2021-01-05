@@ -1,8 +1,8 @@
-import { Sun } from '../sun/Sun';
-import { NodesType } from '../../../engine/types';
-import Cell from '../../Cell';
-import Engine from '../../../engine';
-import Vector from '../../../engine/core/Vector';
+import { Sun } from './Sun';
+import { NodesType } from '../../engine/types';
+import Cell from '../Cell';
+import Engine from '../../engine';
+import Vector from '../../engine/core/Vector';
 
 export class FallingSun {
   delay: number = 5000;
@@ -13,8 +13,6 @@ export class FallingSun {
 
   isStopped: boolean;
 
-  sunFallingTimer: any;
-
   scene: string;
 
   sunCount: { suns: number; };
@@ -22,6 +20,8 @@ export class FallingSun {
   cells: Cell[][];
 
   updateSunCountInLevel: (count: number) => void;
+
+  sunFallingTimer: any;
 
   constructor(
     engine: Engine,
@@ -39,36 +39,16 @@ export class FallingSun {
   }
 
   init(): void {
-    // FallingSun.isStopped = false;
-    // let timer = this.sunFallingTimer;
-    // const { delay } = this;
-    // const currentInstance: FallingSun = this;
-    // function start(): any {
-    //   timer = setTimeout(start, delay);
-    //   console.log('sun fall! +25');
-    //   const sun: ISpriteNode | IRectNode = currentInstance.createSun(78, 35);
-    //   sun.addTo(currentInstance.scene);
-    //
-    //   if (FallingSun.isStopped) {
-    //     clearTimeout(timer);
-    //     console.log('Stop sun falling');
-    //   }
-    //   return timer;
-    // }
-    let timer = this.sunFallingTimer;
     this.isStopped = false;
     const start = (): void => {
-      timer = setTimeout(start, this.delay);
-      console.log('sun fall! +25');
+      this.sunFallingTimer = setTimeout(start, this.delay);
       const sun: NodesType = this.createSun(78, 35);
       sun.addTo(this.scene);
 
       if (this.isStopped) {
-        clearTimeout(timer);
-        console.log('Stop sun falling');
+        clearTimeout(this.sunFallingTimer);
       }
-      this.sunFallingTimer = timer;
-      return timer;
+      return this.sunFallingTimer;
     };
     setTimeout(start, this.delay);
   }
@@ -84,11 +64,11 @@ export class FallingSun {
         this.engine, this.layer, sunPositionCoordinates, dh || 78, speed || 35,
       ), () => this.updateSun(sun, coordinates.y));
     this.engine.on(sun, 'click', () => {
-      // I need to redo it!!!!!!!------------------------------------------------{
       this.updateSunCountInLevel(this.sunCount.suns + 25);
-      // ---------------------------------}
       sun.destroy();
-      console.log('collect');
+      if (this.engine.getSceneNodes('scene').length === 0) {
+        sun.clearLayer();
+      }
     });
     return sun;
   }
