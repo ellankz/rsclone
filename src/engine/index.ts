@@ -213,10 +213,19 @@ export default class Engine {
       }
       const layerIdx = node.layer.nodes.indexOf(node);
       if (layerIdx !== -1) {
-        node.clearLayer();
         node.layer.nodes.splice(layerIdx, 1);
+        node.clearLayer();
       }
+      node.removeAllEvents();
     }
+
+    node.removeAllEvents = () => {
+      if (node.events.length > 0) {
+        node.events.forEach((event) => {
+          this.event.removeEvent(node, event);
+        });
+      }
+    };
 
     node.addTo = addTo.bind(this);
     node.destroy = destroy.bind(this);

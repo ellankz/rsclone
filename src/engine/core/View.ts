@@ -11,6 +11,10 @@ export default class View implements IView {
     this.layers = layers;
     this.layers.forEach((layer) => {
       const targetLayer = layer;
+      if (targetLayer.view) {
+        const idx = targetLayer.view.layers.indexOf(layer);
+        if (idx !== -1) targetLayer.view.layers.splice(idx, 1);
+      }
       targetLayer.view = this;
     });
   }
