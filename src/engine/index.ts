@@ -14,6 +14,11 @@ import {
   NodeConfig,
   NodesType,
   NodesTypeName,
+  IImageNode,
+  IRectNode,
+  ICircleNode,
+  ISpriteNode,
+  ITextNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
