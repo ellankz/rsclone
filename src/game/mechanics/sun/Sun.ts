@@ -1,7 +1,7 @@
-import Vector from '../../engine/core/Vector';
-import Engine from '../../engine';
+import Vector from '../../../engine/core/Vector';
+import Engine from '../../../engine';
 
-const sunImage = require('../../assets/sprites/sun.png');
+const sunImage = require('../../../assets/sprites/sun.png');
 
 export class Sun {
   type: string;

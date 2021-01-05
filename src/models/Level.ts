@@ -6,6 +6,7 @@ import SunCount from '../game/SunCount';
 import { LevelConfig, PlantType, ZombieConfig } from '../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
+import { FallingSun } from '../game/mechanics/falling-sun/FallingSun';
 
 export default class Level {
   private zombiesArr: Zombie[] = [];
@@ -34,6 +35,8 @@ export default class Level {
 
   private sunCounter: SunCount;
 
+  private sunFall: FallingSun;
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
@@ -49,6 +52,7 @@ export default class Level {
     this.createSunCount();
     this.createPlantCards();
     this.listenCellClicks();
+    this.startLevel();
     return this;
   }
 
@@ -115,5 +119,18 @@ export default class Level {
         });
       }
     }
+  }
+
+  startLevel() {
+    this.dropSuns();
+  }
+
+  stopLevel() {
+    this.sunFall.stop();
+  }
+
+  dropSuns() {
+    this.sunFall = new FallingSun(this.engine, this.sunCount, this.cells, this.updateSunCount);
+    this.sunFall.init();
   }
 }
