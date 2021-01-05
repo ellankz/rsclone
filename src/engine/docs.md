@@ -355,7 +355,7 @@ engine.createNode({
 - `addTo: (sceneName) => node` - принимает имя сцены и добавляет туда узел (узел может находится только на одной сцене), возвращяет этот же узел
 - `move: (Vector) => void` - принимает Vector и смещает позицию элемента на это растояние
 - `destroy: () => void` - удаляет узел из слоев и сцены
-- `clearLayer: () => void` - !(использовать осторожно, особенно если слой не обновляется) очищает слой на котором находится узел
+- `clearLayer: () => void` - очищает слой на котором находится узел и обновляет все узлы
 
 Пример
 
@@ -486,7 +486,7 @@ setTimeout(() => {
 
 1. Обновление происходит достаточно быстро, около 60 кадров в секунду
 
-2. Елементы сцены лучше хранить на одном слою
+2. Элементы сцены и статические узлы лучше хранить на разных слоях
 
 3. Не стоит задавать слоям и сценам целочиленные имена как '1', чтобы объекты перебирались в правильном порядке
 
@@ -567,7 +567,8 @@ engine.createScene('scene', function Scene() {
     if (engine.getSceneNodes('scene').length === 0) {
       console.log('scene is clear');
       engine.stop(); // if there is no nodes on the scene, stop scene
-      engine.createNode({    // win message
+      engine.createNode({
+        // win message
         type: 'TextNode',
         fontSize: 60,
         border: '1px white', // add weight to text
@@ -629,3 +630,7 @@ nodes.forEach((node) => {
 
 engine.start('scene');
 ```
+
+3. Demo: https://engine-demo3.netlify.app/
+
+Пример детально показывающий работу камеры, а также работу сцены с узлами на разных слоях
