@@ -11,9 +11,11 @@ const backgroundUrl = require('../assets/images/interface/background1.jpg');
 export default class Game {
   private engine: Engine;
 
-  private cells: Cell[][];
+  // private cells: Cell[][];
+  public cells: Cell[][];
 
-  private currentLevel: Level;
+  // private currentLevel: Level;
+  public currentLevel: Level;
 
   constructor(engine: Engine) {
     this.engine = engine;
