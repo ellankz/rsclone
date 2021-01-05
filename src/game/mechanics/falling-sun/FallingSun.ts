@@ -1,15 +1,13 @@
-import Engine from '../../engine';
 import { Sun } from '../sun/Sun';
-import Game from '../../game/index';
-import { IRectNode, ISpriteNode } from '../../engine/types';
-import Center from './types';
+import { NodesType } from '../../../engine/types';
+import Cell from '../../Cell';
+import Engine from '../../../engine';
+import Vector from '../../../engine/core/Vector';
 
 export class FallingSun {
-  delay: number;
+  delay: number = 5000;
 
   engine: Engine;
-
-  game: Game;
 
   layer: string;
 
@@ -19,13 +17,25 @@ export class FallingSun {
 
   scene: string;
 
-  constructor(engine: Engine, game: Game, delay: number, layer: string, scene: string) {
-    this.delay = delay;
+  sunCount: { suns: number; };
+
+  cells: Cell[][];
+
+  updateSunCountInLevel: (count: number) => void;
+
+  constructor(
+    engine: Engine,
+    sunCount: {suns: number},
+    cells: Cell[][],
+    updateSunCountInLevel: (count: number) => void,
+  ) {
     this.engine = engine;
-    this.layer = layer;
-    this.game = game;
-    this.scene = scene;
+    this.layer = 'main';
+    this.scene = 'scene';
     this.isStopped = false;
+    this.sunCount = sunCount;
+    this.cells = cells;
+    this.updateSunCountInLevel = updateSunCountInLevel;
   }
 
   init(): void {
@@ -50,7 +60,7 @@ export class FallingSun {
     const start = (): void => {
       timer = setTimeout(start, this.delay);
       console.log('sun fall! +25');
-      const sun: ISpriteNode | IRectNode = this.createSun(78, 35);
+      const sun: NodesType = this.createSun(78, 35);
       sun.addTo(this.scene);
 
       if (this.isStopped) {
@@ -63,8 +73,8 @@ export class FallingSun {
     setTimeout(start, this.delay);
   }
 
-  createSun(dh?: number, speed?: number):ISpriteNode | IRectNode {
-    const coordinates: Center = this.getCenter(
+  createSun(dh?: number, speed?: number):NodesType {
+    const coordinates: Vector = this.getCenter(
       FallingSun.randomInteger(0, 8),
       FallingSun.randomInteger(0, 4),
     );
@@ -75,7 +85,7 @@ export class FallingSun {
       ), () => this.updateSun(sun, coordinates.y));
     this.engine.on(sun, 'click', () => {
       // I need to redo it!!!!!!!------------------------------------------------{
-      this.game.currentLevel.updateSunCount(this.game.currentLevel.sunCount.suns + 25);
+      this.updateSunCountInLevel(this.sunCount.suns + 25);
       // ---------------------------------}
       sun.destroy();
       console.log('collect');
@@ -83,8 +93,8 @@ export class FallingSun {
     return sun;
   }
 
-  private getCenter(row: number, column: number): Center {
-    const currentCell = this.game.cells[row][column];
+  private getCenter(row: number, column: number): Vector {
+    const currentCell = this.cells[row][column];
     const position: Array<number> = [
       currentCell.getTop(),
       currentCell.getBottom(),
@@ -96,7 +106,7 @@ export class FallingSun {
     const centerX: number = position[3]
       - ((position[3] - position[2]) / FallingSun.randomInteger(1, 2));
 
-    return { x: centerX, y: centerY };
+    return this.engine.vector(centerX, centerY);
   }
 
   private updateSun(node: any, centerY: number): void {
