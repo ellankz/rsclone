@@ -1,9 +1,9 @@
 import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-
 import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
+import Shot from './Shot';
 import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
@@ -28,6 +28,10 @@ export default class Plant {
 
   public height: number;
 
+  public name: string;
+
+  public position: Vector;
+
   private engine: Engine;
 
   private frames: number;
@@ -37,6 +41,8 @@ export default class Plant {
   private node: ISpriteNode;
 
   private states: {[dynamic: string]: PlantStatesPreset};
+
+  public shotType?: string;
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -50,6 +56,7 @@ export default class Plant {
     this.frames = this.plantPresets[config.type].frames;
     this.speed = this.plantPresets[config.type].speed;
     this.states = this.plantPresets[config.type].states;
+    this.shotType = this.plantPresets[config.type].shotType;
     this.engine = engine;
   }
 
@@ -98,5 +105,22 @@ export default class Plant {
   switchState(state: string) {
     this.node.switchState(state);
     setTimeout(() => this.node.switchState('basic'), 3000);
+  }
+
+  startShooting() {
+    if (this.shotType) {
+      const shoot = () => {
+        const shot = new Shot(this.position, this.engine, this.shotType);
+        shot.draw();
+      };
+      shoot();
+      setInterval(shoot, 2000);
+    }
+  }
+
+  stopShooting() {
+    if (this.shotType) {
+      console.log(this, 'stop shooting');
+    }
   }
 }
