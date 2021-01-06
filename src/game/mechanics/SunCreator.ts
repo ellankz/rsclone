@@ -1,5 +1,10 @@
 import Engine from '../../engine';
 import { Sun } from './Sun';
+import Vector from '../../engine/core/Vector';
+
+const DESTROY_DELAY = 3000;
+const CHANGE_STATE_DELAY = 7100;
+const FLY_DELAY = 4000;
 
 export class SunCreator {
   private engine: Engine;
@@ -19,6 +24,7 @@ export class SunCreator {
     this.engine = engine;
     this.posCoordinates = posCoordinates;
     this.instance = this.createNode(layer, update);
+    this.changeAnimation(this.instance.position);
 
   //   this.engine.on(this.instance, 'click', () => {
   //     this.updateSunCountInLevel(this.sunCount.suns + SUN_COST);
@@ -34,5 +40,15 @@ export class SunCreator {
       this.engine, layer, this.posCoordinates, this.dh, this.speed,
     );
     return (update) ? this.engine.createNode(sunConfig, update) : this.engine.createNode(sunConfig);
+  }
+
+  private changeAnimation(position: Vector): void {
+    setTimeout(() => {
+      setTimeout(() => {
+        this.instance.switchState('disappear');
+        this.instance.position = position;
+        setTimeout(() => this.instance.destroy(), DESTROY_DELAY);
+      }, FLY_DELAY);
+    }, CHANGE_STATE_DELAY);
   }
 }
