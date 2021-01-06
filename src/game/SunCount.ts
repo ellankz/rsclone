@@ -45,13 +45,13 @@ export default class SunCount {
         ),
         text: this.count.suns.toString(),
         layer: 'main',
-        font: 'sans-serif',
+        font: 'regular-samdan',
         fontSize: 50,
         color: 'black',
       }) as TextNode;
 
       const sunCounter = this;
-      this.textNode.update = function upddateSunCounterText() {
+      this.textNode.update = function updateSunCounterText() {
         if (sunCounter.localCount !== sunCounter.count.suns) {
           sunCounter.localCount = sunCounter.count.suns;
           this.text = sunCounter.count.suns;

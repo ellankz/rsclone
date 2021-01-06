@@ -5,8 +5,10 @@ import { LevelConfig } from '../types';
 
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
+import LooseScene from '../models/LooseScene';
+import WinScene from '../models/WinScene';
 
-const backgroundUrl = require('../assets/images/interface/background1.jpg');
+const backgroundUrl = require('../assets/images/interface/background2.jpg');
 
 export default class Game {
   private engine: Engine;
@@ -14,6 +16,10 @@ export default class Game {
   private cells: Cell[][];
 
   private currentLevel: Level;
+
+  private loose: LooseScene;
+
+  private win: WinScene;
 
   constructor(engine: Engine) {
     this.engine = engine;
@@ -33,6 +39,15 @@ export default class Game {
     this.addBackground();
     this.createCells();
     this.createLevel(0);
+
+    document.querySelector('.loose').addEventListener('click', () => {
+      this.createLooseScene();
+    });
+
+    document.querySelector('.win').addEventListener('click', () => {
+      this.createWinScene();
+    });
+
     this.engine.start('scene');
   }
 
@@ -68,5 +83,15 @@ export default class Game {
   createLevel(levelIndex: number) {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
+  }
+
+  createLooseScene() {
+    this.loose = new LooseScene(this.engine);
+    this.loose.init();
+  }
+
+  createWinScene() {
+    this.win = new WinScene(this.engine);
+    this.win.init();
   }
 }

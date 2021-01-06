@@ -44,6 +44,10 @@ module.exports = (env) => ({
       },
     },
     {
+      test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+      type: 'asset/inline',
+    },
+    {
       test: /\.(mp3|wav)$/i,
       loader: 'file-loader',
       options: {
