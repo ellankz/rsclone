@@ -1,6 +1,10 @@
 import Engine from '../engine';
 import Vector from '../engine/core/Vector';
 
+const SHOT_OFFSET_X = 52;
+const SHOT_OFFSET_Y = 5;
+const SHOT_SPEED = 3;
+
 require.context('../assets/images/shot', true, /\.(png|jpg)$/);
 
 export default class Shot {
@@ -21,7 +25,7 @@ export default class Shot {
     image.src = `assets/images/shot/${this.type}.png`;
 
     const update = (node: any) => {
-      node.move(this.engine.vector(2.4, 0));
+      node.move(this.engine.vector(SHOT_SPEED, 0));
       if (node.position.x >= this.engine.size.x) {
         node.destroy();
       }
@@ -30,11 +34,13 @@ export default class Shot {
     image.addEventListener('load', () => {
       this.engine.createNode({
         type: 'ImageNode',
-        position: this.engine.vector(this.position.x + 52, this.position.y + 5),
+        position: this.engine.vector(
+          this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
+        ),
         size: this.engine.vector(image.width, image.height),
         layer: 'main',
         img: image,
-        dh: image.height * 1,
+        dh: image.height,
       }, update)
         .addTo('scene');
     });
