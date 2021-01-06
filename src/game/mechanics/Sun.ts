@@ -2,6 +2,7 @@ import Vector from '../../engine/core/Vector';
 import Engine from '../../engine';
 
 const sunImage = require('../../assets/sprites/sun.png');
+const sunOpacityImage = require('../../assets/sprites/sun-opacity.png');
 
 export class Sun {
   type: string;
@@ -44,5 +45,9 @@ export class Sun {
     if (dh) {
       this.dh = dh;
     }
+  }
+
+  opacitySprite() {
+    this.img = sunOpacityImage.default;
   }
 }

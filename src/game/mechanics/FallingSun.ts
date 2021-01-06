@@ -1,8 +1,18 @@
 import { Sun } from './Sun';
-import { NodesType } from '../../engine/types';
+import { IImageNode, IRectNode, NodesType } from '../../engine/types';
 import Cell from '../Cell';
 import Engine from '../../engine';
 import Vector from '../../engine/core/Vector';
+
+const sunOpacityImage = require('../../assets/sprites/sun-opacity.png');
+
+const SUN_COST = 25;
+const SUN_DH = 78;
+const SUN_ANIMATION_SPEED = 35;
+const SUN_MOVING_SPEED = 1.8;
+const SUN_INITIAL_POSITION = -80;
+const CHANGE_STATE_DELAY = 7100;
+const DESTROY_DELAY = 3000;
 
 export class FallingSun {
   delay: number = 5000;
@@ -23,6 +33,8 @@ export class FallingSun {
 
   sunFallingTimer: any;
 
+  private sunOpacity: HTMLImageElement;
+
   constructor(
     engine: Engine,
     sunCount: {suns: number},
@@ -36,15 +48,17 @@ export class FallingSun {
     this.sunCount = sunCount;
     this.cells = cells;
     this.updateSunCountInLevel = updateSunCountInLevel;
+    this.sunOpacity = new Image();
+    this.sunOpacity.src = sunOpacityImage.default;
   }
 
   init(): void {
     this.isStopped = false;
     const start = (): void => {
       this.sunFallingTimer = setTimeout(start, this.delay);
-      const sun: NodesType = this.createSun(78, 35);
+      const sun: NodesType = this.createSun(SUN_DH, SUN_ANIMATION_SPEED);
       sun.addTo(this.scene);
-
+      setTimeout(() => this.changeAnimation(sun), CHANGE_STATE_DELAY);
       if (this.isStopped) {
         clearTimeout(this.sunFallingTimer);
       }
@@ -58,13 +72,14 @@ export class FallingSun {
       FallingSun.randomInteger(0, 8),
       FallingSun.randomInteger(0, 4),
     );
-    const sunPositionCoordinates: Array<number> = [coordinates.x, 0];
+    const sunPositionCoordinates: Array<number> = [coordinates.x, SUN_INITIAL_POSITION];
+    const sunConfig: any = new Sun(
+      this.engine, this.layer, sunPositionCoordinates, dh || SUN_DH, speed || SUN_ANIMATION_SPEED,
+    );
     const sun = this.engine
-      .createNode(new Sun(
-        this.engine, this.layer, sunPositionCoordinates, dh || 78, speed || 35,
-      ), () => this.updateSun(sun, coordinates.y));
+      .createNode(sunConfig, () => this.updateSun(sun, sunConfig, coordinates.y));
     this.engine.on(sun, 'click', () => {
-      this.updateSunCountInLevel(this.sunCount.suns + 25);
+      this.updateSunCountInLevel(this.sunCount.suns + SUN_COST);
       sun.destroy();
       if (this.engine.getSceneNodes('scene').length === 0) {
         sun.clearLayer();
@@ -89,10 +104,19 @@ export class FallingSun {
     return this.engine.vector(centerX, centerY);
   }
 
-  private updateSun(node: any, centerY: number): void {
+  private updateSun(node: any, sun:any, centerY: number): void {
     if (node.position.y <= centerY) {
-      node.move(this.engine.vector(0, 1.8));
+      node.move(this.engine.vector(0, SUN_MOVING_SPEED));
     }
+  }
+
+  changeAnimation(node: any): void {
+    const newNode = node;
+    setTimeout(() => {
+      newNode.img = this.sunOpacity;
+      newNode.startFrame = 0;
+      setTimeout(() => newNode.destroy(), DESTROY_DELAY);
+    }, 5000);
   }
 
   stop(): void {
