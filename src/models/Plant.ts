@@ -61,18 +61,21 @@ export default class Plant {
     const image = new Image();
     image.src = this.image;
 
-    const statesToCreate = Object.entries(this.states).map((state) => {
-      const img = new Image();
-      img.src = state[1].image;
-      img.src = x.default;
-      const size = new Vector(state[1].width * state[1].frames, state[1].height);
-      const {
-        frames, speed, dh, positionAdjust,
-      } = state[1];
-      return [state[0], {
-        img, frames, speed, size, dh, positionAdjust,
-      }];
-    });
+    const generateStates = () => {
+      const statesArr = Object.entries(this.states).map((state) => {
+        const img = new Image();
+        img.src = state[1].image;
+        img.src = x.default;
+        const size = new Vector(state[1].width * state[1].frames, state[1].height);
+        const {
+          frames, speed, dh, positionAdjust,
+        } = state[1];
+        return [state[0], {
+          img, frames, speed, size, dh, positionAdjust,
+        }];
+      });
+      return Object.fromEntries(statesArr);
+    };
 
     const position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
@@ -88,13 +91,12 @@ export default class Plant {
       startFrame: 0,
       speed: this.speed,
       dh: this.height,
-      states: Object.fromEntries(statesToCreate),
+      states: this.states ? generateStates() : undefined,
     }).addTo('scene') as ISpriteNode;
   }
 
   switchState(state: string) {
     this.node.switchState(state);
-
     setTimeout(() => this.node.switchState('basic'), 3000);
   }
 }
