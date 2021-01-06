@@ -1,10 +1,13 @@
-import { PlantConfig, PlantPreset } from '../types';
+import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
 
 import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
+import { ISpriteNode } from '../engine/types';
+import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
+const x = require('../assets/sprites/plants/Peashooter/1.png');
 
 export default class Plant {
   private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
@@ -19,17 +22,11 @@ export default class Plant {
 
   public sunProduction: number;
 
+  public image: string;
+
   public width: number;
 
   public height: number;
-
-  public image: string;
-
-  public name: string;
-
-  public positionX: number | undefined;
-
-  public positionY: number | undefined;
 
   private engine: Engine;
 
@@ -37,20 +34,22 @@ export default class Plant {
 
   private speed: number;
 
+  private node: ISpriteNode;
+
+  private states: {[dynamic: string]: PlantStatesPreset};
+
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
     this.damage = this.plantPresets[config.type].damage;
     this.recharge = this.plantPresets[config.type].recharge;
     this.sunProduction = this.plantPresets[config.type].sunProduction;
     this.health = this.plantPresets[config.type].health;
-    this.width = this.plantPresets[config.type].width;
-    this.height = this.plantPresets[config.type].height;
     this.image = this.plantPresets[config.type].image;
-    this.name = this.plantPresets[config.type].name;
+    this.height = this.plantPresets[config.type].height;
+    this.width = this.plantPresets[config.type].width;
     this.frames = this.plantPresets[config.type].frames;
     this.speed = this.plantPresets[config.type].speed;
-    this.positionX = undefined;
-    this.positionY = undefined;
+    this.states = this.plantPresets[config.type].states;
     this.engine = engine;
   }
 
@@ -58,30 +57,46 @@ export default class Plant {
     this.health -= num;
   }
 
-  placeOnField(positionX: number, positionY: number) {
-    this.positionX = positionX;
-    this.positionY = positionY;
-  }
-
   draw(cell: Cell) {
     const image = new Image();
-    image.src = `assets/sprites/plants/${this.name}/0.png`;
-    image.addEventListener('load', () => {
-      const position = this.engine.vector(
-        cell.getLeft() + (cell.cellSize.x - (image.width / this.frames)) / 2,
-        (cell.getBottom() - image.height) - (cell.cellSize.y - image.height) / 2,
-      );
-      this.engine.createNode({
-        type: 'SpriteNode',
-        position,
-        size: this.engine.vector(image.width, image.height),
-        layer: 'main',
-        img: image,
-        frames: this.frames,
-        startFrame: 0,
-        speed: this.speed,
-        dh: image.height * 1,
-      }).addTo('scene');
-    });
+    image.src = this.image;
+
+    const generateStates = () => {
+      const statesArr = Object.entries(this.states).map((state) => {
+        const img = new Image();
+        img.src = state[1].image;
+        img.src = x.default;
+        const size = new Vector(state[1].width * state[1].frames, state[1].height);
+        const {
+          frames, speed, dh, positionAdjust,
+        } = state[1];
+        return [state[0], {
+          img, frames, speed, size, dh, positionAdjust,
+        }];
+      });
+      return Object.fromEntries(statesArr);
+    };
+
+    const position = this.engine.vector(
+      cell.getLeft() + (cell.cellSize.x - this.width) / 2,
+      (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
+    );
+    this.node = this.engine.createNode({
+      type: 'SpriteNode',
+      position,
+      size: this.engine.vector(this.width * this.frames, this.height),
+      layer: 'main',
+      img: image,
+      frames: this.frames,
+      startFrame: 0,
+      speed: this.speed,
+      dh: this.height,
+      states: this.states ? generateStates() : undefined,
+    }).addTo('scene') as ISpriteNode;
+  }
+
+  switchState(state: string) {
+    this.node.switchState(state);
+    setTimeout(() => this.node.switchState('basic'), 3000);
   }
 }

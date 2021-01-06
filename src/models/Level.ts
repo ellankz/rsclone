@@ -110,6 +110,10 @@ export default class Level {
       for (let y = 0; y < this.cells[x].length; y += 1) {
         const cell = this.cells[x][y];
         this.engine.on(cell.node, 'click', () => {
+          if (this.occupiedCells.has(cell)) {
+            const plant = this.occupiedCells.get(cell);
+            plant.switchState('attack');
+          }
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             const plant = this.createPlant(this.preparedToPlant);
             plant.draw(cell);

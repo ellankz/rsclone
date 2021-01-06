@@ -14,6 +14,7 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "lib": ["ES2019", "dom"]
   },
   "include": [
     "src"
