@@ -76,7 +76,6 @@ export default class Level {
         break;
       default: break;
     }
-    // const newPlant = new Plant({ type }, this.engine);
     this.plantsArr.push(newPlant);
     return newPlant;
   }

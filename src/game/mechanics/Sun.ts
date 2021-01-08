@@ -50,9 +50,8 @@ export class Sun {
     this.frames = 22;
     this.states = {
       live: {
-        img: this.img, // HTMLImageElement
+        img: this.img,
         frames: this.frames,
-        // speed: this.speed,
         speed: SPEED_LIVE,
         startFrame: 0,
         size: this.size,
@@ -60,19 +59,17 @@ export class Sun {
         positionAdjust: new Vector(0, 0),
       },
       disappear: {
-        img: sunOpacity, // HTMLImageElement
+        img: sunOpacity,
         frames: 22,
         speed: SPEED_DISAPPEAR,
-        // speed: this.speed,
         startFrame: 0,
         size: this.size,
         dh: this.dh,
         positionAdjust: new Vector(0, 0),
       },
       appearance: {
-        img: sunAppear, // HTMLImageElement
+        img: sunAppear,
         frames: 22,
-        // speed: this.speed,
         speed: SPEED_APPEARANCE,
         startFrame: 0,
         size: this.size,

@@ -1,7 +1,3 @@
-// import { Sun } from './Sun';
-// import {
-//   IImageNode, IRectNode, ISpriteNode, NodesType,
-// } from '../../engine/types';
 import Cell from '../Cell';
 import Engine from '../../engine';
 import Vector from '../../engine/core/Vector';
@@ -12,8 +8,6 @@ const SUN_DH = 78;
 const SUN_ANIMATION_SPEED = 35;
 const SUN_MOVING_SPEED = 1.8;
 const SUN_INITIAL_POSITION = -80;
-// const CHANGE_STATE_DELAY = 7100;
-// const DESTROY_DELAY = 3000;
 
 export class FallingSun {
   delay: number = 5000;
@@ -55,9 +49,6 @@ export class FallingSun {
       this.sunFallingTimer = setTimeout(start, this.delay);
       const sun: any = this.createSun();
       sun.addTo(this.scene);
-      // setTimeout(() => {
-      //   FallingSun.changeAnimation(sun, sun.position);
-      // }, CHANGE_STATE_DELAY);
 
       if (this.isStopped) {
         clearTimeout(this.sunFallingTimer);
@@ -80,13 +71,6 @@ export class FallingSun {
       () => this.updateSun(sun, coordinates.y),
     ).instance;
 
-    // this.engine.on(sun, 'click', () => {
-    //   this.updateSunCountInLevel(this.sunCount.suns + SUN_COST);
-    //   sun.destroy();
-    //   if (this.engine.getSceneNodes('scene').length === 0) {
-    //     sun.clearLayer();
-    //   }
-    // });
     return sun;
   }
 
@@ -111,15 +95,6 @@ export class FallingSun {
       node.move(this.engine.vector(0, SUN_MOVING_SPEED));
     }
   }
-
-  // private static changeAnimation(node: any, position: Vector): void {
-  //   const copyNode = node;
-  //   setTimeout(() => {
-  //     copyNode.switchState('disappear');
-  //     copyNode.position = position;
-  //     setTimeout(() => copyNode.destroy(), DESTROY_DELAY);
-  //   }, 5000);
-  // }
 
   stop(): void {
     this.isStopped = true;

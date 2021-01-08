@@ -23,11 +23,11 @@ export default class Cell {
     this.cellOffset = this.engine.vector(
       X_OFFSET_COEF * this.engine.size.x,
       Y_OFFSET_COEF * this.engine.size.y,
-    ); // 250, 76
+    );
     this.cellSize = this.engine.vector(
       X_SIZE_COEF * this.engine.size.x,
       Y_SIZE_COEF * this.engine.size.y,
-    ); // 81 * 100
+    );
   }
 
   public draw() {

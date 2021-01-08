@@ -26,7 +26,6 @@ export class SunCreator {
     update?: () => void) {
     this.engine = engine;
     this.posCoordinates = posCoordinates;
-    // this.instance = this.createNode(layer, update);
     this.instance = (update) ? this.createNode(layer, update) : this.createNode(layer);
     this.changeAnimation(this.instance.position);
 
@@ -46,10 +45,6 @@ export class SunCreator {
       this.engine, layer, this.posCoordinates, this.dh, this.speed,
     );
     return (update) ? this.engine.createNode(sunConfig, update) : this.engine.createNode(sunConfig);
-    // if (update) {
-    //   return this.engine.createNode(sunConfig, update);
-    // }
-    // return this.engine.createNode(sunConfig);
   }
 
   private changeAnimation(position: Vector): void {
