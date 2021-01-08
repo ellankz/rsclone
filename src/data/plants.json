@@ -8,7 +8,7 @@
     "image": "./assets/sprites/plants/PeaShooter/0.png",
     "name": "Peashooter",
     "frames": 13,
-    "speed": 140,
+    "speed": 100,
     "width": 71,
     "height": 71,
     "shotType": "green",
@@ -16,7 +16,7 @@
       "attack": {
         "image": "assets/sprites/plants/PeaShooter/1.png",
         "frames": 8,
-        "speed": 215.9,
+        "speed": 225,
         "width": 84,
         "height": 81,
         "dh": 75,

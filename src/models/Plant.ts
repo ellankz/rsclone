@@ -124,7 +124,7 @@ export default class Plant {
           shoot();
           this.shooting = window.setInterval(shoot, 1800);
         }
-      }, 600);
+      }, 700);
     }
   }
 
