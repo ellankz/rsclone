@@ -16,17 +16,14 @@ export default class SunCount {
 
   bgImage: HTMLImageElement;
 
-  updateCountInLevel: (newCount: number) => void;
-
   textNode: TextNode;
 
   localCount: number;
 
-  constructor(engine: Engine, sunCount: {suns: number}, countUpdateCB: (newCount: number) => void) {
+  constructor(engine: Engine, sunCount: {suns: number}) {
     this.count = sunCount;
     this.engine = engine;
     this.bgImage = new Image();
-    this.updateCountInLevel = countUpdateCB;
     this.localCount = sunCount.suns;
   }
 
@@ -80,7 +77,6 @@ export default class SunCount {
   }
 
   public update() {
-    this.updateCountInLevel(this.count.suns);
     this.textNode.text = this.count.suns.toString();
   }
 

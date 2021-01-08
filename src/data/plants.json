@@ -16,7 +16,7 @@
       "attack": {
         "image": "assets/sprites/plants/PeaShooter/1.png",
         "frames": 8,
-        "speed": 100,
+        "speed": 215.9,
         "width": 84,
         "height": 81,
         "dh": 75,

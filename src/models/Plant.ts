@@ -44,6 +44,8 @@ export default class Plant {
 
   public shotType?: string;
 
+  public shooting: number | null = null;
+
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
     this.damage = this.plantPresets[config.type].damage;
@@ -84,13 +86,13 @@ export default class Plant {
       return Object.fromEntries(statesArr);
     };
 
-    const position = this.engine.vector(
+    this.position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
       (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
     );
     this.node = this.engine.createNode({
       type: 'SpriteNode',
-      position,
+      position: this.position,
       size: this.engine.vector(this.width * this.frames, this.height),
       layer: 'main',
       img: image,
@@ -104,23 +106,32 @@ export default class Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
-    setTimeout(() => this.node.switchState('basic'), 3000);
+    this.startShooting();
+    setTimeout(() => {
+      this.node.switchState('basic');
+      this.stopShooting();
+    }, 3000);
   }
 
   startShooting() {
-    if (this.shotType) {
+    if (this.shotType && this.shooting === null) {
       const shoot = () => {
         const shot = new Shot(this.position, this.engine, this.shotType);
         shot.draw();
       };
-      shoot();
-      setInterval(shoot, 2000);
+      setTimeout(() => {
+        if (this.shooting === null) {
+          shoot();
+          this.shooting = window.setInterval(shoot, 1800);
+        }
+      }, 600);
     }
   }
 
   stopShooting() {
-    if (this.shotType) {
-      console.log(this, 'stop shooting');
+    if (this.shotType && this.shooting) {
+      window.clearInterval(this.shooting);
+      this.shooting = null;
     }
   }
 }

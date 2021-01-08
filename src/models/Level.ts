@@ -67,7 +67,7 @@ export default class Level {
   }
 
   private createSunCount() {
-    this.sunCounter = new SunCount(this.engine, this.sunCount, this.updateSunCount.bind(this));
+    this.sunCounter = new SunCount(this.engine, this.sunCount);
     this.sunCounter.draw();
   }
 
