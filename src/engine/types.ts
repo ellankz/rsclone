@@ -1,14 +1,19 @@
 export interface Engine {
   size: IVector;
   canvasOffset: IVector;
-  layers: { [key: string]: ILayer };
+  screens: { [name: string]: ILayer[] };
+  activeScreen: string;
+  layers: { [name: string]: ILayer };
   container: HTMLElement;
 
   vector: (x?: number, y?: number) => IVector;
 
-  init: (_box: string | HTMLElement, layersConfig?: string[]) => void;
+  init: (_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) => void;
   start: (name: string) => void;
   stop: () => void;
+
+  createScreen: (name: string, layersNames: string[]) => void;
+  setScreen: (name: string) => void;
 
   createLayer: (name: string, index: number) => void;
   getLayer: (name: string) => ILayer;
@@ -95,7 +100,7 @@ export interface SpriteStatesConfig {
     startFrame?: number;
     positionAdjust?: IVector;
     size?: IVector;
-  }
+  };
 }
 
 export interface ISpriteNode extends INode {
@@ -134,6 +139,10 @@ export interface ILayer {
   offset: IVector;
   view: IView;
   nodes: NodesType[];
+  screen: string;
+
+  toTop: (n?: number) => void;
+  toBack: (n?: number) => void;
 
   drawRect: (RectConfig: any) => void;
   drawCircle: (CircleConfig: any) => void;
