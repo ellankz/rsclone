@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -47,7 +46,11 @@ module.exports = (env) => ({
       test: /\.(mp3|wav)$/i,
       loader: 'file-loader',
       options: {
-        name: 'audio/[name].[ext]',
+        name: '[path][name].[ext]',
+        outputPath: (file) => {
+          const audioPath = file.split('src/')[1];
+          return audioPath;
+        },
       },
     }, {
       test: /\.(ts|tsx)$/,

@@ -5,6 +5,7 @@ import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
+import { AudioPlayer } from '../game/AudioPlayer';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
 const x = require('../assets/sprites/plants/Peashooter/1.png');
@@ -55,6 +56,11 @@ export default class Plant {
 
   reduceHealth(num: number) {
     this.health -= num;
+  }
+
+  putOnField(cell: Cell) {
+    this.draw(cell);
+    AudioPlayer.playSound('plant');
   }
 
   draw(cell: Cell) {

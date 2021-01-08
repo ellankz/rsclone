@@ -104,7 +104,7 @@ export default class Level {
           }
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             const plant = this.createPlant(this.preparedToPlant);
-            plant.draw(cell);
+            plant.putOnField(cell);
 
             this.occupiedCells.set(cell, plant);
 
