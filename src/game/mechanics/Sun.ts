@@ -4,6 +4,11 @@ import { SpriteStatesConfig } from '../../engine/types';
 
 const sunImage = require('../../assets/sprites/sun.png');
 const sunOpacityImage = require('../../assets/sprites/sun-opacity.png');
+const sunAppearImage = require('../../assets/sprites/sun-appearance.png');
+
+const SPEED_APPEARANCE = 1;
+const SPEED_LIVE = 35;
+const SPEED_DISAPPEAR = 35;
 
 export class Sun {
   type: string;
@@ -40,12 +45,15 @@ export class Sun {
     this.img.src = sunImage.default;
     const sunOpacity: HTMLImageElement = new Image();
     sunOpacity.src = sunOpacityImage.default;
+    const sunAppear: HTMLImageElement = new Image();
+    sunAppear.src = sunAppearImage.default;
     this.frames = 22;
     this.states = {
       live: {
         img: this.img, // HTMLImageElement
         frames: this.frames,
-        speed: this.speed,
+        // speed: this.speed,
+        speed: SPEED_LIVE,
         startFrame: 0,
         size: this.size,
         dh: this.dh,
@@ -54,7 +62,18 @@ export class Sun {
       disappear: {
         img: sunOpacity, // HTMLImageElement
         frames: 22,
-        speed: this.speed,
+        speed: SPEED_DISAPPEAR,
+        // speed: this.speed,
+        startFrame: 0,
+        size: this.size,
+        dh: this.dh,
+        positionAdjust: new Vector(0, 0),
+      },
+      appearance: {
+        img: sunAppear, // HTMLImageElement
+        frames: 22,
+        // speed: this.speed,
+        speed: SPEED_APPEARANCE,
         startFrame: 0,
         size: this.size,
         dh: this.dh,

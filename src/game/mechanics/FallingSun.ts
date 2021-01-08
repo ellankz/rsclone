@@ -74,16 +74,19 @@ export class FallingSun {
     );
     const sunPositionCoordinates: Array<number> = [coordinates.x, SUN_INITIAL_POSITION];
     const sun: any = new SunCreator(
-      this.engine, sunPositionCoordinates, this.layer, () => this.updateSun(sun, coordinates.y),
+      this.engine, sunPositionCoordinates,
+      this.layer, this.updateSunCountInLevel,
+      this.sunCount,
+      () => this.updateSun(sun, coordinates.y),
     ).instance;
 
-    this.engine.on(sun, 'click', () => {
-      this.updateSunCountInLevel(this.sunCount.suns + SUN_COST);
-      sun.destroy();
-      if (this.engine.getSceneNodes('scene').length === 0) {
-        sun.clearLayer();
-      }
-    });
+    // this.engine.on(sun, 'click', () => {
+    //   this.updateSunCountInLevel(this.sunCount.suns + SUN_COST);
+    //   sun.destroy();
+    //   if (this.engine.getSceneNodes('scene').length === 0) {
+    //     sun.clearLayer();
+    //   }
+    // });
     return sun;
   }
 
