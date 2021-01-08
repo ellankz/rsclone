@@ -1,3 +1,4 @@
+import { time } from 'console';
 import Engine from '../engine';
 
 const audioUrl = require('../assets/audio/winmusic.mp3');
@@ -19,9 +20,11 @@ export default class WinScene {
   }
 
   private createAnimation() {
+    const INTERVAL = 0.005;
+
     this.engine.createScene('animation');
     let opacity = 0;
-    let timeInterval = 0.003;
+    let timeInterval = INTERVAL;
 
     const bg: any = this.engine.createNode({
       type: 'RectNode',
@@ -33,16 +36,23 @@ export default class WinScene {
     }, () => {
       opacity += timeInterval;
       bg.color = `rgba(255, 255, 255, ${opacity})`;
-      if (opacity > 1) timeInterval *= -2;
+
+      if (opacity >= 1.1) {
+        this.engine.stop();
+        opacity = 1;
+        timeInterval = -(INTERVAL);
+        this.engine.start('animation');
+      }
+      if (opacity < 0.001) {
+        this.engine.stop();
+        timeInterval = INTERVAL;
+        bg.destroy();
+        bg.clearLayer();
+      }
     }).addTo('animation');
 
-    if (timeInterval < 0) {
-        timeInterval = 0;
-        this.engine.stop();
-    } else {
-        this.engine.stop();
-        this.engine.start('animation');    
-    }
+    this.engine.stop();
+    this.engine.start('animation');
   }
 
   private createWinSound() {

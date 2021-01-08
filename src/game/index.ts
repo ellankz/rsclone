@@ -7,6 +7,7 @@ import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LooseScene from '../models/LooseScene';
 import WinScene from '../models/WinScene';
+import ModalWindow from './ModalWindow';
 
 const backgroundUrl = require('../assets/images/interface/background2.jpg');
 
@@ -20,6 +21,8 @@ export default class Game {
   private loose: LooseScene;
 
   private win: WinScene;
+
+  private modalWindow: ModalWindow;
 
   constructor(engine: Engine) {
     this.engine = engine;
@@ -46,6 +49,10 @@ export default class Game {
 
     document.querySelector('.win').addEventListener('click', () => {
       this.createWinScene();
+    });
+
+    document.querySelector('.pause').addEventListener('click', () => {
+      this.createPauseScene();
     });
 
     this.engine.start('scene');
@@ -93,5 +100,10 @@ export default class Game {
   createWinScene() {
     this.win = new WinScene(this.engine);
     this.win.init();
+  }
+
+  createPauseScene() {
+    this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');
+    this.modalWindow.draw();
   }
 }
