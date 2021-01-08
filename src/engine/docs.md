@@ -479,7 +479,50 @@ setTimeout(() => {
   border?: string
 }
 ```
+##### Смена состояний спрайта
+Все состояния спрайта задаются в момент создания узла.
 
+Дополнительные состояния можно задать в поле states:
+``` javascript
+  const statesToCreate = {
+   attack: {
+        img, // HTMLImageElement 
+        frames: 3,
+        speed: 100,
+        size: new Vector(70, 70),
+        dh: 80,
+        positionAdjust: new Vector(-10, 0)
+      }
+    };
+
+  const node = this.engine.createNode({
+    type: 'SpriteNode',
+    position: new Vector(600, 700),
+    size: new Vector(this.width * this.frames, this.height),
+    layer: 'main',
+    img: image, // HTMLImageElement 
+    frames: this.frames,
+    startFrame: 0,
+    speed: this.speed,
+    dh: this.height,
+    states: statesToCreate,
+  }).addTo('scene') as ISpriteNode;
+```
+Поле states принимает объект с ключем - название состояния ('attack') и значением - объект типа SpriteStatesConfig:
+
+``` javascript
+interface SpriteStatesConfig {
+  [dynamic: string]: { // название состояния, изначальное состояние сохранается с ключем basic
+    img: HTMLImageElement;
+    frames: number; 
+    speed?: number;
+    dh?: number;
+    startFrame?: number;
+    positionAdjust?: IVector; // отклонение позиции от изначальной
+    size?: IVector;
+  }
+}
+```
 ---
 
 ## Notes

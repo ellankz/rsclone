@@ -36,7 +36,7 @@ export type NodesTypeName =
   | 'TextNode'
   | 'ImageNode'
   | 'SpriteNode';
-export type NodesType = IRectNode | ICircleNode | ITextNode | ISpriteNode;
+export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode;
 
 export interface INode {
   position: IVector;
@@ -89,6 +89,18 @@ export interface IImageNode extends INode {
   draw: () => void;
 }
 
+export interface SpriteStatesConfig {
+  [dynamic: string]: {
+    img: HTMLImageElement;
+    frames: number;
+    speed?: number;
+    dh?: number;
+    startFrame?: number;
+    positionAdjust?: IVector;
+    size?: IVector;
+  }
+}
+
 export interface ISpriteNode extends INode {
   img: HTMLImageElement;
   dh: number;
@@ -103,6 +115,7 @@ export interface ISpriteNode extends INode {
 
   draw: () => void;
   innerUpdate: () => void;
+  switchState: (state: string) => void;
 }
 
 export interface IScene {
@@ -177,6 +190,7 @@ export interface SpriteNodeConfig extends NodeConfig {
   frames: number;
   startFrame?: number;
   speed?: number;
+  states: SpriteStatesConfig;
 }
 
 export interface RectConfig {

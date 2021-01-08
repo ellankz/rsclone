@@ -25,9 +25,24 @@ export interface PlantPreset {
   height: number;
   image: string;
   name: string;
+  frames: number;
+  speed: number;
+  states?: {[dynamic: string]: PlantStatesPreset}
 }
 
-export type PlantType = 'sunflower' | 'peashooter';
+export interface PlantStatesPreset {
+  image: string,
+  frames: number,
+  speed: number;
+  width: number;
+  height: number;
+  dh: number;
+  positionAdjust: {
+    x: number, y: number
+  }
+}
+
+export type PlantType = 'SunFlower' | 'Peashooter';
 
 export interface PlantConfig {
   type: PlantType;

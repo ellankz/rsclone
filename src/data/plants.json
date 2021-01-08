@@ -1,24 +1,42 @@
 {
-  "peashooter": {
+  "Peashooter": {
     "cost": 100,
     "damage": 20,
     "recharge": 2,
     "sunProduction": 0,
     "health": 100,
-    "width": 70,
-    "height": 70,
-    "image": "./assets/images/peashooter.png",
-    "name": "peashooter"
+    "image": "./assets/sprites/plants/PeaShooter/0.png",
+    "name": "Peashooter",
+    "frames": 13,
+    "speed": 100,
+    "width": 71,
+    "height": 71,
+    "states": {
+      "attack": {
+        "image": "assets/sprites/plants/PeaShooter/1.png",
+        "frames": 8,
+        "speed": 100,
+        "width": 84,
+        "height": 81,
+        "dh": 75,
+        "positionAdjust": {
+          "x": -5,
+          "y": 0
+        }
+      }
+    }
   },
-  "sunflower": {
+  "SunFlower": {
     "cost": 50,
     "damage": 0,
     "recharge": 25,
     "sunProduction": 50,
     "health": 100,
-    "width": 60,
-    "height": 70,
-    "image": "./assets/images/sunflower.png",
-    "name": "peashooter"
+    "width": 73,
+    "height": 74,
+    "image": "assets/sprites/plants/SunFlower/0.png",
+    "name": "SunFlower",
+    "frames": 18,
+    "speed": 70
   }
 }
