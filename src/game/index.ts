@@ -43,18 +43,11 @@ export default class Game {
     this.createCells();
     this.createLevel(0);
 
-    document.querySelector('.loose').addEventListener('click', () => {
-      this.createLooseScene();
-    });
+    // удалить!! 
+    this.addEventListeners();
 
-    document.querySelector('.win').addEventListener('click', () => {
-      this.createWinScene();
-    });
-
-    document.querySelector('.pause').addEventListener('click', () => {
-      this.createPauseScene();
-    });
-
+    // this.createLooseScene();
+    // this.createPauseScene();
     this.engine.start('scene');
   }
 
@@ -90,6 +83,25 @@ export default class Game {
   createLevel(levelIndex: number) {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
+  }
+
+  // удалить!!
+  addEventListeners() {
+    document.querySelector('.loose').addEventListener('click', () => {
+      setTimeout(() => {
+        this.createLooseScene();
+      }, 0) 
+    });
+
+    document.querySelector('.win').addEventListener('click', () => {
+      this.createWinScene();
+    });
+
+    document.querySelector('.pause').addEventListener('click', () => {
+      setTimeout(() => {
+        this.createPauseScene();
+      })
+    });
   }
 
   createLooseScene() {

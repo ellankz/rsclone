@@ -34,43 +34,45 @@ export default class ModalWindow {
 
   public draw() {
     this.drawBG();
+    this.drawButton(); 
     this.drawText();
-    this.drawButton();
     this.drawTextButton();
-    this.addEventListenerToButton();
+    this.addEventListenerToButton(); 
   }
 
   private drawText() {
-    this.bgImage.addEventListener('load', () => {
-      if (this.modalWindowText === 'game paused') {
-        this.textNode = this.engine.createNode({
-          type: 'TextNode',
-          position: this.engine.vector(
-            (this.engine.size.x / 2) - 70,
-            (this.engine.size.y / 2) - 40,
-          ),
-          text: this.modalWindowText,
-          layer: 'top',
-          font: 'regular-samdan',
-          fontSize: 50,
-          color: '#d9bc6b',
-        }) as TextNode;
-      }
-
-      if (this.modalWindowText === 'game over') {
-        this.textNode = this.engine.createNode({
-          type: 'TextNode',
-          position: this.engine.vector(
-            (this.engine.size.x / 2) - 50,
-            (this.engine.size.y / 2) - 40,
-          ),
-          text: this.modalWindowText,
-          layer: 'top',
-          font: 'regular-samdan',
-          fontSize: 50,
-          color: '#d9bc6b',
-        }) as TextNode;
-      }
+      this.bgImage.addEventListener('load', () => {
+       this.button.addEventListener('load', () => {
+        if (this.modalWindowText === 'game paused') {
+          this.textNode = this.engine.createNode({
+            type: 'TextNode',
+            position: this.engine.vector(
+              (this.engine.size.x / 2) - 70,
+              (this.engine.size.y / 2) - 40,
+            ),
+            text: this.modalWindowText,
+            layer: 'top',
+            font: 'regular-samdan',
+            fontSize: 50,
+            color: '#d9bc6b',
+          }) as TextNode;
+        }
+  
+        if (this.modalWindowText === 'game over') {
+          this.textNode = this.engine.createNode({
+            type: 'TextNode',
+            position: this.engine.vector(
+              (this.engine.size.x / 2) - 50,
+              (this.engine.size.y / 2) - 40,
+            ),
+            text: this.modalWindowText,
+            layer: 'top',
+            font: 'regular-samdan',
+            fontSize: 50,
+            color: '#d9bc6b',
+          }) as TextNode;
+        }
+      })
     });
   }
 
@@ -97,7 +99,7 @@ export default class ModalWindow {
   private drawButton() {
     this.button.src = buttonUrl.default;
 
-    this.bgImage.addEventListener('load', () => {
+   this.bgImage.addEventListener('load', () => {
       this.buttonNode = this.engine.createNode(
         {
           type: 'ImageNode',
@@ -115,8 +117,8 @@ export default class ModalWindow {
   }
 
   private drawTextButton() {
-    this.bgImage.addEventListener('load', () => {
-      this.button.addEventListener('load', () => {
+     this.bgImage.addEventListener('load', () => {
+       this.button.addEventListener('load', () => {
         if (this.textOnTheButton === 'resume game') {
           this.textNodeButton = this.engine.createNode({
             type: 'TextNode',
@@ -148,7 +150,7 @@ export default class ModalWindow {
             border: '1px solid black',
           }) as TextNode;
         }
-      });
+     });
     });
   }
 
@@ -168,6 +170,5 @@ export default class ModalWindow {
     this.textNodeButton.destroy();
     this.bgNode.destroy();
     this.buttonNode.destroy();
-    this.textNode.clearLayer();
   }
 }

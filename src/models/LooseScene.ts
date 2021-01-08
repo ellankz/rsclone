@@ -23,7 +23,7 @@ export default class LooseScene {
     this.createLooseMessage();
     setTimeout(() => {
       this.createModalWindow();
-    }, 5500);
+    }, 5100);
 
     return this;
   }
@@ -57,26 +57,26 @@ export default class LooseScene {
           message.dh += 10;
           message.dw += 20;
         } else {
-          randomNumberOne = getRandomNumber(-2, 2);
-          randomNumberTwo = getRandomNumber(-2, 2);
+          randomNumberOne = getRandomNumber(-1, 1);
+          randomNumberTwo = getRandomNumber(-1, 1);
 
           frames += 1;
 
-          if (frames % 5 === 0) {
+          if (frames % 6 === 0) {
             message.position = this.engine.vector(
               (this.engine.size.x / 2) - message.dh / 2 - randomNumberOne,
               (this.engine.size.y / 2) - message.dh / 2 + 70 - randomNumberTwo,
             );
           }
           if (frames > 60) frames = 0;
-
-          setTimeout(() => {
-            message.destroy();
-            message.clearLayer();
-          }, 5000);
         }
       },
     ).addTo('animation');
+
+    setTimeout(() => {
+      message.destroy();
+      message.clearLayer();
+    }, 5000);
 
     this.engine.stop();
     this.engine.start('animation');
