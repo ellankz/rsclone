@@ -1,7 +1,5 @@
 import Vector from '../core/Vector';
-import {
-  ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig,
-} from '../types';
+import { ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig } from '../types';
 import Node from './Node';
 
 export default class SpriteNode extends Node implements ISpriteNode {
@@ -59,16 +57,16 @@ export default class SpriteNode extends Node implements ISpriteNode {
       positionAdjust: new Vector(0, 0),
       size: this.size,
     };
+
+    setInterval(() => {
+      this.animation = false;
+    }, this.speed);
   }
 
   public innerUpdate() {
     if (this.animation) return;
     this.srcX = (this.srcX + this.frameW) % this.size.x;
     this.animation = true;
-
-    setTimeout(() => {
-      this.animation = false;
-    }, this.speed);
   }
 
   public draw() {
