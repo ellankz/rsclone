@@ -23,7 +23,7 @@ export default class Game {
   public init() {
     const { engine } = this;
     engine.createView(['back', 'main', 'static-main']);
-    engine.getLayer('main').view.move(engine.vector(110, 0));
+    engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
         // code
@@ -39,13 +39,13 @@ export default class Game {
   addBackground() {
     const image = new Image();
     image.src = backgroundUrl.default;
-
+    // debugger;
     this.engine
       .createNode(
         {
           type: 'ImageNode',
           position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + 400, this.engine.size.y),
+          size: this.engine.vector(this.engine.size.x + 370, this.engine.size.y),
           layer: 'back',
           img: image,
           dh: this.engine.size.y,

@@ -37,8 +37,8 @@ export default class SunCount {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.5,
-          this.engine.size.y * TOP_OFFSET_COEF * 2,
+          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.7,
+          this.engine.size.y * TOP_OFFSET_COEF * 2.4,
         ),
         text: this.count.suns.toString(),
         layer: 'static-main',
