@@ -3,14 +3,12 @@ import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
-import Shot from './Shot';
 import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
-const x = require('../assets/sprites/plants/Peashooter/1.png');
 
 export default class Plant {
-  private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
+  protected plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
 
   public cost: number;
 
@@ -58,7 +56,6 @@ export default class Plant {
     this.frames = this.plantPresets[config.type].frames;
     this.speed = this.plantPresets[config.type].speed;
     this.states = this.plantPresets[config.type].states;
-    this.shotType = this.plantPresets[config.type].shotType;
     this.engine = engine;
   }
 
@@ -105,32 +102,5 @@ export default class Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
-    this.startShooting();
-    setTimeout(() => {
-      this.node.switchState('basic');
-      this.stopShooting();
-    }, 3000);
-  }
-
-  startShooting() {
-    if (this.shotType && this.shooting === null) {
-      const shoot = () => {
-        const shot = new Shot(this.position, this.engine, this.shotType);
-        shot.draw();
-      };
-      setTimeout(() => {
-        if (this.shooting === null) {
-          shoot();
-          this.shooting = window.setInterval(shoot, 1800);
-        }
-      }, 700);
-    }
-  }
-
-  stopShooting() {
-    if (this.shotType && this.shooting) {
-      window.clearInterval(this.shooting);
-      this.shooting = null;
-    }
   }
 }

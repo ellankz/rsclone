@@ -7,7 +7,8 @@ import { LevelConfig, PlantType, ZombieConfig } from '../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
-import { SunFlower } from './SunFlower';
+import { SunFlower } from './plants/SunFlower';
+import { Peashooter } from './plants/Peashooter';
 
 export default class Level {
   private zombiesArr: Zombie[] = [];
@@ -72,9 +73,11 @@ export default class Level {
         newPlant = new SunFlower(this.engine, this.updateSunCount.bind(this), this.sunCount);
         break;
       case 'Peashooter':
+        newPlant = new Peashooter({ type }, this.engine);
+        break;
+      default:
         newPlant = new Plant({ type }, this.engine);
         break;
-      default: break;
     }
     this.plantsArr.push(newPlant);
     return newPlant;

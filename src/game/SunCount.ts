@@ -74,16 +74,4 @@ export default class SunCount {
       this.textNode.text = this.count.suns.toString();
     }
   }
-
-  public addSunCount(number: number) {
-    this.count.suns += number;
-    this.update();
-    return this.count;
-  }
-
-  public substractSunCount(number: number) {
-    this.count.suns -= number;
-    this.update();
-    return this.count;
-  }
 }
