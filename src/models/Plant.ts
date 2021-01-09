@@ -28,15 +28,15 @@ export default class Plant {
 
   public height: number;
 
-  private engine: Engine;
+  protected engine: Engine;
 
-  private frames: number;
+  protected frames: number;
 
-  private speed: number;
+  protected speed: number;
 
-  private node: ISpriteNode;
+  protected node: ISpriteNode;
 
-  private states: {[dynamic: string]: PlantStatesPreset};
+  protected states: {[dynamic: string]: PlantStatesPreset};
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -65,7 +65,6 @@ export default class Plant {
       const statesArr = Object.entries(this.states).map((state) => {
         const img = new Image();
         img.src = state[1].image;
-        img.src = x.default;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,

@@ -49,14 +49,6 @@ export default class SunCount {
         fontSize: 50,
         color: 'black',
       }) as TextNode;
-
-      const sunCounter = this;
-      this.textNode.update = function upddateSunCounterText() {
-        if (sunCounter.localCount !== sunCounter.count.suns) {
-          sunCounter.localCount = sunCounter.count.suns;
-          this.text = sunCounter.count.suns;
-        }
-      };
     });
   }
 
@@ -80,19 +72,10 @@ export default class SunCount {
   }
 
   public update() {
-    this.updateCountInLevel(this.count.suns);
-    this.textNode.text = this.count.suns.toString();
-  }
-
-  public addSunCount(number: number) {
-    this.count.suns += number;
-    this.update();
-    return this.count;
-  }
-
-  public substractSunCount(number: number) {
-    this.count.suns -= number;
-    this.update();
-    return this.count;
+    if (this.localCount !== this.count.suns) {
+      this.localCount = this.count.suns;
+      this.updateCountInLevel(this.count.suns);
+      this.textNode.text = this.count.suns.toString();
+    }
   }
 }
