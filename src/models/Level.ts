@@ -45,10 +45,11 @@ export default class Level {
   }
 
   public init() {
-    this.zombiesArr = this.zombiesConfig.map((configItem) => new Zombie(configItem));
+    this.zombiesArr = this.zombiesConfig.map((configItem) => new Zombie(configItem, this.engine));
     this.createSunCount();
     this.createPlantCards();
     this.listenCellClicks();
+    this.createZombies();
     return this;
   }
 
@@ -64,6 +65,27 @@ export default class Level {
     const newPlant = new Plant({ type }, this.engine);
     this.plantsArr.push(newPlant);
     return newPlant;
+  }
+
+  public createZombies() {
+    const MS = 1000;
+
+    function getRandomNumber(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
+      let newZombie;
+      let cell;
+      let row;
+      setTimeout(() => {
+        row = getRandomNumber(0, ROWS_NUM);
+        newZombie = new Zombie(this.zombiesConfig[i], this.engine);
+        this.zombiesArr.push(newZombie);
+        cell = this.cells[COLS_NUM - 1][row];
+        newZombie.draw(cell);
+      }, this.zombiesConfig[i].startDelay * MS);
+    }
   }
 
   private createSunCount() {

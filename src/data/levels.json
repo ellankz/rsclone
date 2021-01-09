@@ -2,20 +2,22 @@
   {
     "zombies": [{
       "type": "basic",
-      "startDelay": 50,
-      "row": 3
+      "startDelay": 7
     }, {
       "type": "basic",
-      "startDelay": 120,
-      "row": 1
+      "startDelay": 37
     }, {
       "type": "basic",
-      "startDelay": 155,
-      "row": 5
+      "startDelay": 62
     }, {
       "type": "basic",
-      "startDelay": 30,
-      "row": 2
+      "startDelay": 96
+    }, {
+      "type": "basic",
+      "startDelay": 112
+    }, {
+      "type": "basic",
+      "startDelay": 120
     }
     ],
     "plantTypes": [

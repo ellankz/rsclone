@@ -1,10 +1,25 @@
 {
   "basic": {
-    "speed": 5,
+    "speed": 150,
     "health": 190,
-    "width": 60,
-    "height": 100,
-    "image": "./assets/images/zombie.png",
-    "name": "basic"
+    "width": 94,
+    "height": 126,
+    "frames": 22,
+    "image": "assets/sprites/zombies/basic/1.png",
+    "name": "basic",
+    "states": {
+      "attack": {
+        "image": "assets/sprites/zombies/basic/2.png",
+        "frames": 21,
+        "speed": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
+        "positionAdjust": {
+          "x": -10,
+          "y": 10
+        }
+      }
+    }
   }
 }

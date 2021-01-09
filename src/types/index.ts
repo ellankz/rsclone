@@ -5,6 +5,20 @@ export interface ZombiePreset {
   height: number;
   image: string;
   name: string;
+  frames: number;
+  states?: {[dynamic: string]: ZombiesStatesPreset}
+}
+
+export interface ZombiesStatesPreset {
+  image: string,
+  frames: number,
+  speed: number;
+  width: number;
+  height: number;
+  dh: number;
+  positionAdjust: {
+    x: number, y: number
+  }
 }
 
 export type ZombieType = 'basic' | 'cone' | 'bucket';

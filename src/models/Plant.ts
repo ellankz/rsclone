@@ -81,6 +81,7 @@ export default class Plant {
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
       (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
     );
+
     this.node = this.engine.createNode({
       type: 'SpriteNode',
       position,
