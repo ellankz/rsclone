@@ -1,7 +1,7 @@
-import Plant from './Plant';
-import Engine from '../engine';
-import { SunCreator } from '../game/mechanics/SunCreator';
-import Cell from '../game/Cell';
+import Plant from '../Plant';
+import Engine from '../../engine';
+import { SunCreator } from '../../game/mechanics/SunCreator';
+import Cell from '../../game/Cell';
 
 const SUN_REPRODUCTION = 11000;
 const SUN_APPEARANCE_STATE = 350;

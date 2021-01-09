@@ -1,4 +1,4 @@
-export const LEFT_CAMERA_OFFSET_COEF = 0.13;
+export const LEFT_CAMERA_OFFSET_COEF = 0.01;
 
 export const SUN_COUNT_WIDTH_COEF = 0.134;
 export const SUN_COUNT_HEIGHT_COEF = 0.057;

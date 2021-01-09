@@ -1,5 +1,7 @@
 import Vector from '../core/Vector';
-import { ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig } from '../types';
+import {
+  ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig,
+} from '../types';
 import Node from './Node';
 
 export default class SpriteNode extends Node implements ISpriteNode {
@@ -22,6 +24,8 @@ export default class SpriteNode extends Node implements ISpriteNode {
   startFrame: number;
 
   speed: number;
+
+  interval: number;
 
   private animation = false;
 
@@ -58,7 +62,11 @@ export default class SpriteNode extends Node implements ISpriteNode {
       size: this.size,
     };
 
-    setInterval(() => {
+    this.animate();
+  }
+
+  private animate() {
+    this.interval = window.setInterval(() => {
       this.animation = false;
     }, this.speed);
   }
@@ -100,6 +108,9 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.size = state.size || this.size;
     this.startFrame = state.startFrame || 0;
     this.speed = state.speed || this.speed;
+
+    window.clearInterval(this.interval);
+    this.animate();
 
     this.frameW = this.size.x / this.frames;
     this.frameH = this.size.y;

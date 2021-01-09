@@ -16,17 +16,14 @@ export default class SunCount {
 
   bgImage: HTMLImageElement;
 
-  updateCountInLevel: (newCount: number) => void;
-
   textNode: TextNode;
 
   localCount: number;
 
-  constructor(engine: Engine, sunCount: {suns: number}, countUpdateCB: (newCount: number) => void) {
+  constructor(engine: Engine, sunCount: {suns: number}) {
     this.count = sunCount;
     this.engine = engine;
     this.bgImage = new Image();
-    this.updateCountInLevel = countUpdateCB;
     this.localCount = sunCount.suns;
   }
 
@@ -40,8 +37,8 @@ export default class SunCount {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.5,
-          this.engine.size.y * TOP_OFFSET_COEF * 2,
+          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.7,
+          this.engine.size.y * TOP_OFFSET_COEF * 2.4,
         ),
         text: this.count.suns.toString(),
         layer: 'main',
@@ -74,7 +71,6 @@ export default class SunCount {
   public update() {
     if (this.localCount !== this.count.suns) {
       this.localCount = this.count.suns;
-      this.updateCountInLevel(this.count.suns);
       this.textNode.text = this.count.suns.toString();
     }
   }
