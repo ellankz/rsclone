@@ -1,5 +1,10 @@
 import Vector from '../core/Vector';
-import { ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig } from '../types';
+import {
+  ISpriteNode,
+  SpriteNodeConfig,
+  NodesType,
+  SpriteStatesConfig,
+} from '../types';
 import Node from './Node';
 
 export default class SpriteNode extends Node implements ISpriteNode {
