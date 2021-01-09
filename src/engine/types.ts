@@ -51,10 +51,13 @@ export interface INode {
   sceneName: string;
   border?: string;
 
+  events: [string, (e: any) => void][];
+
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
   update?: (node: NodesType) => void;
   destroy: () => void;
+  removeAllEvents: () => void;
   clearLayer: () => void;
 }
 

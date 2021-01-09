@@ -4,8 +4,15 @@ import Vector from './Vector';
 export default class Event {
   offset: IVector;
 
+  removeEvent: (node: NodesType, event: [string, (e: any) => void]) => void;
+
   constructor(offset: IVector) {
     this.offset = offset;
+
+    this.removeEvent = (node: NodesType, event: [string, (e: any) => void]) => {
+      node.layer.canvas.removeEventListener(event[0], event[1]);
+      node.events.splice(node.events.indexOf(event), 1);
+    };
   }
 
   handle(node: NodesType, event: string, callback: (e: any) => void) {
@@ -26,7 +33,7 @@ export default class Event {
       return xAxis && yAxis;
     }
 
-    node.layer.canvas.addEventListener('click', (e) => {
+    const func = (e: any) => {
       const pos = new Vector(
         node.position.x - node.layer.view.position.x,
         node.position.y - node.layer.view.position.y,
@@ -36,6 +43,10 @@ export default class Event {
 
       const isInside = isPointInside(point, pos, size);
       if (isInside) callback(e);
-    });
+    };
+
+    node.events.push(['click', func]);
+
+    node.layer.canvas.addEventListener('click', func);
   }
 }
