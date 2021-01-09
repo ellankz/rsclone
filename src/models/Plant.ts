@@ -1,13 +1,14 @@
 import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-
 import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 
+require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
+
 export default class Plant {
-  private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
+  protected plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
 
   public cost: number;
 
@@ -25,15 +26,19 @@ export default class Plant {
 
   public height: number;
 
-  private engine: Engine;
+  public name: string;
 
-  private frames: number;
+  public position: Vector;
 
-  private speed: number;
+  protected engine: Engine;
 
-  private node: ISpriteNode;
+  protected frames: number;
 
-  private states: {[dynamic: string]: PlantStatesPreset};
+  protected speed: number;
+
+  protected node: ISpriteNode;
+
+  protected states: {[dynamic: string]: PlantStatesPreset};
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -72,13 +77,13 @@ export default class Plant {
       return Object.fromEntries(statesArr);
     };
 
-    const position = this.engine.vector(
+    this.position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
       (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
     );
     this.node = this.engine.createNode({
       type: 'SpriteNode',
-      position,
+      position: this.position,
       size: this.engine.vector(this.width * this.frames, this.height),
       layer: 'main',
       img: image,
@@ -92,6 +97,5 @@ export default class Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
-    setTimeout(() => this.node.switchState('basic'), 3000);
   }
 }
