@@ -21,7 +21,7 @@ export interface ZombiesStatesPreset {
   }
 }
 
-export type ZombieType = 'basic' | 'cone' | 'bucket';
+export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket';
 
 export interface ZombieConfig {
   type: ZombieType;

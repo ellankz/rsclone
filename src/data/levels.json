@@ -1,16 +1,16 @@
 [
   {
     "zombies": [{
-      "type": "cone",
-      "startDelay": 3
+      "type": "basic_2",
+      "startDelay": 1
     }, {
-      "type": "bucket",
-      "startDelay": 20
+      "type": "cone",
+      "startDelay": 17
     }, {
       "type": "basic",
       "startDelay": 30
     }, {
-      "type": "basic",
+      "type": "bucket",
       "startDelay": 45
     }, {
       "type": "basic",

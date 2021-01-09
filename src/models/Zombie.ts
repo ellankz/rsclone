@@ -94,12 +94,17 @@ export default class Zombie {
       );
 
       // zombie stop
-      if (X_AXIS - i < X_HOME) zombieSpeed = 0;
+      if (X_AXIS - i < X_HOME) {
+        zombieSpeed = 0;
+      }
     }).addTo('scene') as ISpriteNode;
 
     // delete
     this.engine.on(this.node, 'click', () => {
-      this.node.switchState('attack');
+      this.node.switchState('death');
+      setTimeout(() => {
+        this.node.destroy();
+      }, 1500)     
     });
   }
 }
