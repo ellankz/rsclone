@@ -58,7 +58,7 @@ export default class PlantCard {
         size: this.engine.vector(
           this.engine.size.x * PLANT_CARD_WIDTH_COEF, this.engine.size.y * PLANT_CARD_HEIGHT_COEF,
         ),
-        layer: 'main',
+        layer: 'static-main',
         img: image,
         dh: this.engine.size.y * PLANT_CARD_HEIGHT_COEF * 1.1,
         srcPosition: this.engine.vector(0, srcPos),
