@@ -24,6 +24,8 @@ export default class Layer implements ILayer {
 
   nodes: NodesType[];
 
+  screen: string;
+
   update: () => void;
 
   constructor(index: number, size: IVector, container: HTMLElement, offset: IVector, view?: IView) {
@@ -42,6 +44,15 @@ export default class Layer implements ILayer {
     this.view = view || new View([this]);
     this.nodes = [];
     this.update = null;
+    this.screen = '';
+  }
+
+  public toTop(n?: number) {
+    this.canvas.style.zIndex = (+this.canvas.style.zIndex + (n || 1) + 1).toString();
+  }
+
+  public toBack(n?: number) {
+    this.canvas.style.zIndex = (+this.canvas.style.zIndex - (n || 1) - 1).toString();
   }
 
   public clear() {

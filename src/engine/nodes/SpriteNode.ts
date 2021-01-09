@@ -1,6 +1,9 @@
 import Vector from '../core/Vector';
 import {
-  ISpriteNode, SpriteNodeConfig, NodesType, SpriteStatesConfig,
+  ISpriteNode,
+  SpriteNodeConfig,
+  NodesType,
+  SpriteStatesConfig,
 } from '../types';
 import Node from './Node';
 
