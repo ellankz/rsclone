@@ -34,32 +34,39 @@ export default class Engine {
 
   activeScreen: string;
 
-  private running: boolean;
+  screenZIndex: number;
 
-  private stopped: boolean;
+  private running: boolean;
 
   private scenes: { [name: string]: Scene };
 
   private activeScene: Scene;
 
-  event: Event;
+  private animation: number;
+
+  private event: Event;
 
   vector: (x?: number, y?: number) => Vector;
 
   container: HTMLElement;
 
-  constructor(_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) {
+  constructor(
+    _box: string | HTMLElement,
+    config?: string[] | { [name: string]: string[] },
+    screenZIndex?: number,
+  ) {
     this.size = null;
     this.canvasOffset = null;
     this.activeScreen = '';
     this.activeScene = null;
+    this.screenZIndex = screenZIndex || 100;
     this.running = false;
-    this.stopped = true;
 
     this.screens = {};
     this.layers = {};
     this.scenes = {};
     this.event = null;
+    this.animation = null;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
@@ -102,28 +109,28 @@ export default class Engine {
 
   //   Engine
   public start(name: string) {
-    if (this.running || !this.stopped) return;
+    if (this.running) return;
     this.running = this.setScene(name);
-    this.stopped = !this.running;
     if (this.running) {
       this.updateScene();
     }
   }
 
   public stop() {
-    if (this.stopped && !this.running) return;
-    this.stopped = true;
+    if (!this.running) return;
     this.running = false;
+    cancelAnimationFrame(this.animation);
   }
 
   private updateScene() {
+    if (!this.running) return;
     this.activeScene.clear();
     this.activeScene.updateNodes();
     this.activeScene.update();
     this.activeScene.drawNodes();
     this.activeScene.draw();
     if (this.running) {
-      requestAnimationFrame(this.updateScene.bind(this));
+      this.animation = requestAnimationFrame(this.updateScene.bind(this));
     }
   }
 
