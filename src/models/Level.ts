@@ -79,10 +79,10 @@ export default class Level {
       let cell;
       let row;
       setTimeout(() => {
-        row = getRandomNumber(0, ROWS_NUM);
+        row = getRandomNumber(0, ROWS_NUM - 1);
         newZombie = new Zombie(this.zombiesConfig[i], this.engine);
         this.zombiesArr.push(newZombie);
-        cell = this.cells[COLS_NUM - 1][row];
+        cell = this.cells[8][row];
         newZombie.draw(cell);
       }, this.zombiesConfig[i].startDelay * MS);
     }

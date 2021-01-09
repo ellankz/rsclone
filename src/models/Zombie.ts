@@ -6,6 +6,8 @@ import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 
+require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
+
 export default class Zombie {
   private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
 
@@ -52,7 +54,7 @@ export default class Zombie {
     const Y_AXIS = 10;
     const X_HOME = 150;
 
-    let speed = 0.15;
+    let zombieSpeed = 0.15;
     let i = 0;
 
     const image = new Image();
@@ -86,13 +88,13 @@ export default class Zombie {
       dh: this.height,
       states: this.states ? generateStates() : undefined,
     }, () => {
-      i += speed;
+      i += zombieSpeed;
       this.node.position = this.engine.vector(
         X_AXIS - i, (cell.getBottom() - this.height - Y_AXIS),
       );
 
       // zombie stop
-      if (X_AXIS - i < X_HOME) speed = 0;
+      if (X_AXIS - i < X_HOME) zombieSpeed = 0;
     }).addTo('scene') as ISpriteNode;
 
     // delete

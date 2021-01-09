@@ -2,10 +2,10 @@
   "basic": {
     "speed": 150,
     "health": 190,
-    "width": 94,
-    "height": 126,
+    "width": 166,
+    "height": 144,
     "frames": 22,
-    "image": "assets/sprites/zombies/basic/1.png",
+    "image": "./assets/sprites/zombies/basic/1.png",
     "name": "basic",
     "states": {
       "attack": {
@@ -16,8 +16,54 @@
         "height": 144,
         "dh": 140,
         "positionAdjust": {
-          "x": -10,
-          "y": 10
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
+  },
+  "cone": {
+    "speed": 150,
+    "health": 250,
+    "width": 166,
+    "height": 144,
+    "frames": 21,
+    "image": "assets/sprites/zombies/cone/1.png",
+    "name": "cone",
+    "states": {
+      "attack": {
+        "image": "assets/sprites/zombies/cone/2.png",
+        "frames": 11,
+        "speed": 180,
+        "width": 166,
+        "height": 144,  
+        "dh": 140,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
+  },
+  "bucket": {
+    "speed": 150,
+    "health": 330,
+    "width": 166,
+    "height": 144,
+    "frames": 15,
+    "image": "assets/sprites/zombies/bucket/1.png",
+    "name": "bucket",
+    "states": {
+      "attack": {
+        "image": "assets/sprites/zombies/bucket/2.png",
+        "frames": 11,
+        "speed": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
         }
       }
     }
