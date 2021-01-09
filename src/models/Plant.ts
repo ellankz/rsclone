@@ -6,9 +6,6 @@ import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 
-require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
-const x = require('../assets/sprites/plants/Peashooter/1.png');
-
 export default class Plant {
   private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
 
@@ -58,14 +55,12 @@ export default class Plant {
   }
 
   draw(cell: Cell) {
-    const image = new Image();
-    image.src = this.image;
+    const image = this.engine.loader.files[this.image] as HTMLImageElement;
 
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
-        const img = new Image();
-        img.src = state[1].image;
-        img.src = x.default;
+        const path = state[1].image;
+        const img = this.engine.loader.files[path] as HTMLImageElement;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,

@@ -5,7 +5,7 @@
     "recharge": 2,
     "sunProduction": 0,
     "health": 100,
-    "image": "./assets/sprites/plants/PeaShooter/0.png",
+    "image": "assets/sprites/plants/PeaShooter/0.png",
     "name": "Peashooter",
     "frames": 13,
     "speed": 100,

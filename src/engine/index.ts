@@ -14,14 +14,10 @@ import {
   NodeConfig,
   NodesType,
   NodesTypeName,
-  IImageNode,
-  IRectNode,
-  ICircleNode,
-  ISpriteNode,
-  ITextNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
+import Loader from './core/Loader';
 
 export default class Engine {
   size: Vector;
@@ -43,6 +39,8 @@ export default class Engine {
   vector: (x?: number, y?: number) => Vector;
 
   container: HTMLElement;
+
+  loader: Loader;
 
   constructor(_box: string | HTMLElement, layersArray?: string[]) {
     this.size = null;
@@ -236,5 +234,13 @@ export default class Engine {
       return new View(layers);
     }
     return null;
+  }
+
+  // Loader
+  public preloadFiles(filePaths: string[]) {
+    this.loader = new Loader(filePaths, () => {
+      console.log('All files loaded');
+    });
+    this.loader.load();
   }
 }
