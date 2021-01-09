@@ -41,7 +41,7 @@ export default class SunCount {
           this.engine.size.y * TOP_OFFSET_COEF * 2.4,
         ),
         text: this.count.suns.toString(),
-        layer: 'static-main',
+        layer: 'main',
         font: 'sans-serif',
         fontSize: 50,
         color: 'black',
@@ -61,7 +61,7 @@ export default class SunCount {
         size: this.engine.vector(
           this.engine.size.x * SUN_COUNT_WIDTH_COEF, this.engine.size.y * SUN_COUNT_HEIGHT_COEF,
         ),
-        layer: 'static-main',
+        layer: 'main',
         img: this.bgImage,
         dh: this.engine.size.y * SUN_COUNT_HEIGHT_COEF * 1.5,
       },
@@ -73,5 +73,17 @@ export default class SunCount {
       this.localCount = this.count.suns;
       this.textNode.text = this.count.suns.toString();
     }
+  }
+
+  public addSunCount(number: number) {
+    this.count.suns += number;
+    this.update();
+    return this.count;
+  }
+
+  public substractSunCount(number: number) {
+    this.count.suns -= number;
+    this.update();
+    return this.count;
   }
 }

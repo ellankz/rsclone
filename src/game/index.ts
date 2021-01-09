@@ -22,7 +22,7 @@ export default class Game {
 
   public init() {
     const { engine } = this;
-    engine.createView(['back', 'main', 'static-main']);
+    engine.createView(['back', 'main']);
     engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
