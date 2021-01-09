@@ -246,10 +246,8 @@ export default class Engine {
   }
 
   // Loader
-  public preloadFiles(filePaths: string[]) {
-    this.loader = new Loader(filePaths, () => {
-      console.log('All files loaded');
-    });
+  public preloadFiles(filePaths: string[], cb: () => void) {
+    this.loader = new Loader(filePaths, cb);
     this.loader.load();
   }
 }

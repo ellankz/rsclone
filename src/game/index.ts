@@ -6,7 +6,7 @@ import filePaths from '../data/files.json';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 
-const backgroundUrl = require('../assets/images/interface/background1.jpg');
+const BG_URL = 'assets/images/interface/background1.jpg';
 
 export default class Game {
   private engine: Engine;
@@ -25,25 +25,24 @@ export default class Game {
 
   public init() {
     const { engine } = this;
-    engine.preloadFiles(this.filePaths);
-    engine.createView(['back', 'main']);
-    engine.getLayer('main').view.move(engine.vector(0, 0));
-    engine.createScene('scene', function Scene() {
-      this.update = () => {
-        // code
-      };
-    });
+    engine.preloadFiles(this.filePaths, () => {
+      engine.createView(['back', 'main']);
+      engine.getLayer('main').view.move(engine.vector(0, 0));
+      engine.createScene('scene', function Scene() {
+        this.update = () => {
+          // code
+        };
+      });
 
-    this.addBackground();
-    this.createCells();
-    this.createLevel(0);
-    this.engine.start('scene');
+      this.addBackground();
+      this.createCells();
+      this.createLevel(0);
+      this.engine.start('scene');
+    });
   }
 
   addBackground() {
-    const image = new Image();
-    image.src = backgroundUrl.default;
-    // debugger;
+    const image = this.engine.loader.files[BG_URL] as HTMLImageElement;
     this.engine
       .createNode(
         {
