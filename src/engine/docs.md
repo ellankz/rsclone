@@ -749,16 +749,12 @@ const engine = new Engine(container, {
   level: ['back', 'main', 'nav'],
   firstScreen: ['firstScreen'],
 });
-
-let levelSceneExit: () => void = null; // резервируем переменные под коллбеки
-let levelSceneInit: () => void = null;
+ 
+let levelSceneInit: () => void = null; // резервируем переменную под коллбек
 
 engine.createScene('levelScene', function () {
   this.init = () => {
     if (levelSceneInit) levelSceneInit();
-  };
-  this.exit = () => {
-    if (levelSceneExit) levelSceneExit();
   };
 });
 
@@ -916,14 +912,8 @@ engine.start('firstScreenScene');
 let running = false; // флаг для отслеживания анимации
 
 levelSceneInit = () => {
-  // 110 - начальная позиция фона
-  engine.getLayer('back').view.position.x = 110;
+  engine.getLayer('back').view.position.x = 110; // 110 - начальная позиция фона
   engine.getLayer('main').view.position.x = 110;
-};
-
-levelSceneExit = () => {
-  levelSceneInit();
-  delete zombie.update; // удаляем при выходе со сцены, чтобы каждый раз начинать заново
 };
 
 const viewAnimation = (node: any) => {
