@@ -46,14 +46,6 @@ export default class SunCount {
         fontSize: 50,
         color: 'black',
       }) as TextNode;
-
-      const sunCounter = this;
-      this.textNode.update = function upddateSunCounterText() {
-        if (sunCounter.localCount !== sunCounter.count.suns) {
-          sunCounter.localCount = sunCounter.count.suns;
-          this.text = sunCounter.count.suns;
-        }
-      };
     });
   }
 
@@ -77,7 +69,10 @@ export default class SunCount {
   }
 
   public update() {
-    this.textNode.text = this.count.suns.toString();
+    if (this.localCount !== this.count.suns) {
+      this.localCount = this.count.suns;
+      this.textNode.text = this.count.suns.toString();
+    }
   }
 
   public addSunCount(number: number) {

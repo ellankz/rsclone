@@ -38,6 +38,20 @@
     "image": "assets/sprites/plants/SunFlower/0.png",
     "name": "SunFlower",
     "frames": 18,
-    "speed": 70
+    "speed": 100,
+    "states": {
+      "generate": {
+        "image": "assets/sprites/plants/SunFlower/sun-creator.png",
+        "frames": 18,
+        "speed": 100,
+        "width": 73,
+        "height": 74,
+        "dh": 74,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
   }
 }
