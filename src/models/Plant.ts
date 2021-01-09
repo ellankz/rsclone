@@ -40,10 +40,6 @@ export default class Plant {
 
   protected states: {[dynamic: string]: PlantStatesPreset};
 
-  public shotType?: string;
-
-  public shooting: number | null = null;
-
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
     this.damage = this.plantPresets[config.type].damage;

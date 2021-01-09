@@ -4,6 +4,10 @@ import Plant from '../Plant';
 import Shot from '../Shot';
 
 export class Peashooter extends Plant {
+  public shotType?: string;
+
+  public shooting: number | null = null;
+
   constructor(config: PlantConfig, engine: Engine) {
     super(config, engine);
     this.shotType = this.plantPresets[config.type].shotType;
