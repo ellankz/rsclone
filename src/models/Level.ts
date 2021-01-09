@@ -6,6 +6,9 @@ import SunCount from '../game/SunCount';
 import { LevelConfig, PlantType, ZombieConfig } from '../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
+import { FallingSun } from '../game/mechanics/FallingSun';
+import { SunFlower } from './plants/SunFlower';
+import { Peashooter } from './plants/Peashooter';
 
 export default class Level {
   private zombiesArr: Zombie[] = [];
@@ -34,6 +37,8 @@ export default class Level {
 
   private sunCounter: SunCount;
 
+  private sunFall: FallingSun;
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
@@ -50,6 +55,7 @@ export default class Level {
     this.createPlantCards();
     this.listenCellClicks();
     this.createZombies();
+    // Sthis.startLevel();
     return this;
   }
 
@@ -62,7 +68,18 @@ export default class Level {
   }
 
   public createPlant(type: PlantType) {
-    const newPlant = new Plant({ type }, this.engine);
+    let newPlant: Plant;
+    switch (type) {
+      case 'SunFlower':
+        newPlant = new SunFlower(this.engine, this.updateSunCount.bind(this), this.sunCount);
+        break;
+      case 'Peashooter':
+        newPlant = new Peashooter({ type }, this.engine);
+        break;
+      default:
+        newPlant = new Plant({ type }, this.engine);
+        break;
+    }
     this.plantsArr.push(newPlant);
     return newPlant;
   }
@@ -89,12 +106,20 @@ export default class Level {
   }
 
   private createSunCount() {
-    this.sunCounter = new SunCount(this.engine, this.sunCount, this.updateSunCount.bind(this));
+    this.sunCounter = new SunCount(this.engine, this.sunCount);
     this.sunCounter.draw();
   }
 
   public updateSunCount(newCount:number) {
     this.sunCount.suns = newCount;
+    this.reDrawCardsAndCount();
+  }
+
+  private reDrawCardsAndCount() {
+    this.plantCards.forEach((card) => {
+      card.updateCardState();
+    });
+    this.sunCounter.update();
   }
 
   public prepareToPlant(plantType: PlantType) {
@@ -132,14 +157,25 @@ export default class Level {
 
             this.updateSunCount(this.sunCount.suns - plant.cost);
 
-            this.plantCards.forEach((card) => {
-              card.updateCardState();
-            });
-            this.sunCounter.update();
             this.preparedToPlant = null;
           }
         });
       }
     }
+  }
+
+  startLevel() {
+    this.dropSuns();
+  }
+
+  stopLevel() {
+    this.sunFall.stop();
+  }
+
+  dropSuns() {
+    this.sunFall = new FallingSun(
+      this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
+    );
+    this.sunFall.init();
   }
 }
