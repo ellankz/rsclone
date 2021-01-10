@@ -13,12 +13,16 @@
         "frames": 22,
         "speed": 150,
         "width": 166,
-        "height": 144
+        "height": 144,
+        "dh": 145,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        } 
       },
       "stop": {
         "image": "assets/sprites/zombies/basic/stop.png",
         "frames": 11,
-        "startFrame": 0,
         "speed": 180,
         "width": 166,
         "height": 144,
@@ -81,12 +85,16 @@
         "frames": 18,
         "speed": 150,
         "width": 166,
-        "height": 144
+        "height": 144,
+        "dh": 145,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        } 
       },
       "stop": {
         "image": "assets/sprites/zombies/basic_2/stop.png",
         "frames": 11,
-        "startFrame": 2,
         "speed": 180,
         "width": 166,
         "height": 144,
@@ -141,7 +149,6 @@
     "width": 166,
     "height": 144,
     "frames": 21,
-    "startFrame": 5,
     "image": "assets/sprites/zombies/cone/walk.png",
     "name": "cone",
     "states": {
@@ -150,7 +157,12 @@
         "frames": 21,
         "speed": 150,
         "width": 166,
-        "height": 144
+        "height": 144,
+        "dh": 145,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        } 
       },
       "stop": {
         "image": "assets/sprites/zombies/cone/stop.png",
@@ -167,7 +179,6 @@
       "attack": {
         "image": "assets/sprites/zombies/cone/attack.png",
         "frames": 11,
-        "startFrame": 3,
         "speed": 180,
         "width": 166,
         "height": 144,  
@@ -218,12 +229,16 @@
         "frames": 15,
         "speed": 150,
         "width": 166,
-        "height": 140
+        "height": 140,
+        "dh": 145,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        } 
       },
       "stop": {
         "image": "assets/sprites/zombies/bucket/stop.png",
         "frames": 6,
-        "startFrame": 7,
         "speed": 180,
         "width": 166,
         "height": 140,

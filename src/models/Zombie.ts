@@ -54,7 +54,7 @@ export default class Zombie {
 
   draw(cell: Cell, occupiedCells: Map<Cell, Plant>) {
     const X_AXIS = 1000;
-    const Y_AXIS = 10;
+    const Y_AXIS = 5;
     const X_HOME = 150;
 
     this.zombieSpeed = 0.15;
@@ -103,10 +103,8 @@ export default class Zombie {
 
   attack(occupiedCells: Map<Cell, Plant>) {
     occupiedCells.forEach((plant, cell) => {
-      const distance = this.node.position.minus(plant.position);
-
-      if (distance.x < -5 && distance.x > -50
-          && distance.y < -5 && distance.y > -70) {
+      if (this.node.position.x - plant.position.x < -20 && this.node.position.x - plant.position.x > -60 &&
+        this.node.position.y - plant.position.y < -5 && this.node.position.y - plant.position.y > -70) {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
         // plant.health = 0;
