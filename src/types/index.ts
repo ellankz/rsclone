@@ -16,6 +16,7 @@ export interface ZombieConfig {
 }
 
 export interface PlantPreset {
+  shotType?: string;
   cost: number;
   damage: number;
   recharge: number;

@@ -28,6 +28,8 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   speed: number;
 
+  interval: number;
+
   private animation = false;
 
   private states: SpriteStatesConfig;
@@ -63,7 +65,11 @@ export default class SpriteNode extends Node implements ISpriteNode {
       size: this.size,
     };
 
-    setInterval(() => {
+    this.animate();
+  }
+
+  private animate() {
+    this.interval = window.setInterval(() => {
       this.animation = false;
     }, this.speed);
   }
@@ -105,6 +111,9 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.size = state.size || this.size;
     this.startFrame = state.startFrame || 0;
     this.speed = state.speed || this.speed;
+
+    window.clearInterval(this.interval);
+    this.animate();
 
     this.frameW = this.size.x / this.frames;
     this.frameH = this.size.y;
