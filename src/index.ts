@@ -10,6 +10,7 @@ document.body.appendChild(container);
 // const engine = new Engine(container, ['back', 'main']);
 const engine = new Engine(container, {
   first: ['back', 'main'],
+  // loader: ['loader'],
 });
 const game = new Game(engine);
 game.init();

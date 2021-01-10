@@ -1,8 +1,6 @@
-require.context('../../assets/', true, /\.(png|jpg|mp3)$/);
+const context = require.context('../../assets/', true, /\.(png|jpg|mp3)$/);
 
 export default class Loader {
-  listToLoad: string[];
-
   fileContextPath: string;
 
   files: {
@@ -13,14 +11,22 @@ export default class Loader {
 
   loadedCallback: () => void;
 
-  constructor(listToLoad: string[], loadedCallback: () => void) {
-    this.listToLoad = listToLoad;
+  filesList: string[];
+
+  constructor(loadedCallback: () => void) {
     this.filesLoadedCount = 0;
     this.loadedCallback = loadedCallback;
+    this.createFilesList();
+  }
+
+  createFilesList() {
+    const keys = context.keys();
+    this.filesList = keys.map((key) => key.replace('./', 'assets/'));
   }
 
   load() {
-    const files = this.listToLoad.map((path) => {
+    this.createFilesList();
+    const files = this.filesList.map((path) => {
       const ext = path.slice(-3);
       if (ext === 'png' || ext === 'jpg') {
         const image = new Image();
@@ -31,7 +37,7 @@ export default class Loader {
       if (ext === 'mp3') {
         const audio = new Audio();
         audio.src = path;
-        audio.addEventListener('load', () => this.fileLoaded());
+        audio.addEventListener('canplaythrough', () => this.fileLoaded());
         return [path, audio];
       }
       return [path, undefined];
@@ -41,7 +47,7 @@ export default class Loader {
 
   fileLoaded() {
     this.filesLoadedCount += 1;
-    if (this.filesLoadedCount >= this.listToLoad.length) {
+    if (this.filesLoadedCount >= this.filesList.length) {
       this.loadedCallback();
     }
   }

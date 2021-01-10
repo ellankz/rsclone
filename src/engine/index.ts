@@ -302,8 +302,8 @@ export default class Engine {
   }
 
   // Loader
-  public preloadFiles(filePaths: string[], cb: () => void) {
-    this.loader = new Loader(filePaths, cb);
+  public preloadFiles(cb: () => void) {
+    this.loader = new Loader(cb);
     this.loader.load();
   }
 }

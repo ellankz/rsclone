@@ -47,7 +47,11 @@ module.exports = (env) => ({
       test: /\.(mp3|wav)$/i,
       loader: 'file-loader',
       options: {
-        name: 'audio/[name].[ext]',
+        name: '[path][name].[ext]',
+        outputPath: (file) => {
+          const filePath = file.split('src/')[1];
+          return filePath;
+        },
       },
     }, {
       test: /\.(ts|tsx)$/,
