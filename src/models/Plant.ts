@@ -36,7 +36,7 @@ export default class Plant {
 
   protected speed: number;
 
-  protected node: ISpriteNode;
+  public node: ISpriteNode;
 
   protected states: {[dynamic: string]: PlantStatesPreset};
 
@@ -99,5 +99,9 @@ export default class Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
+  }
+
+  destroyPlant() {
+    this.node.destroy();
   }
 }

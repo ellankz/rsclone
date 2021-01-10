@@ -47,6 +47,7 @@ export class SunFlower extends Plant {
       ).instance;
       sun.addTo('scene');
       sun.switchState('appearance');
+
       setTimeout(() => {
         sun.switchState('live');
       }, SUN_APPEARANCE_STATE);

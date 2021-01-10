@@ -12,6 +12,7 @@ export interface ZombiePreset {
 export interface ZombiesStatesPreset {
   image: string,
   frames: number,
+  startFrame?: number,
   speed: number;
   width: number;
   height: number;

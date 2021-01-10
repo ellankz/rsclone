@@ -50,12 +50,11 @@ export default class Level {
   }
 
   public init() {
-    this.zombiesArr = this.zombiesConfig.map((configItem) => new Zombie(configItem, this.engine));
     this.createSunCount();
     this.createPlantCards();
     this.listenCellClicks();
     this.createZombies();
-    // Sthis.startLevel();
+    this.startLevel();
     return this;
   }
 
@@ -91,16 +90,30 @@ export default class Level {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    const trackPosition = () => {
+      this.zombies.forEach((zombieNode) => {
+        if (zombieNode.node.position.x < 150 && zombieNode.node.position.x > 100) {
+          this.zombies.forEach((zombie) => {
+            zombie.stop();
+          });
+        } else {
+          zombieNode.attack(this.occupiedCells);
+        }
+      });
+      setTimeout(trackPosition, 1000);
+    };
+
     for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
-      let newZombie;
-      let cell;
-      let row;
+      let cell: Cell;
+      let row: number;
+
       setTimeout(() => {
         row = getRandomNumber(0, ROWS_NUM - 1);
-        newZombie = new Zombie(this.zombiesConfig[i], this.engine);
+        const newZombie: Zombie = new Zombie(this.zombiesConfig[i], this.engine);
+        cell = this.cells[i][row];
+        newZombie.draw(cell, this.occupiedCells);
         this.zombiesArr.push(newZombie);
-        cell = this.cells[8][row];
-        newZombie.draw(cell);
+        trackPosition();
       }, this.zombiesConfig[i].startDelay * MS);
     }
   }

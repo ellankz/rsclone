@@ -3,6 +3,7 @@ import zombiePresets from '../data/zombies.json';
 
 import Engine from '../engine';
 import Cell from '../game/Cell';
+import Plant from './Plant';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 
@@ -27,9 +28,11 @@ export default class Zombie {
 
   public startDelay: number;
 
+  private zombieSpeed: number;
+
   private engine: Engine;
 
-  private node: ISpriteNode;
+  public node: ISpriteNode;
 
   private states: {[dynamic: string]: ZombiesStatesPreset};
 
@@ -49,12 +52,12 @@ export default class Zombie {
     this.health -= num;
   }
 
-  draw(cell: Cell) {
-    const X_AXIS = 1050;
+  draw(cell: Cell, occupiedCells: Map<Cell, Plant>) {
+    const X_AXIS = 1000;
     const Y_AXIS = 10;
     const X_HOME = 150;
 
-    let zombieSpeed = 0.15;
+    this.zombieSpeed = 0.15;
     let i = 0;
 
     const image = new Image();
@@ -76,6 +79,13 @@ export default class Zombie {
       return Object.fromEntries(statesArr);
     };
 
+    const update = () => {
+      i += this.zombieSpeed;
+      this.node.position = this.engine.vector(
+        X_AXIS - i, (cell.getBottom() - this.height - Y_AXIS),
+      );
+    };
+
     this.node = this.engine.createNode({
       type: 'SpriteNode',
       position: this.engine.vector(X_AXIS, (cell.getBottom() - this.height - Y_AXIS)),
@@ -87,24 +97,38 @@ export default class Zombie {
       speed: this.speed,
       dh: this.height,
       states: this.states ? generateStates() : undefined,
-    }, () => {
-      i += zombieSpeed;
-      this.node.position = this.engine.vector(
-        X_AXIS - i, (cell.getBottom() - this.height - Y_AXIS),
-      );
+    }, update)
+      .addTo('scene') as ISpriteNode;
+  }
 
-      // zombie stop
-      if (X_AXIS - i < X_HOME) {
-        zombieSpeed = 0;
+  attack(occupiedCells: Map<Cell, Plant>) {
+    occupiedCells.forEach((plant, cell) => {
+      const distance = this.node.position.minus(plant.position);
+
+      if (distance.x < -5 && distance.x > -50
+          && distance.y < -5 && distance.y > -70) {
+        this.node.switchState('attack');
+        this.zombieSpeed = 0;
+        // plant.health = 0;
+
+        setTimeout(() => {
+          this.node.switchState('walking');
+          this.zombieSpeed = 0.15;
+          occupiedCells.delete(cell);
+          plant.node.destroy();
+        }, 4000);
       }
-    }).addTo('scene') as ISpriteNode;
-
-    // delete
-    this.engine.on(this.node, 'click', () => {
-      this.node.switchState('death');
-      setTimeout(() => {
-        this.node.destroy();
-      }, 1500)     
     });
+  }
+
+  stop() {
+    this.node.switchState('stop');
+    this.zombieSpeed = 0;
+  }
+
+  removeZombie() {
+    if (this.health <= 0) {
+      this.node.destroy();
+    }
   }
 }
