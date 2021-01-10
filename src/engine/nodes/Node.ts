@@ -20,8 +20,6 @@ export default class Node implements INode {
 
   border?: string;
 
-  events: [string, (e: any) => void][];
-
   addTo: (sceneName: string) => NodesType;
 
   destroy: () => void;
@@ -36,7 +34,6 @@ export default class Node implements INode {
     this.type = 'Node';
     this.layer = params.layer;
     this.sceneName = '';
-    this.events = [];
 
     if (params.border) {
       this.border = params.border;
