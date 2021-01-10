@@ -14,11 +14,6 @@ import {
   NodeConfig,
   NodesType,
   NodesTypeName,
-  IImageNode,
-  IRectNode,
-  ICircleNode,
-  ISpriteNode,
-  ITextNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
@@ -35,6 +30,8 @@ export default class Engine {
   activeScreen: string;
 
   screenZIndex: number;
+
+  events: { [event: string]: { [option: string]: any } };
 
   private running: boolean;
 
@@ -61,6 +58,7 @@ export default class Engine {
     this.activeScene = null;
     this.screenZIndex = screenZIndex || 100;
     this.running = false;
+    this.events = {};
 
     this.screens = {};
     this.layers = {};
@@ -73,8 +71,13 @@ export default class Engine {
     this.init(_box, config);
   }
 
+  // Events
   public on(node: NodesType, event: string, callback: (e: any) => void) {
-    this.event.handle(node, event, callback);
+    return this.event.addEvent(node, event, callback);
+  }
+
+  public off(node: NodesType, event: string, callback: (e: any) => void) {
+    return this.event.removeEvent(node, event, callback);
   }
 
   // Init
@@ -86,7 +89,8 @@ export default class Engine {
     this.canvasOffset = this.vector(box.left, box.top);
     this.size = this.vector(box.width, box.height);
 
-    this.event = new Event(this.canvasOffset);
+    this.event = new Event(this.canvasOffset, this);
+
     if (!config) {
       this.createLayer('main', 0);
     } else if (!Array.isArray(config)) {
@@ -280,13 +284,7 @@ export default class Engine {
       node.removeAllEvents();
     }
 
-    node.removeAllEvents = () => {
-      if (node.events.length > 0) {
-        node.events.forEach((event) => {
-          this.event.removeEvent(node, event);
-        });
-      }
-    };
+    node.removeAllEvents = () => this.event.removeAllEvents(node);
 
     node.addTo = addTo.bind(this);
     node.destroy = destroy.bind(this);
