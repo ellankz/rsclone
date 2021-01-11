@@ -2,9 +2,9 @@ import Vector from '../../engine/core/Vector';
 import Engine from '../../engine';
 import { SpriteStatesConfig } from '../../engine/types';
 
-const sunImage = require('../../assets/sprites/sun.png');
-const sunOpacityImage = require('../../assets/sprites/sun-opacity.png');
-const sunAppearImage = require('../../assets/sprites/sun-appearance.png');
+const SUN_IMG = 'assets/sprites/sun.png';
+const SUN_OPACITY_IMG = 'assets/sprites/sun-opacity.png';
+const SUN_APPER_IMG = 'assets/sprites/sun-appearance.png';
 
 const SPEED_APPEARANCE = 1;
 const SPEED_LIVE = 35;
@@ -41,12 +41,9 @@ export class Sun {
     this.size = engine.vector(1716, 78);
     this.layer = layerName;
 
-    this.img = new Image();
-    this.img.src = sunImage.default;
-    const sunOpacity: HTMLImageElement = new Image();
-    sunOpacity.src = sunOpacityImage.default;
-    const sunAppear: HTMLImageElement = new Image();
-    sunAppear.src = sunAppearImage.default;
+    this.img = engine.loader.files[SUN_IMG] as HTMLImageElement;
+    const sunOpacity = engine.loader.files[SUN_OPACITY_IMG] as HTMLImageElement;
+    const sunAppear = engine.loader.files[SUN_APPER_IMG] as HTMLImageElement;
     this.frames = 22;
     this.states = {
       live: {
@@ -86,9 +83,5 @@ export class Sun {
     if (dh) {
       this.dh = dh;
     }
-  }
-
-  opacitySprite() {
-    this.img = sunOpacityImage.default;
   }
 }

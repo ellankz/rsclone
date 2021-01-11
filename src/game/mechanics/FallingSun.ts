@@ -3,14 +3,11 @@ import Engine from '../../engine';
 import Vector from '../../engine/core/Vector';
 import { SunCreator } from './SunCreator';
 
-const SUN_COST = 25;
-const SUN_DH = 78;
-const SUN_ANIMATION_SPEED = 35;
 const SUN_MOVING_SPEED = 1.8;
 const SUN_INITIAL_POSITION = -80;
 
 export class FallingSun {
-  delay: number = 5000;
+  delay: number = 7000;
 
   engine: Engine;
 

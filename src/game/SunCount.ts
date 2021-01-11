@@ -5,9 +5,9 @@ import {
   TOP_OFFSET_COEF,
 } from '../constats';
 import Engine from '../engine';
-import TextNode from '../engine/nodes/TextNode';
+import { ITextNode } from '../engine/types';
 
-const sunBack = require('../assets/images/interface/SunBack.png');
+const SUNBACK_URL = 'assets/images/interface/SunBack.png';
 
 export default class SunCount {
   count: {suns: number};
@@ -16,14 +16,14 @@ export default class SunCount {
 
   bgImage: HTMLImageElement;
 
-  textNode: TextNode;
+  textNode: ITextNode;
 
   localCount: number;
 
   constructor(engine: Engine, sunCount: {suns: number}) {
     this.count = sunCount;
     this.engine = engine;
-    this.bgImage = new Image();
+    this.bgImage = this.engine.loader.files[SUNBACK_URL] as HTMLImageElement;
     this.localCount = sunCount.suns;
   }
 
@@ -33,24 +33,21 @@ export default class SunCount {
   }
 
   private drawText() {
-    this.bgImage.addEventListener('load', () => {
-      this.textNode = this.engine.createNode({
-        type: 'TextNode',
-        position: this.engine.vector(
-          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.7,
-          this.engine.size.y * TOP_OFFSET_COEF * 2.4,
-        ),
-        text: this.count.suns.toString(),
-        layer: 'main',
-        font: 'sans-serif',
-        fontSize: 50,
-        color: 'black',
-      }) as TextNode;
-    });
+    this.textNode = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.7,
+        this.engine.size.y * TOP_OFFSET_COEF * 2.4,
+      ),
+      text: this.count.suns.toString(),
+      layer: 'main',
+      font: 'sans-serif',
+      fontSize: 50,
+      color: 'black',
+    }) as ITextNode;
   }
 
   private drawBG() {
-    this.bgImage.src = sunBack.default;
     this.engine.createNode(
       {
         type: 'ImageNode',

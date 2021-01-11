@@ -60,13 +60,12 @@ export default class Plant {
   }
 
   draw(cell: Cell) {
-    const image = new Image();
-    image.src = this.image;
+    const image = this.engine.loader.files[this.image] as HTMLImageElement;
 
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
-        const img = new Image();
-        img.src = state[1].image;
+        const path = state[1].image;
+        const img = this.engine.loader.files[path] as HTMLImageElement;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,
