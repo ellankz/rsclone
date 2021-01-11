@@ -11,12 +11,21 @@ export default class Loader {
 
   loadedCallback: () => void;
 
+  beforeLoadCallback: () => Promise<void>;
+
+  loadedOneCallback: () => void;
+
   filesList: string[];
 
-  constructor(loadedCallback: () => void) {
-    this.filesLoadedCount = 0;
+  constructor(
+    beforeLoadCallback: () => Promise<void>,
+    loadedOneCallback: () => void,
+    loadedCallback: () => void,
+  ) {
+    this.beforeLoadCallback = beforeLoadCallback;
+    this.loadedOneCallback = loadedOneCallback;
     this.loadedCallback = loadedCallback;
-    this.createFilesList();
+    this.filesLoadedCount = 0;
   }
 
   createFilesList() {
@@ -24,8 +33,14 @@ export default class Loader {
     this.filesList = keys.map((key) => key.replace('./', 'assets/'));
   }
 
+  init() {
+    this.beforeLoadCallback().then(() => {
+      this.createFilesList();
+      this.load();
+    });
+  }
+
   load() {
-    this.createFilesList();
     const files = this.filesList.map((path) => {
       const ext = path.slice(-3);
       if (ext === 'png' || ext === 'jpg') {
@@ -49,6 +64,8 @@ export default class Loader {
     this.filesLoadedCount += 1;
     if (this.filesLoadedCount >= this.filesList.length) {
       this.loadedCallback();
+    } else {
+      this.loadedOneCallback();
     }
   }
 }

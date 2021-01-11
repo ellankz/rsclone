@@ -20,21 +20,38 @@ export default class Game {
   }
 
   public init() {
-    const { engine } = this;
-    engine.preloadFiles(() => {
-      engine.createView(['back', 'main']);
-      engine.getLayer('main').view.move(engine.vector(0, 0));
-      engine.createScene('scene', function Scene() {
-        this.update = () => {
-          // code
-        };
-      });
+    this.setupGame();
+    this.engine.preloadFiles(
+      () => this.createLoaderScreen(),
+      () => this.updateLoaderScreenState(),
+      () => this.startGame(),
+    );
+  }
 
-      this.addBackground();
-      this.createCells();
-      this.createLevel(0);
-      this.engine.start('scene');
+  setupGame() {
+    const { engine } = this;
+    engine.createView(['back', 'main']);
+    engine.getLayer('main').view.move(engine.vector(0, 0));
+    engine.createScene('scene', function Scene() {
+      this.update = () => {
+        // code
+      };
     });
+  }
+
+  async createLoaderScreen() {
+    console.log(this.cells.length);
+  }
+
+  updateLoaderScreenState() {
+    console.log(this.cells.length);
+  }
+
+  startGame() {
+    this.addBackground();
+    this.createCells();
+    this.createLevel(0);
+    this.engine.start('scene');
   }
 
   addBackground() {
