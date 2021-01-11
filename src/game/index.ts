@@ -6,9 +6,6 @@ import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 
-const BG_URL = 'assets/images/interface/background1.jpg';
-const BG_LEVEL_OFFSET_X = 370;
-
 export default class Game {
   private engine: Engine;
 
@@ -43,24 +40,9 @@ export default class Game {
   }
 
   startGame() {
-    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
     this.createCells();
     this.createLevel(0);
     this.engine.setScreen('first');
-  }
-
-  addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
-    this.engine
-      .createNode(
-        {
-          type: 'ImageNode',
-          position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
-          layer,
-          img: image,
-          dh: this.engine.size.y,
-        },
-      );
   }
 
   createCells() {
