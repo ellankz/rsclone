@@ -6,9 +6,6 @@ import '../../node_modules/canvasinput/CanvasInput';
 const windowCopy: any = window;
 const { CanvasInput } = windowCopy;
 
-const BACKGROUND_SRC = require('../assets/images/interface/register.png');
-const BUTTON_SRC = require('../assets/images/interface/Button.png');
-
 const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen_inputs'];
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
 const LOGIN_SCREEN_SCENE_NAME: string = 'loginScreen';
@@ -28,37 +25,44 @@ export class LoginScreen extends ScreenCreator {
 
   private createNodes(): void {
     // BACKGROUND
-    const bgImage: HTMLImageElement = LoginScreen.createImg(BACKGROUND_SRC.default);
+    const BACKGROUND = this.engine
+      .loader.files['assets/images/interface/register.png'] as HTMLImageElement;
+
     const background: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (this.engine.size.x / 2) - (bgImage.width / 2),
-        (this.engine.size.y / 2) - (bgImage.height / 2),
+        (this.engine.size.x / 2) - (BACKGROUND.width / 2),
+        (this.engine.size.y / 2) - (BACKGROUND.height / 2),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: LOGIN_SCREEN_LAYERS[0],
-      img: bgImage,
+      img: BACKGROUND,
     });
 
     // BUTTON CLOSE
-    const buttonImg: HTMLImageElement = LoginScreen.createImg(BUTTON_SRC.default);
+    const BUTTON_CLOSE = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+
     const buttonClose: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (background.position.x) + (bgImage.width / 2.7),
-        (background.position.y) + (bgImage.height / 1.18),
+        (background.position.x) + (BACKGROUND.width / 2.7),
+        (background.position.y) + (BACKGROUND.height / 1.18),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: LOGIN_SCREEN_LAYERS[1],
-      img: buttonImg,
+      img: BUTTON_CLOSE,
     });
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
-      position: this.engine.vector(buttonClose.position.x, buttonClose.position.y),
+      position: this.engine.vector(
+        buttonClose.position.x + 20,
+        buttonClose.position.y + 10,
+      ),
       text: 'CLOSE',
       layer: LOGIN_SCREEN_LAYERS[1],
-      fontSize: 20,
-      color: 'grey',
+      fontSize: 25,
+      color: '#333',
     });
     this.setEvent(buttonClose, 'click', () => {
       this.engine.setScreen('startScreen');
@@ -68,27 +72,30 @@ export class LoginScreen extends ScreenCreator {
     const buttonSubmit: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (background.position.x) + (bgImage.width / 2.7),
-        (background.position.y) + (bgImage.height / 1.5),
+        (background.position.x) + (BACKGROUND.width / 2.7),
+        (background.position.y) + (BACKGROUND.height / 1.5),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: LOGIN_SCREEN_LAYERS[1],
-      img: buttonImg,
+      img: BUTTON_CLOSE,
     });
     const textButtonSubmit: any = this.engine.createNode({
       type: 'TextNode',
-      position: this.engine.vector(buttonSubmit.position.x, buttonSubmit.position.y),
+      position: this.engine.vector(
+        buttonSubmit.position.x + 20,
+        buttonSubmit.position.y + 10,
+      ),
       text: 'Submit',
       layer: LOGIN_SCREEN_LAYERS[1],
-      fontSize: 20,
-      color: 'grey',
+      fontSize: 25,
+      color: '#333',
     });
     this.setEvent(buttonSubmit, 'click', () => {
       this.engine.setScreen('startScreen');
     });
-    // INPUTS
 
-    const input = new CanvasInput({
+    // INPUTS
+    const username = new CanvasInput({
       canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
       fontSize: 18,
       // fontFamily: 'Arial',
@@ -97,7 +104,7 @@ export class LoginScreen extends ScreenCreator {
       width: 200,
       padding: 5,
       x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.x / 3),
+      y: (this.engine.size.y / 2.5),
       // borderWidth: 1,
       borderColor: '#FFF',
       borderRadius: 0,
@@ -105,7 +112,7 @@ export class LoginScreen extends ScreenCreator {
       innerShadow: 'none',
       placeHolder: 'Enter you password',
     });
-    const input2 = new CanvasInput({
+    const password = new CanvasInput({
       canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
       fontSize: 18,
       // fontFamily: 'Arial',
@@ -114,7 +121,7 @@ export class LoginScreen extends ScreenCreator {
       width: 200,
       padding: 5,
       x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.x / 4),
+      y: (this.engine.size.x / 3.5),
       // borderWidth: 1,
       borderColor: '#FFF',
       borderRadius: 0,

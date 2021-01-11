@@ -1,9 +1,6 @@
 import { ScreenCreator } from './ScreenCreator';
 import Engine from '../engine';
 
-const BACKGROUND_IMG_SRC = require('../assets/images/interface/settingBackground.jpg');
-const BUTTON_SRC = require('../assets/images/interface/Button.png');
-
 const SETTINGS_SCREEN_LAYERS: Array<string> = ['settings-screen_background', 'settings-screen_elements'];
 const SETTINGS_SCREEN_SCREEN_NAME: string = 'settingsScreen';
 const SETTINGS_SCREEN_SCENE_NAME: string = 'settingsScreen';
@@ -32,40 +29,47 @@ export class SettingsScreen extends ScreenCreator {
     });
 
     // BACKGROUND IMG
-    const backgroundImgElem: HTMLImageElement = SettingsScreen.createImg(
-      BACKGROUND_IMG_SRC.default,
-    );
+    const BACKGROUND_IMG = this.engine
+      .loader.files['assets/images/interface/settingBackground.jpg'] as HTMLImageElement;
+
     const backgroundImg = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(0, 0),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       position: this.engine.vector(
-        (this.engine.size.x / 2) - (backgroundImgElem.width / 2),
-        (this.engine.size.y / 2) - (backgroundImgElem.height / 2),
+        (this.engine.size.x / 2) - (BACKGROUND_IMG.width / 2),
+        (this.engine.size.y / 2) - (BACKGROUND_IMG.height / 2),
       ),
       layer: SETTINGS_SCREEN_LAYERS[0],
-      img: backgroundImgElem,
+      img: BACKGROUND_IMG,
     });
+
     // BUTTON CLOSE
-    const buttonImg: HTMLImageElement = SettingsScreen.createImg(BUTTON_SRC.default);
+    const BUTTON_IMG = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+
     const buttonClose: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (this.engine.size.x / 2) - (buttonImg.width / 2),
-        (this.engine.size.y) - (buttonImg.width / 2),
+        (this.engine.size.x / 2) - (BUTTON_IMG.width / 2),
+        (this.engine.size.y) - (BUTTON_IMG.width / 2),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: SETTINGS_SCREEN_LAYERS[1],
-      img: buttonImg,
+      img: BUTTON_IMG,
     });
+
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
-      position: this.engine.vector(buttonClose.position.x, buttonClose.position.y),
+      position: this.engine.vector(
+        buttonClose.position.x + 16,
+        buttonClose.position.y + 10,
+      ),
       text: 'CLOSE',
       layer: SETTINGS_SCREEN_LAYERS[1],
-      fontSize: 20,
-      color: 'grey',
+      fontSize: 25,
+      color: '#333',
     });
+
     this.setEvent(buttonClose, 'click', () => {
       this.engine.setScreen('startScreen');
     });

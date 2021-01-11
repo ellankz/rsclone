@@ -1,16 +1,10 @@
 import Engine from '../engine';
-import Vector from '../engine/core/Vector';
 import { ScreenCreator } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
 import { SettingsScreen } from './SettingsScreen';
 
-const BACKGROUND_SRC = require('../assets/images/interface/SelectorBackground.png');
-const START_GAME_BUTTON_SRC = require('../assets/images/interface/startScreen-button-notActive2.png');
-const START_GAME_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button-Active2.png');
-const SETTINGS_BUTTON_SRC = require('../assets/images/interface/startScreen-button_settings-notActive.png');
-const SETTINGS_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button_settings-Active.png');
-const AUTORIZATION_CARD_IMG = require('../assets/images/interface/autorization-card.png');
-const AUTORIZATION_BUTTON_IMG = require('../assets/images/interface/Button2.png');
+// const START_GAME_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button-Active2.png');
+// const SETTINGS_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button_settings-Active.png');
 
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
 const START_SCREEN_SCREEN_NAME: string = 'startScreen';
@@ -45,32 +39,33 @@ export class StartScreen extends ScreenCreator {
 
   private createNodes(): void {
     // BACKGROUND
-    const backgroundImgElem: HTMLImageElement = StartScreen.createImg(BACKGROUND_SRC.default);
+    const BACKGROUND = this.engine
+      .loader.files['assets/images/interface/SelectorBackground.png'] as HTMLImageElement;
+
     const backgroundImg: any = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(0, 0),
       position: this.engine.vector(
-        (this.engine.size.x / 2) - (backgroundImgElem.width / 2),
-        (this.engine.size.y / 2) - (backgroundImgElem.height / 2),
+        (this.engine.size.x / 2) - (BACKGROUND.width / 2),
+        (this.engine.size.y / 2) - (BACKGROUND.height / 2),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: START_SCREEN_LAYERS[0],
-      img: backgroundImgElem,
-
+      img: BACKGROUND,
     });
 
     // ADVENTURE BUTTON
-    const startImgButton: HTMLImageElement = StartScreen.createImg(START_GAME_BUTTON_SRC.default);
+    const START_GAME_BUTTON = this.engine
+      .loader.files['assets/images/interface/startScreen-button-notActive2.png'] as HTMLImageElement;
+
     const startGameButton: any = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(START_GAME_BUTTON_POSITION.x, START_GAME_BUTTON_POSITION.y),
       position: this.engine.vector(
-        backgroundImgElem.width - 1.25 * startImgButton.width,
-        backgroundImgElem.height - 3.55 * startImgButton.height,
+        (backgroundImg.position.x) + 1.45 * START_GAME_BUTTON.width,
+        (backgroundImg.position.y) + 0.6 * START_GAME_BUTTON.height,
       ),
       size: this.engine.vector(330, 143),
       layer: START_SCREEN_LAYERS[1],
-      img: startImgButton,
+      img: START_GAME_BUTTON,
     });
 
     this.engine.on(startGameButton, 'click', () => {
@@ -80,68 +75,66 @@ export class StartScreen extends ScreenCreator {
     });
 
     // SETTINGS BUTTON
-    const settingsGameButtonImg: HTMLImageElement = StartScreen.createImg(
-      SETTINGS_BUTTON_SRC.default,
-    );
+    const SETTINGS_BUTTON = this.engine
+      .loader.files['assets/images/interface/startScreen-button_settings-notActive.png'] as HTMLImageElement;
+
     const settingsGameButton: any = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(SETTINGS_BUTTON_POSITION.x, SETTINGS_BUTTON_POSITION.y),
       position: this.engine.vector(
-        backgroundImgElem.width - 1.33 * settingsGameButtonImg.width,
-        backgroundImgElem.height - 2.8 * settingsGameButtonImg.height,
+        (startGameButton.position.x) + 0 * SETTINGS_BUTTON.width,
+        (startGameButton.position.y) + 1 * SETTINGS_BUTTON.height,
       ),
       size: this.engine.vector(312, 131),
       layer: START_SCREEN_LAYERS[1],
-      img: settingsGameButtonImg,
+      img: SETTINGS_BUTTON,
     });
     this.setEvent(settingsGameButton, 'click', () => {
       this.settingsScreen.openScreen();
     });
 
-    // USERNAME TEXT
-    const userName: any = this.engine.createNode({
-      type: 'TextNode',
-      position: this.engine.vector(USER_NAME_POSITION.x, USER_NAME_POSITION.y),
-      text: this.userName,
-      layer: START_SCREEN_LAYERS[0],
-      fontSize: 20,
-      color: 'black',
-    });
-
     // USERNAME BACKGROUND
-    const autorizationBackgroundImg: HTMLImageElement = StartScreen.createImg(
-      AUTORIZATION_CARD_IMG.default,
-    );
+    const LOGIN_CARD_IMG = this.engine
+      .loader.files['assets/images/interface/autorization-card.png'] as HTMLImageElement;
+
     const autorizationBackground: any = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(
-      //   AUTORIZATION_BACKGROUND_POSITION.x,
-      //   AUTORIZATION_BACKGROUND_POSITION.y,
-      // ),
       position: this.engine.vector(
         backgroundImg.position.x + 20,
         backgroundImg.position.y,
       ),
       size: this.engine.vector(287, 150),
       layer: START_SCREEN_LAYERS[0],
-      img: autorizationBackgroundImg,
+      img: LOGIN_CARD_IMG,
       dh: 100,
     });
 
+    // USERNAME TEXT
+    const userName: any = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        // USER_NAME_POSITION.x, USER_NAME_POSITION.y
+        (autorizationBackground.position.x + LOGIN_CARD_IMG.width) / 3,
+        autorizationBackground.position.y + LOGIN_CARD_IMG.height / 2.5,
+      ),
+      text: this.userName,
+      layer: START_SCREEN_LAYERS[0],
+      fontSize: 18,
+      color: '#fff',
+    });
+
     // LOGIN BUTTON
+    const LOGIN_BUTTON_IMG = this.engine
+      .loader.files['assets/images/interface/Button2.png'] as HTMLImageElement;
+
     const autorizationButton: any = this.engine.createNode({
       type: 'ImageNode',
-      // position: this.engine.vector(
-      //   AUTORIZATION_BUTTON_POSITION.x,
-      //   AUTORIZATION_BUTTON_POSITION.y,
-      // ),
       position: this.engine.vector(
-        backgroundImg.position.x + 25,
-        backgroundImg.position.y + autorizationBackground.dh - 7,
+        autorizationBackground.position.x + 7,
+        autorizationBackground.position.y + 1.32 * LOGIN_BUTTON_IMG.height,
       ),
       size: this.engine.vector(290, 70),
       layer: START_SCREEN_LAYERS[1],
-      img: StartScreen.createImg(AUTORIZATION_BUTTON_IMG.default),
+      img: LOGIN_BUTTON_IMG,
       dh: 45,
     });
     this.setEvent(autorizationButton, 'click', () => {
