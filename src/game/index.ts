@@ -27,7 +27,6 @@ export default class Game {
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
-      () => console.log('done loading'),
     );
   }
 

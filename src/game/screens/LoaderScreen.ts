@@ -89,7 +89,7 @@ export default class LoaderScreen {
         startX + (this.rollBarImages[0].width - ROLL_WIDTH) * percent,
         startY,
       );
-      if (percent >= 0.6 && percent < 0.23) { // 6 23 47 61 73
+      if (percent >= 0.6 && percent < 0.23) {
         this.barNode.img = this.rollBarImages[1];
       } else if (percent >= 0.23 && percent < 0.47) {
         this.barNode.img = this.rollBarImages[2];
