@@ -28,36 +28,49 @@ export default class Engine {
 
   canvasOffset: Vector;
 
-  layers: { [key: string]: Layer };
+  screens: { [name: string]: Layer[] };
+
+  layers: { [name: string]: Layer };
+
+  activeScreen: string;
+
+  screenZIndex: number;
 
   private running: boolean;
 
-  private stopped: boolean;
-
-  private scenes: { [key: string]: Scene };
+  private scenes: { [name: string]: Scene };
 
   private activeScene: Scene;
 
-  event: Event;
+  private animation: number;
+
+  private event: Event;
 
   vector: (x?: number, y?: number) => Vector;
 
   container: HTMLElement;
 
-  constructor(_box: string | HTMLElement, layersArray?: string[]) {
+  constructor(
+    _box: string | HTMLElement,
+    config?: string[] | { [name: string]: string[] },
+    screenZIndex?: number,
+  ) {
     this.size = null;
     this.canvasOffset = null;
+    this.activeScreen = '';
     this.activeScene = null;
+    this.screenZIndex = screenZIndex || 100;
     this.running = false;
-    this.stopped = true;
 
+    this.screens = {};
     this.layers = {};
     this.scenes = {};
     this.event = null;
+    this.animation = null;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
-    this.init(_box, layersArray);
+    this.init(_box, config);
   }
 
   public on(node: NodesType, event: string, callback: (e: any) => void) {
@@ -65,7 +78,7 @@ export default class Engine {
   }
 
   // Init
-  public init(_box: string | HTMLElement, layersArray?: string[]) {
+  public init(_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) {
     this.container = typeof _box === 'string' ? document.getElementById(_box) : _box;
 
     const box: DOMRect = this.container.getBoundingClientRect();
@@ -74,41 +87,84 @@ export default class Engine {
     this.size = this.vector(box.width, box.height);
 
     this.event = new Event(this.canvasOffset);
+    if (!config) {
+      this.createLayer('main', 0);
+    } else if (!Array.isArray(config)) {
+      Object.keys(config).forEach((screen) => {
+        const layers = config[screen];
+        if (!layers || layers.length <= 0) return;
 
-    if (layersArray && layersArray.length > 0) {
-      layersArray.forEach((layer, i) => {
+        layers.forEach((layer) => this.createLayer(layer));
+        this.createScreen(screen, layers);
+      });
+
+      const topScreen = Object.keys(this.screens)[Object.keys(this.screens).length - 1];
+      this.setScreen(topScreen);
+    } else if (config.length > 0) {
+      config.forEach((layer, i) => {
         this.createLayer(layer, i);
       });
-    } else {
-      this.createLayer('main', 0);
     }
   }
 
   //   Engine
   public start(name: string) {
-    if (this.running || !this.stopped) return;
+    if (this.running) return;
     this.running = this.setScene(name);
-    this.stopped = !this.running;
     if (this.running) {
       this.updateScene();
     }
   }
 
   public stop() {
-    if (this.stopped && !this.running) return;
-    this.stopped = true;
+    if (!this.running) return;
     this.running = false;
+    cancelAnimationFrame(this.animation);
   }
 
   private updateScene() {
+    if (!this.running) return;
     this.activeScene.clear();
     this.activeScene.updateNodes();
     this.activeScene.update();
     this.activeScene.drawNodes();
     this.activeScene.draw();
     if (this.running) {
-      requestAnimationFrame(this.updateScene.bind(this));
+      this.animation = requestAnimationFrame(this.updateScene.bind(this));
     }
+  }
+
+  // Screens
+  public createScreen(name: string, layersNames: string[]) {
+    if (this.screens[name] || !layersNames || layersNames.length <= 0) return;
+
+    const layers = layersNames.map((layerName) => {
+      const layer = this.layers[layerName];
+      layer.screen = name;
+      return layer;
+    });
+
+    this.screens[name] = layers;
+  }
+
+  public setScreen(name: string) {
+    if (!this.screens[name]) return;
+
+    if (this.activeScreen) {
+      const lastLayers = this.screens[this.activeScreen];
+      lastLayers.forEach((layer) => {
+        const { canvas } = layer;
+        canvas.style.zIndex = (+layer.canvas.style.zIndex - 100).toString();
+      });
+    }
+
+    const layers = this.screens[name];
+    layers.forEach((layer) => {
+      const { canvas } = layer;
+      canvas.style.zIndex = (+layer.canvas.style.zIndex + 100).toString();
+    });
+
+    this.activeScreen = name;
   }
 
   // Layers
@@ -218,10 +274,19 @@ export default class Engine {
       }
       const layerIdx = node.layer.nodes.indexOf(node);
       if (layerIdx !== -1) {
-        node.clearLayer();
         node.layer.nodes.splice(layerIdx, 1);
+        node.clearLayer();
       }
+      node.removeAllEvents();
     }
+
+    node.removeAllEvents = () => {
+      if (node.events.length > 0) {
+        node.events.forEach((event) => {
+          this.event.removeEvent(node, event);
+        });
+      }
+    };
 
     node.addTo = addTo.bind(this);
     node.destroy = destroy.bind(this);
