@@ -4,8 +4,10 @@ import Cell from './Cell';
 import { LevelConfig } from '../types';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
+import LoaderScreen from './screens/LoaderScreen';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
+const BG_LEVEL_OFFSET_X = 370;
 
 export default class Game {
   private engine: Engine;
@@ -21,10 +23,11 @@ export default class Game {
 
   public init() {
     this.setupGame();
+    const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     this.engine.preloadFiles(
-      () => this.createLoaderScreen(),
-      () => this.updateLoaderScreenState(),
-      () => this.startGame(),
+      () => loaderScreen.create(),
+      (percent: number) => loaderScreen.update(percent),
+      () => console.log('done loading'),
     );
   }
 
@@ -37,32 +40,24 @@ export default class Game {
         // code
       };
     });
-  }
-
-  async createLoaderScreen() {
-    console.log(this.cells.length);
-  }
-
-  updateLoaderScreenState() {
-    console.log(this.cells.length);
-  }
-
-  startGame() {
-    this.addBackground();
-    this.createCells();
-    this.createLevel(0);
     this.engine.start('scene');
   }
 
-  addBackground() {
-    const image = this.engine.loader.files[BG_URL] as HTMLImageElement;
+  startGame() {
+    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
+    this.createCells();
+    this.createLevel(0);
+    this.engine.setScreen('first');
+  }
+
+  addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
     this.engine
       .createNode(
         {
           type: 'ImageNode',
           position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + 370, this.engine.size.y),
-          layer: 'back',
+          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
+          layer,
           img: image,
           dh: this.engine.size.y,
         },

@@ -303,7 +303,7 @@ export default class Engine {
 
   // Loader
   public preloadFiles(
-    beforeLoadCB: () => Promise<void>, loadedOneCB: () => void, loadedCB: () => void,
+    beforeLoadCB: () => Promise<void>, loadedOneCB: (percent: number) => void, loadedCB: () => void,
   ) {
     this.loader = new Loader(beforeLoadCB, loadedOneCB, loadedCB);
     this.loader.init();
