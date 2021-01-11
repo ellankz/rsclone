@@ -1,6 +1,11 @@
 import Engine from '../engine';
 import { ScreenCreator } from './ScreenCreator';
 
+import '../../node_modules/canvasinput/CanvasInput';
+
+const windowCopy: any = window;
+const { CanvasInput } = windowCopy;
+
 const BACKGROUND_SRC = require('../assets/images/interface/register.png');
 const BUTTON_SRC = require('../assets/images/interface/Button.png');
 
@@ -58,6 +63,64 @@ export class LoginScreen extends ScreenCreator {
     this.setEvent(buttonClose, 'click', () => {
       this.engine.setScreen('startScreen');
     });
+
+    // BUTTON SUBMIT
+    const buttonSubmit: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        (background.position.x) + (bgImage.width / 2.7),
+        (background.position.y) + (bgImage.height / 1.5),
+      ),
+      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      layer: LOGIN_SCREEN_LAYERS[1],
+      img: buttonImg,
+    });
+    const textButtonSubmit: any = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(buttonSubmit.position.x, buttonSubmit.position.y),
+      text: 'Submit',
+      layer: LOGIN_SCREEN_LAYERS[1],
+      fontSize: 20,
+      color: 'grey',
+    });
+    this.setEvent(buttonSubmit, 'click', () => {
+      this.engine.setScreen('startScreen');
+    });
     // INPUTS
+
+    const input = new CanvasInput({
+      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
+      fontSize: 18,
+      // fontFamily: 'Arial',
+      fontColor: '#212121',
+      fontWeight: 'bold',
+      width: 200,
+      padding: 5,
+      x: (this.engine.size.x / 2) - (200 / 2),
+      y: (this.engine.size.x / 3),
+      // borderWidth: 1,
+      borderColor: '#FFF',
+      borderRadius: 0,
+      boxShadow: 'none',
+      innerShadow: 'none',
+      placeHolder: 'Enter you password',
+    });
+    const input2 = new CanvasInput({
+      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
+      fontSize: 18,
+      // fontFamily: 'Arial',
+      fontColor: '#212121',
+      fontWeight: 'bold',
+      width: 200,
+      padding: 5,
+      x: (this.engine.size.x / 2) - (200 / 2),
+      y: (this.engine.size.x / 4),
+      // borderWidth: 1,
+      borderColor: '#FFF',
+      borderRadius: 0,
+      boxShadow: 'none',
+      innerShadow: 'none',
+      placeHolder: 'Enter you login',
+    });
   }
 }
