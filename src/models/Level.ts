@@ -10,6 +10,9 @@ import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 
+const BG_URL = 'assets/images/interface/background1.jpg';
+const BG_LEVEL_OFFSET_X = 370;
+
 export default class Level {
   private zombiesArr: Zombie[] = [];
 
@@ -51,6 +54,7 @@ export default class Level {
 
   public init() {
     this.zombiesArr = this.zombiesConfig.map((configItem) => new Zombie(configItem));
+    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
     this.createSunCount();
     this.createPlantCards();
     this.listenCellClicks();
@@ -64,6 +68,20 @@ export default class Level {
 
   public get plants() {
     return this.plantsArr;
+  }
+
+  addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
+    this.engine
+      .createNode(
+        {
+          type: 'ImageNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
+          layer,
+          img: image,
+          dh: this.engine.size.y,
+        },
+      );
   }
 
   public createPlant(type: PlantType) {

@@ -5,7 +5,6 @@ import Engine from '../engine';
 import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_HEIGHT_COEF, PLANT_CARD_WIDTH_COEF } from '../constats';
 import { IImageNode, NodesType } from '../engine/types';
 
-require.context('../assets/images/cards', true, /\.(png|jpg)$/);
 export default class PlantCard {
   public plant: Plant;
 
