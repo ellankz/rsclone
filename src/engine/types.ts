@@ -5,8 +5,12 @@ export interface Engine {
   activeScreen: string;
   layers: { [name: string]: ILayer };
   container: HTMLElement;
+  events: { [event: string]: { [option: string]: any } };
 
   vector: (x?: number, y?: number) => IVector;
+
+  on: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
+  off: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
 
   init: (_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) => void;
   start: (name: string) => void;
@@ -50,8 +54,6 @@ export interface INode {
   layer: ILayer;
   sceneName: string;
   border?: string;
-
-  events: [string, (e: any) => void][];
 
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
