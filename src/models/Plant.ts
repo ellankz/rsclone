@@ -1,5 +1,4 @@
 import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-
 import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
@@ -7,10 +6,9 @@ import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
-const x = require('../assets/sprites/plants/Peashooter/1.png');
 
 export default class Plant {
-  private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
+  protected plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
 
   public cost: number;
 
@@ -27,6 +25,10 @@ export default class Plant {
   public width: number;
 
   public height: number;
+
+  public name: string;
+
+  public position: Vector;
 
   protected engine: Engine;
 
@@ -58,13 +60,12 @@ export default class Plant {
   }
 
   draw(cell: Cell) {
-    const image = new Image();
-    image.src = this.image;
+    const image = this.engine.loader.files[this.image] as HTMLImageElement;
 
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
-        const img = new Image();
-        img.src = state[1].image;
+        const path = state[1].image;
+        const img = this.engine.loader.files[path] as HTMLImageElement;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,
@@ -76,13 +77,13 @@ export default class Plant {
       return Object.fromEntries(statesArr);
     };
 
-    const position = this.engine.vector(
+    this.position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
       (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
     );
     this.node = this.engine.createNode({
       type: 'SpriteNode',
-      position,
+      position: this.position,
       size: this.engine.vector(this.width * this.frames, this.height),
       layer: 'main',
       img: image,
@@ -96,6 +97,5 @@ export default class Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
-    setTimeout(() => this.node.switchState('basic'), 3000);
   }
 }

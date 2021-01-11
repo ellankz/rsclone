@@ -7,7 +7,11 @@ import { LevelConfig, PlantType, ZombieConfig } from '../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
-import { SunFlower } from './SunFlower';
+import { SunFlower } from './plants/SunFlower';
+import { Peashooter } from './plants/Peashooter';
+
+const BG_URL = 'assets/images/interface/background1.jpg';
+const BG_LEVEL_OFFSET_X = 370;
 
 export default class Level {
   private zombiesArr: Zombie[] = [];
@@ -50,6 +54,7 @@ export default class Level {
 
   public init() {
     this.zombiesArr = this.zombiesConfig.map((configItem) => new Zombie(configItem));
+    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
     this.createSunCount();
     this.createPlantCards();
     this.listenCellClicks();
@@ -65,6 +70,20 @@ export default class Level {
     return this.plantsArr;
   }
 
+  addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
+    this.engine
+      .createNode(
+        {
+          type: 'ImageNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
+          layer,
+          img: image,
+          dh: this.engine.size.y,
+        },
+      );
+  }
+
   public createPlant(type: PlantType) {
     let newPlant: Plant;
     switch (type) {
@@ -72,16 +91,18 @@ export default class Level {
         newPlant = new SunFlower(this.engine, this.updateSunCount.bind(this), this.sunCount);
         break;
       case 'Peashooter':
+        newPlant = new Peashooter({ type }, this.engine);
+        break;
+      default:
         newPlant = new Plant({ type }, this.engine);
         break;
-      default: break;
     }
     this.plantsArr.push(newPlant);
     return newPlant;
   }
 
   private createSunCount() {
-    this.sunCounter = new SunCount(this.engine, this.sunCount, this.updateSunCount.bind(this));
+    this.sunCounter = new SunCount(this.engine, this.sunCount);
     this.sunCounter.draw();
   }
 

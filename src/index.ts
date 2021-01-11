@@ -11,9 +11,9 @@ const container = document.createElement('div');
 container.id = 'game';
 document.body.appendChild(container);
 
-// const engine = new Engine(container, ['back', 'main']);
 const engine = new Engine(container, {
   first: ['back', 'main'],
+  loader: ['loader-back', 'loader'],
 });
 const game = new Game(engine);
 game.init();

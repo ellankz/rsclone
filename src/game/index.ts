@@ -2,11 +2,9 @@ import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
 import { LevelConfig } from '../types';
-
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
-
-const backgroundUrl = require('../assets/images/interface/background1.jpg');
+import LoaderScreen from './screens/LoaderScreen';
 
 export default class Game {
   private engine: Engine;
@@ -21,36 +19,30 @@ export default class Game {
   }
 
   public init() {
+    this.setupGame();
+    const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    this.engine.preloadFiles(
+      () => loaderScreen.create(),
+      (percent: number) => loaderScreen.update(percent),
+    );
+  }
+
+  setupGame() {
     const { engine } = this;
     engine.createView(['back', 'main']);
-    engine.getLayer('main').view.move(engine.vector(110, 0));
+    engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
         // code
       };
     });
-
-    this.addBackground();
-    this.createCells();
-    this.createLevel(0);
     this.engine.start('scene');
   }
 
-  addBackground() {
-    const image = new Image();
-    image.src = backgroundUrl.default;
-
-    this.engine
-      .createNode(
-        {
-          type: 'ImageNode',
-          position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + 400, this.engine.size.y),
-          layer: 'back',
-          img: image,
-          dh: this.engine.size.y,
-        },
-      );
+  startGame() {
+    this.createCells();
+    this.createLevel(0);
+    this.engine.setScreen('first');
   }
 
   createCells() {

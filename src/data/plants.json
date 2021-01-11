@@ -5,17 +5,18 @@
     "recharge": 2,
     "sunProduction": 0,
     "health": 100,
-    "image": "./assets/sprites/plants/PeaShooter/0.png",
+    "image": "assets/sprites/plants/Peashooter/0.png",
     "name": "Peashooter",
     "frames": 13,
     "speed": 100,
     "width": 71,
     "height": 71,
+    "shotType": "green",
     "states": {
       "attack": {
-        "image": "assets/sprites/plants/PeaShooter/1.png",
+        "image": "assets/sprites/plants/Peashooter/1.png",
         "frames": 8,
-        "speed": 100,
+        "speed": 225,
         "width": 84,
         "height": 81,
         "dh": 75,
@@ -37,22 +38,10 @@
     "image": "assets/sprites/plants/SunFlower/0.png",
     "name": "SunFlower",
     "frames": 18,
-    "speed": 70,
+    "speed": 100,
     "states": {
       "generate": {
         "image": "assets/sprites/plants/SunFlower/sun-creator.png",
-        "frames": 18,
-        "speed": 40,
-        "width": 73,
-        "height": 74,
-        "dh": 74,
-        "positionAdjust": {
-          "x": 0,
-          "y": 0
-        }
-      },
-      "basic": {
-        "image": "assets/sprites/plants/PeaShooter/0.png",
         "frames": 18,
         "speed": 100,
         "width": 73,
