@@ -17,6 +17,7 @@ import {
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
+import Loader from './core/Loader';
 
 export default class Engine {
   size: Vector;
@@ -46,6 +47,8 @@ export default class Engine {
   vector: (x?: number, y?: number) => Vector;
 
   container: HTMLElement;
+
+  loader: Loader;
 
   constructor(
     _box: string | HTMLElement,
@@ -299,5 +302,13 @@ export default class Engine {
       return new View(layers);
     }
     return null;
+  }
+
+  // Loader
+  public preloadFiles(
+    beforeLoadCB: () => Promise<void>, loadedOneCB: (percent: number) => void,
+  ) {
+    this.loader = new Loader(beforeLoadCB, loadedOneCB);
+    this.loader.init();
   }
 }

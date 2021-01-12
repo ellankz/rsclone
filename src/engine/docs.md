@@ -16,6 +16,7 @@
   - [TextNode](#textnode)
   - [ImageNode](#imagenode)
   - [SpriteNode](#spritenode)
+- [Loader](#loader)
 - [Notes](#notes)
 - [Examples](#examples)
 
@@ -620,6 +621,17 @@ interface SpriteStatesConfig {
 
 ---
 
+## Loader
+Загрузчик загружает все mp3, png, jpg файлы из папки src/assets и создает Image и Audio элементы для каждого.
+Получить доступ к элементу можно таким образом:
+
+```javascript
+const image = engine.loader.files['assets/images/image1.png'] as HTMLImageElement;
+const audio = engine.loader.files['assets/audio/audio.mp3'] as HTMLAudioElement;
+```
+
+---
+
 ## Notes
 
 1. Обновление происходит достаточно быстро, около 60 кадров в секунду
@@ -640,6 +652,7 @@ interface SpriteStatesConfig {
    ```
 
 ---
+
 
 ## Examples
 
