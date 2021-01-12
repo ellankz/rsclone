@@ -2,18 +2,11 @@ import Engine from '../engine';
 import { ScreenCreator } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
 import { SettingsScreen } from './SettingsScreen';
-
-// const START_GAME_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button-Active2.png');
-// const SETTINGS_BUTTON_SRC_ACTIVE = require('../assets/images/interface/startScreen-button_settings-Active.png');
+import { LevelSelectionScreen } from './LevelSelectionScreen';
 
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
 const START_SCREEN_SCREEN_NAME: string = 'startScreen';
 const START_SCREEN_SCENE_NAME: string = 'startScreen';
-// const START_GAME_BUTTON_POSITION: {x: number, y: number} = { x: 485, y: 90 };
-// const SETTINGS_BUTTON_POSITION: {x: number, y: number} = { x: 485, y: 210 };
-// const AUTORIZATION_BACKGROUND_POSITION: {x: number, y: number} = { x: 20, y: 0 };
-// const AUTORIZATION_BUTTON_POSITION: {x: number, y: number} = { x: 25, y: 94 };
-const USER_NAME_POSITION: {x: number, y: number} = { x: 70, y: 60 };
 
 export class StartScreen extends ScreenCreator {
   public userName: string = 'Guest';
@@ -22,7 +15,11 @@ export class StartScreen extends ScreenCreator {
 
   private settingsScreen: any = new SettingsScreen(this.engine);
 
-  constructor(engine: Engine, userName?: string) {
+  private levelSelectionScreen: any/* = new LevelSelectionScreen(this.engine) */;
+
+  // private startLevel: () => void;
+
+  constructor(engine: Engine, func: () => void, userName?: string) { // -------------------------------------------
     super(engine);
     if (userName) {
       this.userName = userName;
@@ -31,6 +28,8 @@ export class StartScreen extends ScreenCreator {
     this.createNodes();
     this.engine.createScreen(START_SCREEN_SCREEN_NAME, START_SCREEN_LAYERS);
     this.engine.createScene(START_SCREEN_SCENE_NAME);
+    // this.startLevel = func;
+    this.levelSelectionScreen = new LevelSelectionScreen(this.engine, func);
   }
 
   public openScreen(): void {
@@ -68,10 +67,14 @@ export class StartScreen extends ScreenCreator {
       img: START_GAME_BUTTON,
     });
 
-    this.engine.on(startGameButton, 'click', () => {
-      this.engine.stop();
-      this.engine.setScreen('first');
-      this.engine.start('scene');
+    this.setActive(
+      startGameButton,
+      'assets/images/interface/startScreen-button-Active2.png',
+      'assets/images/interface/startScreen-button-notActive2.png',
+    );
+
+    this.setEvent(startGameButton, 'click', () => {
+      this.levelSelectionScreen.openScreen();
     });
 
     // SETTINGS BUTTON
@@ -81,13 +84,20 @@ export class StartScreen extends ScreenCreator {
     const settingsGameButton: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (startGameButton.position.x) + 0 * SETTINGS_BUTTON.width,
-        (startGameButton.position.y) + 1 * SETTINGS_BUTTON.height,
+        (startGameButton.position.x),
+        (startGameButton.position.y) + SETTINGS_BUTTON.height,
       ),
       size: this.engine.vector(312, 131),
       layer: START_SCREEN_LAYERS[1],
       img: SETTINGS_BUTTON,
     });
+
+    this.setActive(
+      settingsGameButton,
+      'assets/images/interface/startScreen-button_settings-Active.png',
+      'assets/images/interface/startScreen-button_settings-notActive.png',
+    );
+
     this.setEvent(settingsGameButton, 'click', () => {
       this.settingsScreen.openScreen();
     });

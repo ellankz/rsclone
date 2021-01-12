@@ -70,6 +70,11 @@ export class SettingsScreen extends ScreenCreator {
       color: '#333',
     });
 
+    this.setActive(
+      buttonClose,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
     this.setEvent(buttonClose, 'click', () => {
       this.engine.setScreen('startScreen');
     });

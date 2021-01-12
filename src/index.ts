@@ -13,3 +13,8 @@ const engine = new Engine(container, {
 });
 const game = new Game(engine);
 game.init();
+
+// setTimeout(() => {
+//   const startGameScreen = new StartScreen(engine);
+//   startGameScreen.openScreen();
+// }, 1000);

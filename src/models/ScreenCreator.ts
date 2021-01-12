@@ -17,13 +17,20 @@ export class ScreenCreator {
     layers.forEach((layer: string) => this.engine.createLayer(layer));
   }
 
-  public static createImg(src: string): HTMLImageElement {
-    const imageElement: HTMLImageElement = new Image();
-    imageElement.src = src;
-    return imageElement;
-  }
-
   protected setEvent(node: any, event: string, callback: () => void):void {
     this.engine.on(node, event, callback);
+  }
+
+  protected setActive(button: any, active: string, nonActive: string): void {
+    const copyButton = button;
+    this.engine.on(copyButton, 'mousedown', () => {
+      copyButton.img.src = active;
+      copyButton.clearLayer();
+    });
+
+    this.engine.on(copyButton, 'mouseup', () => {
+      copyButton.img.src = nonActive;
+      copyButton.clearLayer();
+    });
   }
 }

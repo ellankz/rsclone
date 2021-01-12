@@ -64,6 +64,13 @@ export class LoginScreen extends ScreenCreator {
       fontSize: 25,
       color: '#333',
     });
+
+    this.setActive(
+      buttonClose,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
     this.setEvent(buttonClose, 'click', () => {
       this.engine.setScreen('startScreen');
     });
@@ -90,6 +97,12 @@ export class LoginScreen extends ScreenCreator {
       fontSize: 25,
       color: '#333',
     });
+    // this.setActive(
+    //   buttonSubmit,
+    //   'assets/images/interface/ButtonActive.png',
+    //   'assets/images/interface/Button.png',
+    // );
+
     this.setEvent(buttonSubmit, 'click', () => {
       this.engine.setScreen('startScreen');
     });
