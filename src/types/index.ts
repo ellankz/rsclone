@@ -1,6 +1,7 @@
 export interface ZombiePreset {
   speed: number;
   health: number;
+  damage: number;
   width: number;
   height: number;
   image: string;
@@ -26,7 +27,7 @@ export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket';
 export interface ZombieConfig {
   type: ZombieType;
   startDelay: number;
-  row: number;
+  row?: number;
 }
 
 export interface PlantPreset {

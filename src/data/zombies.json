@@ -2,6 +2,7 @@
   "basic": {
     "speed": 150,
     "health": 190,
+    "damage": 25,
     "width": 166,
     "height": 144,
     "frames": 22,
@@ -57,12 +58,12 @@
         } 
       },
       "lost_head": {
-        "image": "assets/sprites/zombies/basic/lost_head.png",
-        "frames": 12,
+        "image": "assets/sprites/zombies/basic/without_head.png",
+        "frames": 18,
         "speed": 180,
-        "width": 150,
-        "height": 186,
-        "dh": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
         "positionAdjust": {
           "x": 0,
           "y": 0
@@ -74,6 +75,7 @@
   "basic_2": {
     "speed": 150,
     "health": 190,
+    "damage": 25,
     "width": 166,
     "height": 144,
     "frames": 18,
@@ -119,22 +121,22 @@
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
-        "speed": 180,
+        "speed": 120,
         "width": 166,
         "height": 186,
-        "dh": 190,
+        "dh": 180,
         "positionAdjust": {
-          "x": 0,
+          "x": 10,
           "y": 0
         } 
       },
       "lost_head": {
-        "image": "assets/sprites/zombies/basic/lost_head.png",
-        "frames": 12,
+        "image": "assets/sprites/zombies/basic/without_head.png",
+        "frames": 18,
         "speed": 180,
-        "width": 150,
-        "height": 186,
-        "dh": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
         "positionAdjust": {
           "x": 0,
           "y": 0
@@ -146,6 +148,7 @@
   "cone": {
     "speed": 150,
     "health": 250,
+    "damage": 25,
     "width": 166,
     "height": 144,
     "frames": 21,
@@ -201,12 +204,12 @@
         } 
       },
       "lost_head": {
-        "image": "assets/sprites/zombies/basic/lost_head.png",
-        "frames": 12,
+        "image": "assets/sprites/zombies/basic/without_head.png",
+        "frames": 18,
         "speed": 180,
-        "width": 150,
-        "height": 186,
-        "dh": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
         "positionAdjust": {
           "x": 0,
           "y": 0
@@ -218,8 +221,9 @@
   "bucket": {
     "speed": 150,
     "health": 330,
+    "damage": 25,
     "width": 166,
-    "height": 140,
+    "height": 144,
     "frames": 15,
     "image": "assets/sprites/zombies/bucket/walk.png",
     "name": "bucket",
@@ -229,7 +233,7 @@
         "frames": 15,
         "speed": 150,
         "width": 166,
-        "height": 140,
+        "height": 144,
         "dh": 145,
         "positionAdjust": {
           "x": 0,
@@ -241,7 +245,7 @@
         "frames": 6,
         "speed": 180,
         "width": 166,
-        "height": 140,
+        "height": 144,
         "dh": 145,
         "positionAdjust": {
           "x": 0,
@@ -253,7 +257,7 @@
         "frames": 11,
         "speed": 180,
         "width": 166,
-        "height": 140,
+        "height": 144,
         "dh": 140,
         "positionAdjust": {
           "x": 0,
@@ -273,12 +277,12 @@
         } 
       },
       "lost_head": {
-        "image": "assets/sprites/zombies/basic/lost_head.png",
-        "frames": 12,
+        "image": "assets/sprites/zombies/basic/without_head.png",
+        "frames": 18,
         "speed": 180,
-        "width": 150,
-        "height": 186,
-        "dh": 180,
+        "width": 166,
+        "height": 144,
+        "dh": 140,
         "positionAdjust": {
           "x": 0,
           "y": 0

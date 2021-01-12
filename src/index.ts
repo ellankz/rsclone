@@ -9,7 +9,7 @@ document.body.appendChild(container);
 
 // const engine = new Engine(container, ['back', 'main']);
 const engine = new Engine(container, {
-  first: ['back', 'main'],
+  first: ['back', 'main', 'top'],
 });
 const game = new Game(engine);
 game.init();

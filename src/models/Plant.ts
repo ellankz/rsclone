@@ -4,6 +4,7 @@ import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
+import Zombie from './Zombie';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
 
@@ -30,15 +31,23 @@ export default class Plant {
 
   public position: Vector;
 
+  public row: number;
+
   protected engine: Engine;
 
   protected frames: number;
 
   protected speed: number;
 
-  public node: ISpriteNode;
+  protected node: ISpriteNode;
 
   protected states: {[dynamic: string]: PlantStatesPreset};
+
+  public isDestroyedFlag: boolean;
+
+  public timer: any;
+
+  public shooting: number | null = null;
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -97,11 +106,27 @@ export default class Plant {
     }).addTo('scene') as ISpriteNode;
   }
 
-  switchState(state: string) {
+  switchState(state: string, zombie?: Zombie, plant?: Plant) {
     this.node.switchState(state);
   }
 
-  destroyPlant() {
+  public stopShooting() {
+    this.shooting = null;
+  }
+
+  public stopCreatingSuns() {
+    clearTimeout(this.timer);
+  }
+
+  public isDestroyed(): void {
+    if (this.health <= 0) {
+      this.isDestroyedFlag = true;
+    }
+  }
+
+  destroy() {
+    this.stopCreatingSuns();
+    this.isDestroyed();
     this.node.destroy();
   }
 }

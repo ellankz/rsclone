@@ -1,3 +1,5 @@
+/* eslint no-use-before-define: 0 */
+
 import { ZombieConfig, ZombiePreset, ZombiesStatesPreset } from '../types';
 import zombiePresets from '../data/zombies.json';
 
@@ -9,12 +11,24 @@ import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
+const X_MIN = -20;
+const X_MAX = -60;
+const Y_MIN = -5;
+const Y_MAX = -70;
+
+const X_AXIS = 1000;
+const Y_AXIS = 5;
+
+const SPEED = 0.15;
+
 export default class Zombie {
   private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
 
   public speed: number;
 
   public health: number;
+
+  public damage: number;
 
   public width: number;
 
@@ -30,6 +44,10 @@ export default class Zombie {
 
   private zombieSpeed: number;
 
+  public position: Vector;
+
+  public row: number;
+
   private engine: Engine;
 
   public node: ISpriteNode;
@@ -39,6 +57,7 @@ export default class Zombie {
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
     this.health = this.zombiePresets[config.type].health;
+    this.damage = this.zombiePresets[config.type].damage;
     this.width = this.zombiePresets[config.type].width;
     this.height = this.zombiePresets[config.type].height;
     this.image = this.zombiePresets[config.type].image;
@@ -48,17 +67,9 @@ export default class Zombie {
     this.engine = engine;
   }
 
-  reduceHealth(num: number) {
-    this.health -= num;
-  }
-
-  draw(cell: Cell, occupiedCells: Map<Cell, Plant>) {
-    const X_AXIS = 1000;
-    const Y_AXIS = 5;
-    const X_HOME = 150;
-
-    this.zombieSpeed = 0.15;
-    let i = 0;
+  public draw(cell: Cell, occupiedCells: Map<Cell, Plant>) {
+    this.zombieSpeed = SPEED;
+    let start = 0;
 
     const image = new Image();
     image.src = this.image;
@@ -80,17 +91,19 @@ export default class Zombie {
     };
 
     const update = () => {
-      i += this.zombieSpeed;
+      start += this.zombieSpeed;
       this.node.position = this.engine.vector(
-        X_AXIS - i, (cell.getBottom() - this.height - Y_AXIS),
+        X_AXIS - start, (cell.getBottom() - this.height - Y_AXIS),
       );
+
+      this.trackPosition();
     };
 
     this.node = this.engine.createNode({
       type: 'SpriteNode',
       position: this.engine.vector(X_AXIS, (cell.getBottom() - this.height - Y_AXIS)),
       size: this.engine.vector(this.width * this.frames, this.height),
-      layer: 'main',
+      layer: 'top',
       img: image,
       frames: this.frames,
       startFrame: 0,
@@ -101,32 +114,85 @@ export default class Zombie {
       .addTo('scene') as ISpriteNode;
   }
 
-  attack(occupiedCells: Map<Cell, Plant>) {
+  public attack(occupiedCells: Map<Cell, Plant>) {
     occupiedCells.forEach((plant, cell) => {
-      if (this.node.position.x - plant.position.x < -20 && this.node.position.x - plant.position.x > -60 &&
-        this.node.position.y - plant.position.y < -5 && this.node.position.y - plant.position.y > -70) {
+      if (this.node.position.x - plant.position.x < X_MIN
+        && this.node.position.x - plant.position.x > X_MAX
+        && this.node.position.y - plant.position.y < Y_MIN
+        && this.node.position.y - plant.position.y > Y_MAX) {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
-        // plant.health = 0;
+        this.makeDamage(plant);
 
-        setTimeout(() => {
-          this.node.switchState('walking');
-          this.zombieSpeed = 0.15;
+        if (plant.health <= 0) {
+          this.eatThePlant(plant);
           occupiedCells.delete(cell);
-          plant.node.destroy();
-        }, 4000);
+          this.node.switchState('walking');
+          this.zombieSpeed = SPEED;
+        }
       }
     });
   }
 
-  stop() {
+  private makeDamage(plant: any) {
+    plant.reduceHealth(this.damage);
+  }
+
+  private eatThePlant(plant: any) {
+    plant.destroy(this);
+  }
+
+  public stop() {
     this.node.switchState('stop');
     this.zombieSpeed = 0;
   }
 
-  removeZombie() {
-    if (this.health <= 0) {
-      this.node.destroy();
+  public reduceHealth(num: number) {
+    if (this.health >= 0) {
+      this.health -= num;
     }
+  }
+
+  private lostHead() {
+    this.node.switchState('lost_head');
+
+    const image = new Image();
+    image.src = '../assets/sprites/zombies/basic/lost_head.png';
+
+    const head = this.engine.createNode({
+      type: 'SpriteNode',
+      position: this.engine.vector(this.position.x + 60, this.position.y),
+      size: this.engine.vector(150 * 12, 186),
+      layer: 'top',
+      img: image,
+      frames: 12,
+      width: 150,
+      height: 186,
+      startFrame: 0,
+      speed: 120,
+      dh: 180,
+    }).addTo('scene') as ISpriteNode;
+
+    setTimeout(() => {
+      head.destroy();
+    }, 1300);
+  }
+
+  public remove() {
+    this.lostHead();
+    setTimeout(() => {
+      this.zombieSpeed = 0;
+      this.node.switchState('death');
+    }, 2000);
+    setTimeout(() => {
+      this.node.destroy();
+    }, 3200);
+  }
+
+  private trackPosition() {
+    if (this.node.position) {
+      this.position = this.node.position;
+    }
+    return this.position;
   }
 }

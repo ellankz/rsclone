@@ -10,10 +10,16 @@ import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 
+const MS = 1000;
+
 export default class Level {
   private zombiesArr: Zombie[] = [];
 
+  private zombie: Zombie;
+
   private plantsArr: Plant[] = [];
+
+  private plant: Plant;
 
   public sunCount: {suns: number} = { suns: 500 };
 
@@ -52,8 +58,6 @@ export default class Level {
   public init() {
     this.createSunCount();
     this.createPlantCards();
-    this.listenCellClicks();
-    this.createZombies();
     this.startLevel();
     return this;
   }
@@ -84,38 +88,60 @@ export default class Level {
   }
 
   public createZombies() {
-    const MS = 1000;
-
-    function getRandomNumber(min: number, max: number) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const trackPosition = () => {
-      this.zombies.forEach((zombieNode) => {
-        if (zombieNode.node.position.x < 150 && zombieNode.node.position.x > 100) {
-          this.zombies.forEach((zombie) => {
-            zombie.stop();
-          });
-        } else {
-          zombieNode.attack(this.occupiedCells);
-        }
-      });
-      setTimeout(trackPosition, 1000);
-    };
-
     for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
       let row: number;
 
       setTimeout(() => {
-        row = getRandomNumber(0, ROWS_NUM - 1);
-        const newZombie: Zombie = new Zombie(this.zombiesConfig[i], this.engine);
+        row = Level.getRandomNumber(0, ROWS_NUM - 1);
+        this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
         cell = this.cells[i][row];
-        newZombie.draw(cell, this.occupiedCells);
-        this.zombiesArr.push(newZombie);
-        trackPosition();
+        this.zombie.row = row;
+        this.zombie.draw(cell, this.occupiedCells);
+        this.zombiesArr.push(this.zombie);
       }, this.zombiesConfig[i].startDelay * MS);
     }
+  }
+
+  public listenGameEvents() {
+    const trackPosition = () => {
+      this.zombiesArr.forEach((zombie) => {
+        if (zombie.position && zombie.position.x < 150) {
+          this.stopLevel();
+        } else {
+          zombie.attack(this.occupiedCells);
+        }
+
+        this.plantsArr.forEach((plant) => {
+          if (zombie.row === plant.row && zombie.position) {
+            plant.switchState('attack', zombie, plant);
+
+            if (zombie.health <= 0) {
+              zombie.remove();
+              plant.switchState('basic');
+              plant.stopShooting();
+            }
+          }
+        });
+      });
+
+      this.deleteZombie();
+      this.deletePlant();
+      setTimeout(trackPosition, MS);
+    };
+    trackPosition();
+  }
+
+  private deleteZombie() {
+    const index = this.zombiesArr.findIndex((el) => el.health <= 0);
+    if (index >= 0) this.zombiesArr.splice(index, 1);
+    return this.zombiesArr;
+  }
+
+  private deletePlant() {
+    const index = this.plantsArr.findIndex((el) => el.health <= 0);
+    if (index >= 0) this.plantsArr.splice(index, 1);
+    return this.plantsArr;
   }
 
   private createSunCount() {
@@ -158,17 +184,14 @@ export default class Level {
       for (let y = 0; y < this.cells[x].length; y += 1) {
         const cell = this.cells[x][y];
         this.engine.on(cell.node, 'click', () => {
-          if (this.occupiedCells.has(cell)) {
-            const plant = this.occupiedCells.get(cell);
-            plant.switchState('attack');
-          }
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
-            const plant = this.createPlant(this.preparedToPlant);
-            plant.draw(cell);
+            this.plant = this.createPlant(this.preparedToPlant);
+            this.plant.draw(cell);
+            this.plant.row = cell.position.y;
 
-            this.occupiedCells.set(cell, plant);
+            this.occupiedCells.set(cell, this.plant);
 
-            this.updateSunCount(this.sunCount.suns - plant.cost);
+            this.updateSunCount(this.sunCount.suns - this.plant.cost);
 
             this.preparedToPlant = null;
           }
@@ -178,11 +201,23 @@ export default class Level {
   }
 
   startLevel() {
+    this.createZombies();
     this.dropSuns();
+    this.listenCellClicks();
+    this.listenGameEvents();
   }
 
   stopLevel() {
     this.sunFall.stop();
+
+    this.plantsArr.forEach((plant) => {
+      plant.switchState('basic');
+      plant.stopShooting();
+    });
+
+    this.zombiesArr.forEach((zombie) => {
+      zombie.stop();
+    });
   }
 
   dropSuns() {
@@ -190,5 +225,9 @@ export default class Level {
       this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
     );
     this.sunFall.init();
+  }
+
+  static getRandomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }

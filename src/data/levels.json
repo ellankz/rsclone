@@ -1,23 +1,32 @@
 [
   {
     "zombies": [{
-      "type": "basic_2",
+      "type": "basic",
       "startDelay": 1
-    }, {
-      "type": "cone",
+    }, 
+    {
+      "type": "basic_2",
       "startDelay": 17
     },
     {
+      "type": "cone",
+      "startDelay": 47
+    },
+    {
+      "type": "cone",
+      "startDelay": 63
+    },
+    {
       "type": "basic",
-      "startDelay": 37
+      "startDelay": 93
     },
     {
-      "type": "cone",
-      "startDelay": 55
+      "type": "bucket",
+      "startDelay": 103
     },
     {
-      "type": "cone",
-      "startDelay": 80
+      "type": "bucket",
+      "startDelay": 130
     }
     ],
     "plantTypes": [
