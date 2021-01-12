@@ -5,6 +5,7 @@ import { LevelConfig } from '../types';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
+import { DataService } from '../api-service/DataService';
 
 export default class Game {
   private engine: Engine;
@@ -13,9 +14,12 @@ export default class Game {
 
   private currentLevel: Level;
 
-  constructor(engine: Engine) {
+  dataService: DataService;
+
+  constructor(engine: Engine, dataService: DataService) {
     this.engine = engine;
     this.cells = [];
+    this.dataService = dataService;
   }
 
   public init() {
@@ -25,6 +29,9 @@ export default class Game {
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
     );
+    this.dataService.login({ login: 'string', password: 'string' })
+      .then(() => this.dataService.getStats())
+      .then((res) => console.log(res));
   }
 
   setupGame() {
