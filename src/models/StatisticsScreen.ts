@@ -1,21 +1,21 @@
 import { ScreenCreator } from './ScreenCreator';
 import Engine from '../engine';
 
-const SETTINGS_SCREEN_LAYERS: Array<string> = ['settings-screen_background', 'settings-screen_elements'];
-const SETTINGS_SCREEN_SCREEN_NAME: string = 'settingsScreen';
-const SETTINGS_SCREEN_SCENE_NAME: string = 'settingsScreen';
+const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements'];
+const STATISTIC_SCREEN_SCREEN_NAME: string = 'statisticsScreen';
+const STATISTIC_SCREEN_SCENE_NAME: string = 'statisticsScreen';
 
-export class SettingsScreen extends ScreenCreator {
+export class StatisticsScreen extends ScreenCreator {
   constructor(engine: Engine) {
     super(engine);
-    this.createLayers(SETTINGS_SCREEN_LAYERS);
+    this.createLayers(STATISTICS_SCREEN_LAYERS);
     this.createNodes();
-    this.engine.createScreen(SETTINGS_SCREEN_SCREEN_NAME, SETTINGS_SCREEN_LAYERS);
-    this.engine.createScene(SETTINGS_SCREEN_SCENE_NAME);
+    this.engine.createScreen(STATISTIC_SCREEN_SCREEN_NAME, STATISTICS_SCREEN_LAYERS);
+    this.engine.createScene(STATISTIC_SCREEN_SCENE_NAME);
   }
 
   public openScreen(): void {
-    super.openScreen(SETTINGS_SCREEN_SCREEN_NAME, SETTINGS_SCREEN_SCENE_NAME);
+    super.openScreen(STATISTIC_SCREEN_SCREEN_NAME, STATISTIC_SCREEN_SCENE_NAME);
   }
 
   private createNodes(): void {
@@ -24,7 +24,7 @@ export class SettingsScreen extends ScreenCreator {
       type: 'RectNode',
       position: this.engine.vector(0, 0),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: SETTINGS_SCREEN_LAYERS[0],
+      layer: STATISTICS_SCREEN_LAYERS[0],
       color: '#8B4513',
     });
 
@@ -39,7 +39,7 @@ export class SettingsScreen extends ScreenCreator {
         (this.engine.size.x / 2) - (BACKGROUND_IMG.width / 2),
         (this.engine.size.y / 2) - (BACKGROUND_IMG.height / 2),
       ),
-      layer: SETTINGS_SCREEN_LAYERS[0],
+      layer: STATISTICS_SCREEN_LAYERS[0],
       img: BACKGROUND_IMG,
     });
 
@@ -54,7 +54,7 @@ export class SettingsScreen extends ScreenCreator {
         (this.engine.size.y) - (BUTTON_IMG.width / 2),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: SETTINGS_SCREEN_LAYERS[1],
+      layer: STATISTICS_SCREEN_LAYERS[1],
       img: BUTTON_IMG,
     });
 
@@ -65,7 +65,7 @@ export class SettingsScreen extends ScreenCreator {
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
-      layer: SETTINGS_SCREEN_LAYERS[1],
+      layer: STATISTICS_SCREEN_LAYERS[1],
       fontSize: 25,
       color: '#333',
     });

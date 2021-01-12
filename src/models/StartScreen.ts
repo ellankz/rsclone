@@ -1,7 +1,7 @@
 import Engine from '../engine';
 import { ScreenCreator } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
-import { SettingsScreen } from './SettingsScreen';
+import { StatisticsScreen } from './StatisticsScreen';
 import { LevelSelectionScreen } from './LevelSelectionScreen';
 
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
@@ -11,15 +11,13 @@ const START_SCREEN_SCENE_NAME: string = 'startScreen';
 export class StartScreen extends ScreenCreator {
   public userName: string = 'Guest';
 
-  private loginScreen: any = new LoginScreen(this.engine);
+  private loginScreen: any;
 
-  private settingsScreen: any = new SettingsScreen(this.engine);
+  private settingsScreen: any;
 
-  private levelSelectionScreen: any/* = new LevelSelectionScreen(this.engine) */;
+  private levelSelectionScreen: any;
 
-  // private startLevel: () => void;
-
-  constructor(engine: Engine, func: () => void, userName?: string) { // -------------------------------------------
+  constructor(engine: Engine, func: () => void, userName?: string) {
     super(engine);
     if (userName) {
       this.userName = userName;
@@ -28,7 +26,8 @@ export class StartScreen extends ScreenCreator {
     this.createNodes();
     this.engine.createScreen(START_SCREEN_SCREEN_NAME, START_SCREEN_LAYERS);
     this.engine.createScene(START_SCREEN_SCENE_NAME);
-    // this.startLevel = func;
+    this.loginScreen = new LoginScreen(this.engine);
+    this.settingsScreen = new StatisticsScreen(this.engine);
     this.levelSelectionScreen = new LevelSelectionScreen(this.engine, func);
   }
 
@@ -59,7 +58,7 @@ export class StartScreen extends ScreenCreator {
     const startGameButton: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (backgroundImg.position.x) + 1.45 * START_GAME_BUTTON.width,
+        (backgroundImg.position.x) + 1.64 * START_GAME_BUTTON.width,
         (backgroundImg.position.y) + 0.6 * START_GAME_BUTTON.height,
       ),
       size: this.engine.vector(330, 143),
@@ -122,7 +121,6 @@ export class StartScreen extends ScreenCreator {
     const userName: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        // USER_NAME_POSITION.x, USER_NAME_POSITION.y
         (autorizationBackground.position.x + LOGIN_CARD_IMG.width) / 3,
         autorizationBackground.position.y + LOGIN_CARD_IMG.height / 2.5,
       ),
