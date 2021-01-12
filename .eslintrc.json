@@ -26,5 +26,5 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "import"],
-  "ignorePatterns": ["dist/*"]
+  "ignorePatterns": ["dist/*", "webpack.config.js"]
 }
