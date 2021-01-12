@@ -34,10 +34,9 @@ export default class Event {
   }
 
   isPointInside(point: Vector, rectStart: Vector, size: Vector) {
-    const xAxis =
-      point.x / this.scaleRatio >= rectStart.x && point.x / this.scaleRatio <= rectStart.x + size.x;
-    const yAxis =
-      point.y / this.scaleRatio >= rectStart.y && point.y / this.scaleRatio <= rectStart.y + size.y;
+    const targetPoint = new Vector(point.x / this.scaleRatio, point.y / this.scaleRatio);
+    const xAxis = targetPoint.x >= rectStart.x && point.x / this.scaleRatio <= rectStart.x + size.x;
+    const yAxis = targetPoint.y >= rectStart.y && point.y / this.scaleRatio <= rectStart.y + size.y;
     return xAxis && yAxis;
   }
 

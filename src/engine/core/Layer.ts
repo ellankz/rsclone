@@ -28,7 +28,7 @@ export default class Layer implements ILayer {
 
   constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
     const canvas = document.createElement('canvas');
-    canvas.style.cssText = `position: absolute; left: 0; top: 0`;
+    canvas.style.cssText = 'position: absolute; left: 0; top: 0';
     canvas.width = size.x;
     canvas.height = size.y;
     canvas.style.zIndex = index.toString();

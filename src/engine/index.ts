@@ -51,7 +51,7 @@ export default class Engine {
 
   private scaleRatio: number;
 
-  private _fullscreen: boolean;
+  private fullscreenMode: boolean;
 
   private resizeCallback: () => void;
 
@@ -334,8 +334,8 @@ export default class Engine {
 
   // fullscreen
   public set fullscreen(value: boolean) {
-    if (this._fullscreen !== value) {
-      this._fullscreen = value;
+    if (this.fullscreenMode !== value) {
+      this.fullscreenMode = value;
       this.setContainerPosition(value);
 
       if (value) {
@@ -358,20 +358,20 @@ export default class Engine {
     let scaleRatio = 1;
 
     const gameAspectRatio = this.size.x / this.size.y;
-    const windowAspectRatio =
-      document.documentElement.clientWidth / document.documentElement.clientHeight;
+    const documentWidth = document.documentElement.clientWidth;
+    const documentHeight = document.documentElement.clientHeight;
+    const windowAspectRatio = documentWidth / documentHeight;
 
     if (windowAspectRatio > gameAspectRatio) {
-      scaleRatio = document.documentElement.clientHeight / this.size.y;
+      scaleRatio = documentHeight / this.size.y;
     } else {
-      scaleRatio = document.documentElement.clientWidth / this.size.x;
+      scaleRatio = documentWidth / this.size.x;
     }
     this.scaleRatio = scaleRatio;
     this.event.scaleRatio = this.scaleRatio;
 
     const layers = Object.values(this.layers);
 
-    document.body.style.minHeight = `${document.documentElement.clientHeight}px`;
     this.container.style.width = `${this.size.x * this.scaleRatio}px`;
     this.container.style.height = `${this.size.y * this.scaleRatio}px`;
 
