@@ -1,3 +1,4 @@
+import { time } from 'console';
 import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
 import Engine from '../engine';
 import Vector from '../engine/core/Vector';

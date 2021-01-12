@@ -50,6 +50,8 @@ export default class Zombie {
 
   public node: ISpriteNode;
 
+  public opacity: number;
+
   private states: {[dynamic: string]: ZombiesStatesPreset};
 
   constructor(config: ZombieConfig, engine: Engine) {
@@ -148,6 +150,11 @@ export default class Zombie {
     if (this.health >= 0) {
       this.health -= num;
     }
+
+    this.node.opacity = 0.85;
+    setTimeout(() => {
+      this.node.opacity = 1;
+    }, 150);
   }
 
   private lostHead() {
@@ -183,10 +190,11 @@ export default class Zombie {
     }, 1200);
     setTimeout(() => {
       this.node.switchState('end');
+      this.node.opacity = 0.8;
     }, 2000);
     setTimeout(() => {
       this.node.destroy();
-    }, 3000);
+    }, 2800);
   }
 
   private trackPosition() {

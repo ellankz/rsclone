@@ -198,9 +198,10 @@ export default class Level {
           }
         });
       });
-      this.deleteZombie();
-      this.deletePlant();
-      setTimeout(trackPosition, MS);
+      this.zombiesArr = this.deleteZombie();
+      this.plantsArr = this.deletePlant();
+
+      setTimeout(trackPosition, 1000);
     };
     trackPosition();
   }
