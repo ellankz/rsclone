@@ -6,6 +6,7 @@ import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 import { DataService } from '../api-service/DataService';
+import { StartScreen } from '../models/StartScreen';
 
 export default class Game {
   private engine: Engine;
@@ -24,7 +25,8 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
@@ -44,6 +46,11 @@ export default class Game {
       };
     });
     this.engine.start('scene');
+  }
+
+  runFirstScreen(): void {
+    const startGameScreen = new StartScreen(this.engine, this.startGame.bind(this));
+    this.engine.setScreen('startScreen');
   }
 
   startGame() {

@@ -1,5 +1,4 @@
 import './style/main.scss';
-
 import Game from './game/index';
 import Engine from './engine';
 import { DataService } from './api-service/DataService';
