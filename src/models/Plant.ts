@@ -47,7 +47,7 @@ export default class Plant {
 
   public timer: any;
 
-  public shooting: number | null = null;
+  public isShooting: boolean;
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -110,7 +110,7 @@ export default class Plant {
   }
 
   public stopShooting() {
-    this.shooting = null;
+    this.isShooting = false;
   }
 
   public stopCreatingSuns() {

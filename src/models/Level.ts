@@ -13,6 +13,7 @@ import { Peashooter } from './plants/Peashooter';
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
+const X_HOME = 150;
 
 export default class Level {
   private zombiesArr: Zombie[] = [];
@@ -47,6 +48,8 @@ export default class Level {
 
   private sunFall: FallingSun;
 
+  public isEnd: boolean;
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
@@ -71,6 +74,26 @@ export default class Level {
 
   public get plants() {
     return this.plantsArr;
+  }
+
+  startLevel() {
+    this.createZombies();
+    this.dropSuns();
+    this.listenCellClicks();
+    this.listenGameEvents();
+  }
+
+  stopLevel() {
+    this.isEnd = true;
+    this.sunFall.stop();
+
+    this.plantsArr.forEach((plant) => {
+      plant.stopShooting();
+    });
+
+    this.zombiesArr.forEach((zombie) => {
+      zombie.stop();
+    });
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
@@ -112,7 +135,7 @@ export default class Level {
       setTimeout(() => {
         row = Level.getRandomNumber(0, ROWS_NUM - 1);
         this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
-        cell = this.cells[i][row];
+        cell = this.cells[0][row];
         this.zombie.row = row;
         this.zombie.draw(cell, this.occupiedCells);
         this.zombiesArr.push(this.zombie);
@@ -123,14 +146,14 @@ export default class Level {
   public listenGameEvents() {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-        if (zombie.position && zombie.position.x < 150) {
-          this.stopLevel();
-        } else {
-          zombie.attack(this.occupiedCells);
-        }
-
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position) {
+          if (zombie.position && zombie.position.x < X_HOME) {
+            this.stopLevel();
+          } else {
+            zombie.attack(this.occupiedCells);
+          }
+
+          if (zombie.row === plant.row && zombie.position && !this.isEnd) {
             plant.switchState('attack', zombie, plant);
 
             if (zombie.health <= 0) {
@@ -141,7 +164,6 @@ export default class Level {
           }
         });
       });
-
       this.deleteZombie();
       this.deletePlant();
       setTimeout(trackPosition, MS);
@@ -215,26 +237,6 @@ export default class Level {
         });
       }
     }
-  }
-
-  startLevel() {
-    this.createZombies();
-    this.dropSuns();
-    this.listenCellClicks();
-    this.listenGameEvents();
-  }
-
-  stopLevel() {
-    this.sunFall.stop();
-
-    this.plantsArr.forEach((plant) => {
-      plant.switchState('basic');
-      plant.stopShooting();
-    });
-
-    this.zombiesArr.forEach((zombie) => {
-      zombie.stop();
-    });
   }
 
   dropSuns() {

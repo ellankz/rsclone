@@ -48,7 +48,7 @@
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
-        "speed": 180,
+        "speed": 100,
         "width": 166,
         "height": 186,
         "dh": 180,
@@ -66,6 +66,18 @@
         "dh": 140,
         "positionAdjust": {
           "x": 0,
+          "y": 0
+        } 
+      },
+      "end": {
+        "image": "assets/sprites/zombies/basic/end.png",
+        "frames": 1,
+        "speed": 120,
+        "width": 167,
+        "height": 186,
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
           "y": 0
         } 
       }
@@ -121,7 +133,7 @@
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
-        "speed": 120,
+        "speed": 100,
         "width": 166,
         "height": 186,
         "dh": 180,
@@ -139,6 +151,18 @@
         "dh": 140,
         "positionAdjust": {
           "x": 0,
+          "y": 0
+        } 
+      },
+      "end": {
+        "image": "assets/sprites/zombies/basic/end.png",
+        "frames": 1,
+        "speed": 120,
+        "width": 167,
+        "height": 186,
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
           "y": 0
         } 
       }
@@ -194,7 +218,7 @@
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
-        "speed": 180,
+        "speed": 100,
         "width": 166,
         "height": 186,
         "dh": 180,
@@ -212,6 +236,18 @@
         "dh": 140,
         "positionAdjust": {
           "x": 0,
+          "y": 0
+        } 
+      },
+      "end": {
+        "image": "assets/sprites/zombies/basic/end.png",
+        "frames": 1,
+        "speed": 120,
+        "width": 167,
+        "height": 186,
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
           "y": 0
         } 
       }
@@ -267,7 +303,7 @@
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
-        "speed": 180,
+        "speed": 100,
         "width": 166,
         "height": 186,
         "dh": 180,
@@ -285,6 +321,18 @@
         "dh": 140,
         "positionAdjust": {
           "x": 0,
+          "y": 0
+        } 
+      },
+      "end": {
+        "image": "assets/sprites/zombies/basic/end.png",
+        "frames": 1,
+        "speed": 120,
+        "width": 167,
+        "height": 186,
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
           "y": 0
         } 
       }

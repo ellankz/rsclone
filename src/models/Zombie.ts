@@ -1,5 +1,3 @@
-/* eslint no-use-before-define: 0 */
-
 import { ZombieConfig, ZombiePreset, ZombiesStatesPreset } from '../types';
 import zombiePresets from '../data/zombies.json';
 
@@ -16,10 +14,10 @@ const X_MAX = -60;
 const Y_MIN = -5;
 const Y_MAX = -70;
 
-const X_AXIS = 1000;
+const X_AXIS = 980;
 const Y_AXIS = 5;
 
-const SPEED = 0.15;
+const SPEED = 0.17;
 
 export default class Zombie {
   private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
@@ -74,7 +72,6 @@ export default class Zombie {
     const image = new Image();
     image.src = this.image;
 
-    // improve
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
         const img = new Image();
@@ -169,13 +166,13 @@ export default class Zombie {
       width: 150,
       height: 186,
       startFrame: 0,
-      speed: 120,
+      speed: 80,
       dh: 180,
     }).addTo('scene') as ISpriteNode;
 
     setTimeout(() => {
       head.destroy();
-    }, 1300);
+    }, 800);
   }
 
   public remove() {
@@ -183,10 +180,13 @@ export default class Zombie {
     setTimeout(() => {
       this.zombieSpeed = 0;
       this.node.switchState('death');
+    }, 1200);
+    setTimeout(() => {
+      this.node.switchState('end');
     }, 2000);
     setTimeout(() => {
       this.node.destroy();
-    }, 3200);
+    }, 3000);
   }
 
   private trackPosition() {
