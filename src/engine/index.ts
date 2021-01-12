@@ -18,6 +18,7 @@ import {
 import View from './core/View';
 import Event from './core/Event';
 import Loader from './core/Loader';
+import AudioPlayer from './core/AudioPlayer';
 
 export default class Engine {
   size: Vector;
@@ -47,6 +48,8 @@ export default class Engine {
   container: HTMLElement;
 
   loader: Loader;
+
+  audioPlayer: any;
 
   constructor(
     _box: string | HTMLElement,
@@ -303,9 +306,17 @@ export default class Engine {
 
   // Loader
   public preloadFiles(
-    beforeLoadCB: () => Promise<void>, loadedOneCB: (percent: number) => void,
+    beforeLoadCB: () => Promise<void>,
+    loadedOneCB: (percent: number) => void,
+    afterLoadCB: () => void,
   ) {
-    this.loader = new Loader(beforeLoadCB, loadedOneCB);
+    this.loader = new Loader(beforeLoadCB, loadedOneCB, afterLoadCB);
     this.loader.init();
+  }
+
+  // AudioPlayer
+  public addAudio(soundList: {[dynamic: string]: string}) {
+    this.audioPlayer = new AudioPlayer(soundList, this.loader);
+    this.audioPlayer.init();
   }
 }

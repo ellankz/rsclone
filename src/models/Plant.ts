@@ -4,7 +4,6 @@ import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
-import { AudioPlayer } from '../game/AudioPlayer';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
 
@@ -62,7 +61,7 @@ export default class Plant {
 
   putOnField(cell: Cell) {
     this.draw(cell);
-    AudioPlayer.playSound('plant');
+    this.engine.audioPlayer.playSound('plant');
   }
 
   draw(cell: Cell) {
