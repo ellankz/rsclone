@@ -46,6 +46,7 @@ export default class Engine {
 
   vector: (x?: number, y?: number) => Vector;
 
+  // loader: any;
   container: HTMLElement;
 
   loader: Loader;

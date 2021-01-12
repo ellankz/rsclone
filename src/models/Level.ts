@@ -128,12 +128,46 @@ export default class Level {
   }
 
   public createZombies() {
+    // Generate row without repeating more then (2) times
+    function getRandomNumber(min: number, max: number): number {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const random: any = {
+      prev: null,
+      count: 0,
+      consecutive: 2,
+
+      nextRandom(min: number, max: number) {
+        if (this.prev === null || this.count < this.consecutive) {
+          const res = getRandomNumber(min, max);
+          if (res === this.prev) {
+            this.count += 1;
+          } else {
+            this.prev = res;
+            this.count = 1;
+          }
+          return res;
+        }
+
+        let res = this.prev;
+        while (res === this.prev) {
+          res = getRandomNumber(min, max);
+        }
+
+        this.prev = res;
+        this.count = 1;
+        return res;
+      },
+    };
+
+    // Generate zombies
     for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
-      let row: number;
+      let row: number = null;
 
       setTimeout(() => {
-        row = Level.getRandomNumber(0, ROWS_NUM - 1);
+        row = random.nextRandom(0, ROWS_NUM - 1);
         this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
         cell = this.cells[0][row];
         this.zombie.row = row;
@@ -244,9 +278,5 @@ export default class Level {
       this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
     );
     this.sunFall.init();
-  }
-
-  static getRandomNumber(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }
