@@ -25,15 +25,11 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
     );
-    this.dataService.login({ login: 'string', password: 'string' })
-      .then(() => this.dataService.getStats())
-      .then((res) => console.log(res));
   }
 
   setupGame() {
@@ -49,7 +45,9 @@ export default class Game {
   }
 
   runFirstScreen(): void {
-    const startGameScreen = new StartScreen(this.engine, this.startGame.bind(this));
+    const startGameScreen = new StartScreen(
+      this.engine, this.startGame.bind(this), this.dataService,
+    );
     this.engine.setScreen('startScreen');
   }
 

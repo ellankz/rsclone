@@ -1,26 +1,40 @@
 import Engine from '../engine';
 import { ScreenCreator } from './ScreenCreator';
-
 import '../../node_modules/canvasinput/CanvasInput';
+import { DataService } from '../api-service/DataService';
+import { User } from '../types';
+import { ITextNode } from '../engine/types';
 
-const windowCopy: any = window;
-const { CanvasInput } = windowCopy;
+const { CanvasInput } = window as any;
 
-const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen_inputs'];
+const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen-text', 'login-screen_inputs'];
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
 const LOGIN_SCREEN_SCENE_NAME: string = 'loginScreen';
 
 export class LoginScreen extends ScreenCreator {
-  private username: string;
+  dataService: DataService;
 
-  private password: string;
+  error: { message: string; node: ITextNode };
 
-  constructor(engine: Engine) {
+  setUserName: (name: string) => void;
+
+  userName: string;
+
+  constructor(
+    engine: Engine,
+    dataService: DataService,
+    setUserNameCB: (name: string) => void,
+    userName: string,
+  ) {
     super(engine);
+    this.dataService = dataService;
     this.createLayers(LOGIN_SCREEN_LAYERS);
     this.createNodes();
+    this.createErrorMessage();
     this.engine.createScreen(LOGIN_SCREEN_SCREEN_NAME, LOGIN_SCREEN_LAYERS);
     this.engine.createScene(LOGIN_SCREEN_SCENE_NAME);
+    this.setUserName = setUserNameCB;
+    this.userName = userName;
   }
 
   public openScreen(): void {
@@ -29,14 +43,15 @@ export class LoginScreen extends ScreenCreator {
 
   private createNodes(): void {
     // BACKGROUND COLOR
-    const backgroundColor = this.engine.createNode({
+    this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: LOGIN_SCREEN_LAYERS[0],
       color: '#323649',
     });
-    // BACKGROUND
+
+    // BACKGROUND IMAGE
     const BACKGROUND = this.engine
       .loader.files['assets/images/interface/register.png'] as HTMLImageElement;
 
@@ -55,53 +70,47 @@ export class LoginScreen extends ScreenCreator {
     const BUTTON_CLOSE = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
-    const buttonClose: any = this.engine.createNode({
+    const buttonClose = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         (background.position.x) + (BACKGROUND.width / 2.7),
         (background.position.y) + (BACKGROUND.height / 1.18),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
-      // dh: this.
     });
-    const textButtonClose: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonClose.position.x + 20,
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: '#333',
     });
 
-    this.setEvent(buttonClose, 'click', () => {
-      console.log('CLOSE');
-      this.engine.setScreen('startScreen');
-    });
-
-    // BUTTON SUBMIT
-    const buttonSubmit: any = this.engine.createNode({
+    // BUTTON SIGN IN
+    const buttonSubmit = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         (background.position.x) + (BACKGROUND.width / 4.6),
         (background.position.y) + (BACKGROUND.height / 1.5),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
     });
-    const textButtonSubmit: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonSubmit.position.x + 20,
         buttonSubmit.position.y + 10,
       ),
-      text: 'Log in',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      text: 'Sign in',
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: '#333',
     });
@@ -114,24 +123,24 @@ export class LoginScreen extends ScreenCreator {
         (background.position.y) + (BACKGROUND.height / 1.5),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
     });
-    const textButtonRegister: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonRegister.position.x + 15,
         buttonRegister.position.y + 10,
       ),
       text: 'Sing up',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: '#333',
     });
 
     // INPUTS
     const username = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
+      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[2]).canvas,
       fontSize: 18,
       fontColor: '#212121',
       fontWeight: 'bold',
@@ -143,11 +152,11 @@ export class LoginScreen extends ScreenCreator {
       borderRadius: 0,
       boxShadow: 'none',
       innerShadow: 'none',
-      placeHolder: 'Enter you login',
+      placeHolder: 'Enter login',
     });
 
     const password = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
+      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[2]).canvas,
       fontSize: 18,
       fontColor: '#212121',
       fontWeight: 'bold',
@@ -159,7 +168,7 @@ export class LoginScreen extends ScreenCreator {
       borderRadius: 0,
       boxShadow: 'none',
       innerShadow: 'none',
-      placeHolder: 'Enter you password',
+      placeHolder: 'Enter password',
     });
 
     username.onsubmit(() => {
@@ -169,36 +178,74 @@ export class LoginScreen extends ScreenCreator {
       password.blur();
     });
 
-    this.setEvent(buttonRegister, 'click', () => {
-      if (username.value() && password.value()) {
-        console.log('Sing up');
+    const onModalFinish = (name: string) => {
+      if (name !== this.userName) this.setUserName(name);
+      this.closeScreen();
+      username.value('');
+      password.value('');
+      this.setErrorMessage('');
+    };
 
-        // SING UP REQUEST
-        // const formData = new FormData();
-        // formData.append('login', username.value());
-        // formData.append('password', password.value());
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/url'); // url
-        // xhr.send(formData);
+    this.setEvent(buttonClose, 'click', () => {
+      onModalFinish(this.userName);
+    });
+
+    this.setEvent(buttonRegister, 'click', async () => {
+      const name = username.value();
+      const pass = password.value();
+      if (name && pass) {
+        const res = await this.dataService.signup({ login: name, password: pass } as User);
+        if (!res) {
+          this.setErrorMessage('Username is taken');
+        } else {
+          onModalFinish(name);
+        }
       } else {
-        console.log('Enter data');
+        this.setErrorMessage('Enter data');
       }
     });
 
-    this.setEvent(buttonSubmit, 'click', () => {
-      if (username.value() && password.value()) {
-        console.log('Log in');
-        // LOG IN REQUEST
-
-        // const formData = new FormData();
-        // formData.append('login', username.value());
-        // formData.append('password', password.value());
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/url'); // url
-        // xhr.send(formData);
+    this.setEvent(buttonSubmit, 'click', async () => {
+      const name = username.value();
+      const pass = password.value();
+      if (name && pass) {
+        const res = await this.dataService.login({ login: name, password: pass } as User);
+        if (!res) {
+          this.setErrorMessage('Sign in failed');
+        } else {
+          onModalFinish(name);
+        }
       } else {
-        console.log('Enter data');
+        this.setErrorMessage('Enter data');
       }
     });
+  }
+
+  private createErrorMessage() {
+    const { engine } = this;
+    this.error = {
+      message: '',
+      node: engine.createNode({
+        type: 'TextNode',
+        position: engine.vector(
+          (engine.size.x / 2) - (200 / 2),
+          (engine.size.y / 3),
+        ),
+        text: '',
+        layer: LOGIN_SCREEN_LAYERS[1],
+        fontSize: 25,
+        color: '#d20707',
+      }) as ITextNode,
+    };
+  }
+
+  private setErrorMessage(message: string) {
+    this.error.message = message;
+    this.error.node.text = message;
+    this.error.node.clearLayer();
+  }
+
+  private closeScreen() {
+    this.engine.setScreen('startScreen');
   }
 }

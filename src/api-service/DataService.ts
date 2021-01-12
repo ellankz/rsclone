@@ -1,3 +1,4 @@
+import { sign } from 'crypto';
 import { User, Game } from '../types';
 import { DataLoader } from './DataLoader';
 
@@ -10,10 +11,18 @@ export class DataService {
 
   async signup(user: User) {
     try {
-      await DataLoader.signUp(user);
-      const res = await DataLoader.login(user);
-      this.token = res.token;
-      return user.login;
+      const signupResult = await DataLoader.signUp(user);
+      if (signupResult.status === 'error') {
+        throw new Error(signupResult.message);
+      } else {
+        const res = await DataLoader.login(user);
+        if (res.status === 'error') {
+          throw new Error(res.message);
+        } else {
+          this.token = res.token;
+          return user.login;
+        }
+      }
     } catch (error) {
       console.error('Error during signup', error);
       return undefined;
@@ -23,8 +32,12 @@ export class DataService {
   async login(user: User) {
     try {
       const res = await DataLoader.login(user);
-      this.token = res.token;
-      return user.login;
+      if (res.status === 'error') {
+        throw new Error(res.message);
+      } else {
+        this.token = res.token;
+        return user.login;
+      }
     } catch (error) {
       console.error('Error during login', error);
       return undefined;

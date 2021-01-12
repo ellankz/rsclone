@@ -3,6 +3,8 @@ import { ScreenCreator } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
 import { StatisticsScreen } from './StatisticsScreen';
 import { LevelSelectionScreen } from './LevelSelectionScreen';
+import { DataService } from '../api-service/DataService';
+import { ITextNode } from '../engine/types';
 
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
 const START_SCREEN_SCREEN_NAME: string = 'startScreen';
@@ -17,16 +19,26 @@ export class StartScreen extends ScreenCreator {
 
   private levelSelectionScreen: any;
 
-  constructor(engine: Engine, func: () => void, userName?: string) {
+  dataService: DataService;
+
+  userNameNode: ITextNode;
+
+  constructor(engine: Engine, func: () => void, dataService: DataService, userName?: string) {
     super(engine);
     if (userName) {
       this.userName = userName;
     }
+    this.dataService = dataService;
     this.createLayers(START_SCREEN_LAYERS);
     this.createNodes();
     this.engine.createScreen(START_SCREEN_SCREEN_NAME, START_SCREEN_LAYERS);
     this.engine.createScene(START_SCREEN_SCENE_NAME);
-    this.loginScreen = new LoginScreen(this.engine);
+    this.loginScreen = new LoginScreen(
+      this.engine,
+      this.dataService,
+      this.setUserName.bind(this),
+      this.userName,
+    );
     this.settingsScreen = new StatisticsScreen(this.engine);
     this.levelSelectionScreen = new LevelSelectionScreen(this.engine, func);
   }
@@ -118,7 +130,7 @@ export class StartScreen extends ScreenCreator {
     });
 
     // USERNAME TEXT
-    const userName: any = this.engine.createNode({
+    this.userNameNode = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         (autorizationBackground.position.x + LOGIN_CARD_IMG.width) / 3,
@@ -128,7 +140,7 @@ export class StartScreen extends ScreenCreator {
       layer: START_SCREEN_LAYERS[0],
       fontSize: 18,
       color: '#fff',
-    });
+    }) as ITextNode;
 
     // LOGIN BUTTON
     const LOGIN_BUTTON_IMG = this.engine
@@ -148,5 +160,11 @@ export class StartScreen extends ScreenCreator {
     this.setEvent(autorizationButton, 'click', () => {
       this.loginScreen.openScreen();
     });
+  }
+
+  setUserName(name: string) {
+    this.userName = name;
+    this.userNameNode.text = name;
+    this.userNameNode.clearLayer();
   }
 }
