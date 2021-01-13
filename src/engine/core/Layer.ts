@@ -18,8 +18,6 @@ export default class Layer implements ILayer {
 
   size: IVector;
 
-  offset: IVector;
-
   view: IView;
 
   nodes: NodesType[];
@@ -28,9 +26,9 @@ export default class Layer implements ILayer {
 
   update: () => void;
 
-  constructor(index: number, size: IVector, container: HTMLElement, offset: IVector, view?: IView) {
+  constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
     const canvas = document.createElement('canvas');
-    canvas.style.cssText = `position: absolute; left: ${offset.x}px; top: ${offset.y}px`;
+    canvas.style.cssText = 'position: absolute; left: 0; top: 0';
     canvas.width = size.x;
     canvas.height = size.y;
     canvas.style.zIndex = index.toString();
@@ -40,7 +38,6 @@ export default class Layer implements ILayer {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.size = size;
-    this.offset = offset;
     this.view = view || new View([this]);
     this.nodes = [];
     this.update = null;
@@ -142,6 +139,12 @@ export default class Layer implements ILayer {
     if (!isLoaded) {
       params.img.addEventListener('load', draw);
     } else draw();
+  }
+
+  public resize(scaleRatio: number, size: Vector) {
+    this.canvas.width = size.x;
+    this.canvas.height = size.y;
+    this.ctx.scale(scaleRatio, scaleRatio);
   }
 
   private static setBorder(border: string, ctx: CanvasRenderingContext2D) {
