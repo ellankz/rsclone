@@ -183,6 +183,7 @@ export default class Engine {
     });
 
     this.activeScreen = name;
+    if (this.fullscreenMode) this.setFullscreen();
   }
 
   // Layers
