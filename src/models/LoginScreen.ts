@@ -3,7 +3,7 @@ import { ScreenCreator } from './ScreenCreator';
 import '../../node_modules/canvasinput/CanvasInput';
 import { DataService } from '../api-service/DataService';
 import { User } from '../types';
-import { ITextNode } from '../engine/types';
+import { ISpriteNode, ITextNode } from '../engine/types';
 
 const { CanvasInput } = window as any;
 
@@ -16,9 +16,13 @@ export class LoginScreen extends ScreenCreator {
 
   error: { message: string; node: ITextNode };
 
+  isLoading: boolean = false;
+
   setUserName: (name: string) => void;
 
   userName: string;
+
+  loadingNode: any;
 
   constructor(
     engine: Engine,
@@ -194,7 +198,9 @@ export class LoginScreen extends ScreenCreator {
       const name = username.value();
       const pass = password.value();
       if (name && pass) {
+        this.setLoading(true);
         const res = await this.dataService.signup({ login: name, password: pass } as User);
+        this.setLoading(false);
         if (!res) {
           this.setErrorMessage('Username is taken');
         } else {
@@ -209,7 +215,9 @@ export class LoginScreen extends ScreenCreator {
       const name = username.value();
       const pass = password.value();
       if (name && pass) {
+        this.setLoading(true);
         const res = await this.dataService.login({ login: name, password: pass } as User);
+        this.setLoading(false);
         if (!res) {
           this.setErrorMessage('Sign in failed');
         } else {
@@ -219,6 +227,34 @@ export class LoginScreen extends ScreenCreator {
         this.setErrorMessage('Enter data');
       }
     });
+  }
+
+  private setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
+    if (isLoading) {
+      const frames = 12;
+      const size = 100;
+      const speed = 100;
+      const dh = 30;
+      const img = this.engine.loader.files['assets/sprites/loading.png'] as HTMLImageElement;
+      const pos = this.engine.vector(
+        (this.engine.size.x / 2) - (30 / 2),
+        (this.engine.size.x / 3),
+      );
+      this.loadingNode = this.engine.createNode({
+        type: 'SpriteNode',
+        position: pos,
+        size: this.engine.vector(size * frames, size),
+        layer: LOGIN_SCREEN_LAYERS[1],
+        img,
+        frames,
+        startFrame: 0,
+        speed,
+        dh,
+      }).addTo(LOGIN_SCREEN_SCENE_NAME) as ISpriteNode;
+    } else {
+      this.loadingNode.destroy();
+    }
   }
 
   private createErrorMessage() {
