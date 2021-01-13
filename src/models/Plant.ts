@@ -1,16 +1,15 @@
 import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-
 import plantPresets from '../data/plants.json';
 import Engine from '../engine';
 import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
+import Zombie from './Zombie';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
-const x = require('../assets/sprites/plants/Peashooter/1.png');
 
 export default class Plant {
-  private plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
+  protected plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
 
   public cost: number;
 
@@ -28,15 +27,27 @@ export default class Plant {
 
   public height: number;
 
-  private engine: Engine;
+  public name: string;
 
-  private frames: number;
+  public position: Vector;
 
-  private speed: number;
+  public row: number;
 
-  private node: ISpriteNode;
+  protected engine: Engine;
 
-  private states: {[dynamic: string]: PlantStatesPreset};
+  protected frames: number;
+
+  protected speed: number;
+
+  protected node: ISpriteNode;
+
+  protected states: {[dynamic: string]: PlantStatesPreset};
+
+  public isDestroyedFlag: boolean;
+
+  public timer: any;
+
+  public isShooting: boolean;
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
@@ -58,14 +69,12 @@ export default class Plant {
   }
 
   draw(cell: Cell) {
-    const image = new Image();
-    image.src = this.image;
+    const image = this.engine.loader.files[this.image] as HTMLImageElement;
 
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
-        const img = new Image();
-        img.src = state[1].image;
-        img.src = x.default;
+        const path = state[1].image;
+        const img = this.engine.loader.files[path] as HTMLImageElement;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,
@@ -77,13 +86,14 @@ export default class Plant {
       return Object.fromEntries(statesArr);
     };
 
-    const position = this.engine.vector(
+    this.position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
       (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
     );
+
     this.node = this.engine.createNode({
       type: 'SpriteNode',
-      position,
+      position: this.position,
       size: this.engine.vector(this.width * this.frames, this.height),
       layer: 'main',
       img: image,
@@ -95,8 +105,27 @@ export default class Plant {
     }).addTo('scene') as ISpriteNode;
   }
 
-  switchState(state: string) {
+  switchState(state: string, zombie?: Zombie, plant?: Plant) {
     this.node.switchState(state);
-    setTimeout(() => this.node.switchState('basic'), 3000);
+  }
+
+  public stopShooting() {
+    this.isShooting = false;
+  }
+
+  public stopCreatingSuns() {
+    clearTimeout(this.timer);
+  }
+
+  public isDestroyed(): void {
+    if (this.health <= 0) {
+      this.isDestroyedFlag = true;
+    }
+  }
+
+  destroy() {
+    this.stopCreatingSuns();
+    this.isDestroyed();
+    this.node.destroy();
   }
 }

@@ -1,9 +1,9 @@
 import Vector from '../engine/core/Vector';
 import { Engine, NodesType } from '../engine/types';
 
-const X_OFFSET_COEF = 0.271;
+const X_OFFSET_COEF = 0.246;
 const Y_OFFSET_COEF = 0.127;
-const X_SIZE_COEF = 0.088;
+const X_SIZE_COEF = 0.078;
 const Y_SIZE_COEF = 0.167;
 
 export default class Cell {
@@ -23,11 +23,11 @@ export default class Cell {
     this.cellOffset = this.engine.vector(
       X_OFFSET_COEF * this.engine.size.x,
       Y_OFFSET_COEF * this.engine.size.y,
-    ); // 250, 76
+    );
     this.cellSize = this.engine.vector(
       X_SIZE_COEF * this.engine.size.x,
       Y_SIZE_COEF * this.engine.size.y,
-    ); // 81 * 100
+    );
   }
 
   public draw() {
@@ -39,7 +39,7 @@ export default class Cell {
       ),
       size: this.cellSize,
       layer: 'main',
-      color: 'rgba(255, 255, 255, 0.7)',
+      color: 'rgba(255, 255, 255, 0.0)',
     });
   }
 

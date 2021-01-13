@@ -5,6 +5,7 @@
 - [Engine](#engine)
 - [Core](#vector)
   - [Vector](#vector)
+  - [Screen](#screen)
   - [Layer](#layer)
   - [Scene](#scene)
   - [View](#view)
@@ -15,6 +16,7 @@
   - [TextNode](#textnode)
   - [ImageNode](#imagenode)
   - [SpriteNode](#spritenode)
+- [Loader](#loader)
 - [Notes](#notes)
 - [Examples](#examples)
 
@@ -30,7 +32,10 @@
 {
   size: Vector,  // размер контейнера
   canvasOffset: Vector,  // отступ контейнера от границ окна
+  screens: { screenName: Layer[] },
+  activeScreen: string,
   layers: { layerName: Layer },
+  events: { event: { option: value } }; // опции событий
   container: HTMLElement
 }
 ```
@@ -38,16 +43,22 @@
 #### Параметры
 
 ```javascript
-(_box: string | HTMLElement, layersArray?: [...layersNames])
+(_box: string | HTMLElement, config?: {screenName: [...layersNames]} | [...layersNames], screenZIndex?: number);
 ```
 
 `_box` - id или ссылка на сам элемент
 
-`layersArray` - необязательный, но желательный параметр - массив уникальных имен для слоев, которые создадутся сразу при инициализации
+`config` - необязательный параметр, который создадет экраны и слои сразу при инициализации. Форматы:
+
+- объект с ключами имен экранов и значениями - массивами уникальных имен для слоев
+- массив имен для слоев
+
+`screenZIndex` - необязательный параметр, zIndex, который добаляется к слоям текущего экрана, default - 100
 
 #### Создание
 
 ```javascript
+const engine = new Engine(container, { mainScreen: ['back', 'main'], firstScreen: ['nav'] });
 const engine = new Engine(container, ['back', 'main']);
 ```
 
@@ -59,6 +70,9 @@ vector: (x?: number, y?: number) => Vector;
 start: (name: string) => void; // запускает сцену по имени
 stop: () => void; // останавливает активную сцену
 
+createScreen: (name: string, layersNames[]) => void;
+setScreen: (name: string) => void;
+
 createLayer: (name: string, index: number) => void;
 getLayer: (name: string) => ILayer;
 
@@ -67,6 +81,9 @@ getSceneNodes: (name: string) => Nodes[];
 
 createNode: (params: any, update?: () => void) => Node;
 createView: (layersNames: string[]) => View; // создает камеру для выбраных слоев
+
+on: (node: NodesType, event: string, callback: (e: any) => void) => boolean; // добавляет событие на узел
+off: (node: NodesType, event: string, callback: (e: any) => void) => boolean; // удаляет событие с узла
 ```
 
 Все элементы и методы подробно описаны ниже.
@@ -108,6 +125,42 @@ vector.minus(engine.vector(10)); // {x: 0 - 10; y: 0 - 0} => {x: -10; y: 0}
 vector.plus(engine.vector(20, -10)); // {x: - 10 + 20; y: 0 + -10} => {x: 10; y: -10}
 ```
 
+## Screen
+
+Группирует слои в экраны.
+
+#### Cвойства
+
+```javascript
+{
+  layers: [...layersNames], // массив имен слоев
+}
+```
+
+#### Создание
+
+1. При инициализации (рекомендуется)
+   - вторым параметром в движок передается объект с именами экранов и массив строк с уникальными именами слоев
+   - по умолчанию устанавливается последний экран из созданых при инициализации, в остальных случаях необходимо вызывать метод setScreen
+   ```javascript
+   const engine = new Engine('container', { mainScreen: ['back', 'main'], firstScreen: ['nav'] });
+   ```
+2. Отдельно, ничего не возвращает
+   - первый параметр имя экрана, второй - массив имен слоев
+   ```javascript
+   const engine = new Engine('container');
+   engine.createScreen('name', ['main', 'back']);
+   ```
+
+#### Управление
+
+- setScreen - принимает имя экрана и выносит его наверх, путем добавления к слоям большого zIndex
+
+```javascript
+const engine = new Engine(container, { firstScreen: ['main', 'top'] });
+engine.setScreen('firstScreen');
+```
+
 ## Layer
 
 Создает новый канвас, отрисовывает нужные элементы и хранит в себе все его узлы.
@@ -121,7 +174,8 @@ vector.plus(engine.vector(20, -10)); // {x: - 10 + 20; y: 0 + -10} => {x: 10; y:
   size: Vector,         // размеры родительского контейнера
   offset: Vector,       // позиция родительского контейнера
   view: View;           // текущая камера
-  nodes: [...nodes]     // список узлов находящихся на слою
+  nodes: [...nodes],    // список узлов находящихся на слое
+  screen: string,       // имя экрана к которому принадлежит слой, default - ''
 }
 ```
 
@@ -130,7 +184,7 @@ vector.plus(engine.vector(20, -10)); // {x: - 10 + 20; y: 0 + -10} => {x: 10; y:
 ! Если при инициализации не передавались слои, автоматически создается слой 'main'
 
 1. При инициализации (рекомендуется)
-   - вторым параметром в движок передаем массив строк с уникальными именами слоев
+   - вторым параметром в движок передается массив строк с уникальными именами слоев
    - самый последний слой будет самым верхним
    ```javascript
    const engine = new Engine('container', ['back', 'main', 'top']);
@@ -150,6 +204,16 @@ const layer = engine.getLayer('main');
 ```
 
 #### Методы
+
+1. Методы перемещения. Перемещают слои путем изменения zIndex. Необязательным параметром принимает число на которое необходимо увеличить zIndex.
+
+   - toTop(n?)
+   - toBack(n?)
+
+   ```javascript
+   layer.toTop();
+   layer.toBack(3);
+   ```
 
 1. Методы прямой отрисовки (не рекомендуются). Не сохраняются в памяти, полностью статичны, нет возможности вернуть после очистки canvas.
 
@@ -201,7 +265,7 @@ const layer = engine.getLayer('main');
    border?: string;
    ```
 
-2. Дополнительные методы !(только при необходимости)
+1. Дополнительные методы !(только при необходимости)
    - clear - очищает канвас !(не удаляет узлы)
    - update - очищает канвас и рисует все узлы заново
    ```javascript
@@ -311,20 +375,45 @@ engine.getLayer('main').view.move(engine.vector(10, 10));
 
 ## Event
 
-Добавляет события на элементы
+Работает с событими узла.
 
 #### События
 
 - click
+- mouseenter
+- mouseleave
+- mousedown
+- mouseup
+
+#### Опции
+
+- eventBubbling (default: false) - если true - при нажатии на узел событие отрабатывает также на узлах под ним, иначе узлы под игнорируются и событие работает только на неперекрывающихся частях узла. Есть у всех событий, кроме mouseleave. Для mouseleave значение берется из mouseenter.
+
+#### Задание опций
+
+Опции учитываются при каждом отрабатывании событий, поэтому в процессе их можно менять.
+
+Опции задаются через engine.events[eventName][option].
+
+```javascript
+engine.events.click.eventBubbling = true;
+```
 
 #### Использование
 
-! узел должен находиться на верхнем слою
+! Работает с узлами на всех слоях, если установлен активный экран - только с слоями экрана
+! По умолчанию событие отрабатывает только на неперекрывающихся частях узла, чтобы изменить необходимо изменить опцию eventBubbling нужного события на true
 
-`on` - принимает узел, название события, коллбек, в который будет передан event
+Методы `on`, `off` принимают узел, название события и коллбек, в который будет передан event, возвращают true если операция прошла успешно, иначе false.
+
+`on` - добавляет событие на узел
+
+`off` - удаляет событие узла !(коллбек должен равняться тому, что был задан при `on`)
 
 ```javascript
-engine.on(node, 'click', (e) => console.log(e.pageX));
+const callback = (e) => console.log(e.pageX);
+engine.on(node, 'click', callback);
+engine.off(node, 'click', callback);
 ```
 
 ---
@@ -337,7 +426,7 @@ Cоздает узлы, с которыми можно работать (обн�
 
 При создании возвращается узел или null при неправильных параметрах.
 
-Узел сразу отрисовывается на слою при создании.
+Узел сразу отрисовывается на слое при создании.
 
 `createNode(params, update?: (node) => void)` - принимает объект с параметрами необходимые для вида узла, второй необязательный аргумент - функция обновления, в которую передается узел и которая вызывается при обновлении сцены, если узел находится на ней
 
@@ -356,6 +445,7 @@ engine.createNode({
 - `move: (Vector) => void` - принимает Vector и смещает позицию элемента на это растояние
 - `destroy: () => void` - удаляет узел из слоев и сцены
 - `clearLayer: () => void` - очищает слой на котором находится узел и обновляет все узлы
+- `removeAllEvents: () => void` - удаляет все слушатели событий у узла
 
 Пример
 
@@ -479,14 +569,17 @@ setTimeout(() => {
   border?: string
 }
 ```
+
 ##### Смена состояний спрайта
+
 Все состояния спрайта задаются в момент создания узла.
 
 Дополнительные состояния можно задать в поле states:
-``` javascript
+
+```javascript
   const statesToCreate = {
    attack: {
-        img, // HTMLImageElement 
+        img, // HTMLImageElement
         frames: 3,
         speed: 100,
         size: new Vector(70, 70),
@@ -500,7 +593,7 @@ setTimeout(() => {
     position: new Vector(600, 700),
     size: new Vector(this.width * this.frames, this.height),
     layer: 'main',
-    img: image, // HTMLImageElement 
+    img: image, // HTMLImageElement
     frames: this.frames,
     startFrame: 0,
     speed: this.speed,
@@ -508,21 +601,35 @@ setTimeout(() => {
     states: statesToCreate,
   }).addTo('scene') as ISpriteNode;
 ```
+
 Поле states принимает объект с ключем - название состояния ('attack') и значением - объект типа SpriteStatesConfig:
 
-``` javascript
+```javascript
 interface SpriteStatesConfig {
-  [dynamic: string]: { // название состояния, изначальное состояние сохранается с ключем basic
-    img: HTMLImageElement;
-    frames: number; 
-    speed?: number;
-    dh?: number;
-    startFrame?: number;
-    positionAdjust?: IVector; // отклонение позиции от изначальной
-    size?: IVector;
-  }
+  [dynamic: string]: {
+    // название состояния, изначальное состояние сохранается с ключем basic
+    img: HTMLImageElement,
+    frames: number,
+    speed?: number,
+    dh?: number,
+    startFrame?: number,
+    positionAdjust?: IVector, // отклонение позиции от изначальной
+    size?: IVector,
+  };
 }
 ```
+
+---
+
+## Loader
+Загрузчик загружает все mp3, png, jpg файлы из папки src/assets и создает Image и Audio элементы для каждого.
+Получить доступ к элементу можно таким образом:
+
+```javascript
+const image = engine.loader.files['assets/images/image1.png'] as HTMLImageElement;
+const audio = engine.loader.files['assets/audio/audio.mp3'] as HTMLAudioElement;
+```
+
 ---
 
 ## Notes
@@ -545,6 +652,7 @@ interface SpriteStatesConfig {
    ```
 
 ---
+
 
 ## Examples
 
@@ -676,4 +784,235 @@ engine.start('scene');
 
 3. Demo: https://engine-demo3.netlify.app/
 
-Пример детально показывающий работу камеры, а также работу сцены с узлами на разных слоях
+Пример показывающий работу камеры, смену сцен с узлами на разных слоях, использование экранов
+
+```javascript
+const engine = new Engine(container, {
+  level: ['back', 'main', 'nav'],
+  firstScreen: ['firstScreen'],
+});
+
+let levelSceneInit: () => void = null; // резервируем переменную под коллбек
+
+engine.createScene('levelScene', function () {
+  this.init = () => {
+    if (levelSceneInit) levelSceneInit();
+  };
+});
+
+engine.createScene('firstScreenScene');
+
+const bgImg = new Image();
+const sunflowerImg = new Image();
+const zombieImg = new Image();
+
+bgImg.src = 'assets/images/interface/background1.jpg';
+sunflowerImg.src = 'assets/sprites/plants/SunFlower/0.png';
+zombieImg.src = 'assets/sprites/zombies/zombie.png';
+
+// configs
+const sunflowerConfig = {
+  type: 'SpriteNode',
+  position: engine.vector(),
+  size: engine.vector(1314, 74),
+  dh: 80,
+  frames: 18,
+  layer: 'main',
+  img: sunflowerImg,
+  speed: 50,
+};
+
+const zombieConfig = {
+  type: 'SpriteNode',
+  position: engine.vector(),
+  size: engine.vector(2068, 126),
+  dh: 130,
+  frames: 22,
+  speed: 50,
+  layer: 'main',
+  img: zombieImg,
+};
+
+const btnConfig = {
+  type: 'RectNode',
+  position: engine.vector(),
+  size: engine.vector(155, 40),
+  layer: 'nav',
+  color: '#503714',
+  border: '4px #604013',
+};
+
+const textConfig = {
+  type: 'TextNode',
+  position: engine.vector(),
+  text: '',
+  color: '#cfc161',
+  layer: 'nav',
+  fontSize: 18,
+  font: 'sans-serif',
+};
+
+// levelScreen
+const bgNode = engine
+  .createNode({
+    type: 'ImageNode',
+    position: engine.vector(),
+    size: engine.vector(engine.size.x + 400, engine.size.y),
+    layer: 'back',
+    img: bgImg,
+    dh: engine.size.y,
+  })
+  .addTo('levelScene');
+
+engine.createNode({ ...sunflowerConfig, position: engine.vector(500, 290) }).addTo('levelScene');
+engine.createNode({ ...sunflowerConfig, position: engine.vector(580, 380) }).addTo('levelScene');
+
+const zombie = engine // резервируем переменную, чтобы в дальнейшем повесить анимацию
+  .createNode({ ...zombieConfig, position: engine.vector(1140, 240) })
+  .addTo('levelScene');
+
+// nav
+const btn1 = engine.createNode({
+  ...btnConfig,
+  position: engine.vector(engine.size.x - btnConfig.size.x - 20, 20),
+});
+
+const btn2 = engine.createNode({
+  ...btnConfig,
+  position: engine.vector(engine.size.x - btnConfig.size.x - 20, 40 + btnConfig.size.y),
+});
+
+const btn3 = engine.createNode({
+  ...btnConfig,
+  position: engine.vector(engine.size.x - btnConfig.size.x - 20, 60 + btnConfig.size.y * 2),
+});
+
+const btnBack = engine.createNode({
+  ...btnConfig,
+  position: engine.vector(20, 20),
+});
+
+engine.createNode({
+  ...textConfig,
+  position: engine.vector(btn1.position.x + 10, btn1.position.y + 12),
+  text: 'move all screens',
+});
+
+engine.createNode({
+  ...textConfig,
+  position: engine.vector(btn2.position.x + 10, btn2.position.y + 12),
+  text: 'move 1st screen',
+});
+
+engine.createNode({
+  ...textConfig,
+  position: engine.vector(btn3.position.x + 10, btn3.position.y + 12),
+  text: 'move 2nd screen',
+});
+
+engine.createNode({
+  ...textConfig,
+  position: engine.vector(btnBack.position.x + 50, btnBack.position.y + 12),
+  text: 'BACK',
+});
+
+// firstScreen
+engine.createNode({
+  type: 'RectNode',
+  position: engine.vector(),
+  size: engine.vector(engine.size.x, engine.size.y),
+  layer: 'firstScreen',
+  color: '#1a1000',
+});
+
+engine
+  .createNode({
+    ...sunflowerConfig,
+    position: engine.vector(engine.size.x / 2 - 40, engine.size.y / 2 - 100),
+    layer: 'firstScreen',
+  })
+  .addTo('firstScreenScene');
+
+const btnPlay = engine.createNode({
+  ...btnConfig,
+  position: engine.vector(
+    engine.size.x / 2 - btnConfig.size.x / 2,
+    engine.size.y / 2 - btnConfig.size.y / 2 + 40,
+  ),
+  layer: 'firstScreen',
+});
+
+engine.createNode({
+  ...textConfig,
+  position: engine.vector(btnPlay.position.x + 55, btnPlay.position.y + 12),
+  text: 'PLAY',
+  layer: 'firstScreen',
+});
+
+// game
+engine.start('firstScreenScene');
+let running = false; // флаг для отслеживания анимации
+
+levelSceneInit = () => {
+  engine.getLayer('back').view.position.x = 110; // 110 - начальная позиция фона
+  engine.getLayer('main').view.position.x = 110;
+};
+
+const viewAnimation = (node: any) => {
+  const view = node.layer.view;
+  running = true;
+
+  node.update = () => {
+    if (view.position.x - 110 >= 200) {
+      setTimeout(() => {
+        node.update = () => {
+          if (view.position.x <= 110) {
+            delete node.update;
+            view.position.x = 110;
+            running = false;
+          } else {
+            view.move(engine.vector(-2.5, 0));
+          }
+        };
+      }, 100);
+    } else {
+      view.move(engine.vector(3.5, 0));
+    }
+  };
+};
+
+engine.on(btnPlay, 'click', () => {
+  engine.stop();
+  engine.setScreen('level');
+  engine.start('levelScene');
+});
+
+engine.on(btnBack, 'click', () => {
+  engine.stop();
+  engine.setScreen('firstScreen');
+  engine.start('firstScreenScene');
+});
+
+engine.on(btn1, 'click', () => {
+  if (running) return;
+  const view = engine.createView(['back', 'main']);
+  view.move(engine.vector(110));
+  viewAnimation(zombie);
+});
+
+engine.on(btn2, 'click', () => {
+  if (running) return;
+  const view = engine.createView(['main']);
+  view.move(engine.vector(110));
+  engine.getLayer('back').view.position.x = 110; // позиция камеры уже могла измениться
+  viewAnimation(bgNode);
+});
+
+engine.on(btn3, 'click', () => {
+  if (running) return;
+  const view = engine.createView(['back']);
+  view.move(engine.vector(110));
+  engine.getLayer('main').view.position.x = 110;
+  viewAnimation(zombie);
+});
+```

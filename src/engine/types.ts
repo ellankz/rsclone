@@ -1,14 +1,23 @@
 export interface Engine {
   size: IVector;
   canvasOffset: IVector;
-  layers: { [key: string]: ILayer };
+  screens: { [name: string]: ILayer[] };
+  activeScreen: string;
+  layers: { [name: string]: ILayer };
   container: HTMLElement;
+  events: { [event: string]: { [option: string]: any } };
 
   vector: (x?: number, y?: number) => IVector;
 
-  init: (_box: string | HTMLElement, layersConfig?: string[]) => void;
+  on: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
+  off: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
+
+  init: (_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) => void;
   start: (name: string) => void;
   stop: () => void;
+
+  createScreen: (name: string, layersNames: string[]) => void;
+  setScreen: (name: string) => void;
 
   createLayer: (name: string, index: number) => void;
   getLayer: (name: string) => ILayer;
@@ -36,6 +45,7 @@ export type NodesTypeName =
   | 'TextNode'
   | 'ImageNode'
   | 'SpriteNode';
+
 export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode;
 
 export interface INode {
@@ -45,8 +55,7 @@ export interface INode {
   layer: ILayer;
   sceneName: string;
   border?: string;
-
-  events: [string, (e: any) => void][];
+  opacity?: number;
 
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
@@ -98,7 +107,7 @@ export interface SpriteStatesConfig {
     startFrame?: number;
     positionAdjust?: IVector;
     size?: IVector;
-  }
+  };
 }
 
 export interface ISpriteNode extends INode {
@@ -137,6 +146,10 @@ export interface ILayer {
   offset: IVector;
   view: IView;
   nodes: NodesType[];
+  screen: string;
+
+  toTop: (n?: number) => void;
+  toBack: (n?: number) => void;
 
   drawRect: (RectConfig: any) => void;
   drawCircle: (CircleConfig: any) => void;
@@ -160,6 +173,7 @@ export interface NodeConfig {
   type: NodesTypeName;
   layer: ILayer;
   border?: string;
+  opacity?: number;
 }
 
 export interface RectNodeConfig extends NodeConfig {
@@ -200,6 +214,7 @@ export interface RectConfig {
   height: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface CircleConfig {
@@ -208,6 +223,7 @@ export interface CircleConfig {
   radius: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface TextConfig {
@@ -218,6 +234,7 @@ export interface TextConfig {
   size?: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface ImageConfig {
@@ -231,6 +248,7 @@ export interface ImageConfig {
   dh: number;
   dw: number;
   border?: string;
+  opacity?: number;
 }
 
 export interface SceneConfig {

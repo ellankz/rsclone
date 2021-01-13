@@ -1,17 +1,14 @@
 body {
-  background: rgb(41, 16, 69);
+  background: pink;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  margin: 0;
 }
 
 #game {
-  width: 920px;
+  width: 1030px;
   height: 600px;
-  cursor: pointer;
 }
 
 @font-face {

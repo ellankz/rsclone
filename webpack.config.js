@@ -44,19 +44,22 @@ module.exports = (env) => ({
       },
     },
     {
-      test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
-      type: 'asset/inline',
-    },
-    {
       test: /\.(mp3|wav)$/i,
       loader: 'file-loader',
       options: {
-        name: 'audio/[name].[ext]',
+        name: '[path][name].[ext]',
+        outputPath: (file) => {
+          const filePath = file.split('src/')[1];
+          return filePath;
+        },
       },
     }, {
       test: /\.(ts|tsx)$/,
       loader: 'babel-loader',
       exclude: [/node_modules/],
+    }, {
+      test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+      type: 'asset/inline',
     }, {
       test: /\.(ts|tsx)$/,
       loader: 'ts-loader',

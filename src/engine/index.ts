@@ -14,58 +14,78 @@ import {
   NodeConfig,
   NodesType,
   NodesTypeName,
-  IImageNode,
-  IRectNode,
-  ICircleNode,
-  ISpriteNode,
-  ITextNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
+import Loader from './core/Loader';
 
 export default class Engine {
   size: Vector;
 
   canvasOffset: Vector;
 
-  layers: { [key: string]: Layer };
+  screens: { [name: string]: Layer[] };
+
+  layers: { [name: string]: Layer };
+
+  activeScreen: string;
+
+  screenZIndex: number;
+
+  events: { [event: string]: { [option: string]: any } };
 
   private running: boolean;
 
-  private stopped: boolean;
-
-  private scenes: { [key: string]: Scene };
+  private scenes: { [name: string]: Scene };
 
   private activeScene: Scene;
 
-  event: Event;
+  private animation: number;
+
+  private event: Event;
 
   vector: (x?: number, y?: number) => Vector;
 
+  // loader: any;
   container: HTMLElement;
 
-  constructor(_box: string | HTMLElement, layersArray?: string[]) {
+  loader: Loader;
+
+  constructor(
+    _box: string | HTMLElement,
+    config?: string[] | { [name: string]: string[] },
+    screenZIndex?: number,
+  ) {
     this.size = null;
     this.canvasOffset = null;
+    this.activeScreen = '';
     this.activeScene = null;
+    this.screenZIndex = screenZIndex || 100;
     this.running = false;
-    this.stopped = true;
+    this.events = {};
 
+    this.screens = {};
     this.layers = {};
     this.scenes = {};
     this.event = null;
+    this.animation = null;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
-    this.init(_box, layersArray);
+    this.init(_box, config);
   }
 
+  // Events
   public on(node: NodesType, event: string, callback: (e: any) => void) {
-    this.event.handle(node, event, callback);
+    return this.event.addEvent(node, event, callback);
+  }
+
+  public off(node: NodesType, event: string, callback: (e: any) => void) {
+    return this.event.removeEvent(node, event, callback);
   }
 
   // Init
-  public init(_box: string | HTMLElement, layersArray?: string[]) {
+  public init(_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) {
     this.container = typeof _box === 'string' ? document.getElementById(_box) : _box;
 
     const box: DOMRect = this.container.getBoundingClientRect();
@@ -73,42 +93,86 @@ export default class Engine {
     this.canvasOffset = this.vector(box.left, box.top);
     this.size = this.vector(box.width, box.height);
 
-    this.event = new Event(this.canvasOffset);
+    this.event = new Event(this.canvasOffset, this);
 
-    if (layersArray && layersArray.length > 0) {
-      layersArray.forEach((layer, i) => {
+    if (!config) {
+      this.createLayer('main', 0);
+    } else if (!Array.isArray(config)) {
+      Object.keys(config).forEach((screen) => {
+        const layers = config[screen];
+        if (!layers || layers.length <= 0) return;
+
+        layers.forEach((layer) => this.createLayer(layer));
+        this.createScreen(screen, layers);
+      });
+
+      const topScreen = Object.keys(this.screens)[Object.keys(this.screens).length - 1];
+      this.setScreen(topScreen);
+    } else if (config.length > 0) {
+      config.forEach((layer, i) => {
         this.createLayer(layer, i);
       });
-    } else {
-      this.createLayer('main', 0);
     }
   }
 
   //   Engine
   public start(name: string) {
-    if (this.running || !this.stopped) return;
+    if (this.running) return;
     this.running = this.setScene(name);
-    this.stopped = !this.running;
     if (this.running) {
       this.updateScene();
     }
   }
 
   public stop() {
-    if (this.stopped && !this.running) return;
-    this.stopped = true;
+    if (!this.running) return;
     this.running = false;
+    cancelAnimationFrame(this.animation);
   }
 
   private updateScene() {
+    if (!this.running) return;
     this.activeScene.clear();
     this.activeScene.updateNodes();
     this.activeScene.update();
     this.activeScene.drawNodes();
     this.activeScene.draw();
     if (this.running) {
-      requestAnimationFrame(this.updateScene.bind(this));
+      this.animation = requestAnimationFrame(this.updateScene.bind(this));
     }
+  }
+
+  // Screens
+  public createScreen(name: string, layersNames: string[]) {
+    if (this.screens[name] || !layersNames || layersNames.length <= 0) return;
+
+    const layers = layersNames.map((layerName) => {
+      const layer = this.layers[layerName];
+      layer.screen = name;
+      return layer;
+    });
+
+    this.screens[name] = layers;
+  }
+
+  public setScreen(name: string) {
+    if (!this.screens[name]) return;
+
+    if (this.activeScreen) {
+      const lastLayers = this.screens[this.activeScreen];
+      lastLayers.forEach((layer) => {
+        const { canvas } = layer;
+        canvas.style.zIndex = (+layer.canvas.style.zIndex - 100).toString();
+      });
+    }
+
+    const layers = this.screens[name];
+    layers.forEach((layer) => {
+      const { canvas } = layer;
+      canvas.style.zIndex = (+layer.canvas.style.zIndex + 100).toString();
+    });
+
+    this.activeScreen = name;
   }
 
   // Layers
@@ -224,13 +288,7 @@ export default class Engine {
       node.removeAllEvents();
     }
 
-    node.removeAllEvents = () => {
-      if (node.events.length > 0) {
-        node.events.forEach((event) => {
-          this.event.removeEvent(node, event);
-        });
-      }
-    };
+    node.removeAllEvents = () => this.event.removeAllEvents(node);
 
     node.addTo = addTo.bind(this);
     node.destroy = destroy.bind(this);
@@ -245,5 +303,13 @@ export default class Engine {
       return new View(layers);
     }
     return null;
+  }
+
+  // Loader
+  public preloadFiles(
+    beforeLoadCB: () => Promise<void>, loadedOneCB: (percent: number) => void,
+  ) {
+    this.loader = new Loader(beforeLoadCB, loadedOneCB);
+    this.loader.init();
   }
 }

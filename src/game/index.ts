@@ -2,27 +2,29 @@ import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
 import { LevelConfig } from '../types';
-
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
-import LooseScene from '../models/LooseScene';
+import LoaderScreen from './screens/LoaderScreen';
 import WinScene from '../models/WinScene';
+import LooseScene from '../models/LooseScene';
 import ModalWindow from './ModalWindow';
-
-const backgroundUrl = require('../assets/images/interface/background2.jpg');
 
 export default class Game {
   private engine: Engine;
 
   private cells: Cell[][];
 
-  private currentLevel: Level;
+  private win: WinScene;
 
   private loose: LooseScene;
 
-  private win: WinScene;
-
   private modalWindow: ModalWindow;
+
+  private currentLevel: Level;
+
+  private timer: any;
+
+  private isEnd: boolean;
 
   constructor(engine: Engine) {
     this.engine = engine;
@@ -30,42 +32,50 @@ export default class Game {
   }
 
   public init() {
-    const { engine } = this;
-    engine.createView(['back', 'main']);
-    engine.getLayer('main').view.move(engine.vector(110, 0));
-    engine.createScene('scene', function Scene() {
-      this.update = () => {
-        // code
-      };
-    });
-
-    this.addBackground();
-    this.createCells();
-    this.createLevel(0);
-
-    // удалить!! 
-    this.addEventListeners();
-
-    // this.createLooseScene();
-    // this.createPauseScene();
-    this.engine.start('scene');
+    const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    this.engine.preloadFiles(
+      () => loaderScreen.create(),
+      (percent: number) => loaderScreen.update(percent),
+    );
+    this.setupGame();
   }
 
-  addBackground() {
-    const image = new Image();
-    image.src = backgroundUrl.default;
+  setupGame() {
+    const { engine } = this;
+    engine.createView(['back', 'main', 'top']);
+    engine.getLayer('main').view.move(engine.vector(0, 0));
+    engine.createScene('scene', function Scene() {
+      this.update = () => {
+        //code;
+    };
+  })
+  this.engine.start('scene');
+}
 
-    this.engine
-      .createNode(
-        {
-          type: 'ImageNode',
-          position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + 400, this.engine.size.y),
-          layer: 'back',
-          img: image,
-          dh: this.engine.size.y,
-        },
-      );
+  startGame() {
+    this.createCells();
+    this.currentLevel = this.createLevel(0);
+    this.engine.setScreen('first');
+  }
+
+  endGame() {
+    const trackPosition = () => {
+      if (this.currentLevel) {
+
+        this.currentLevel.zombiesArr.forEach((zombie) => {
+          if (zombie.position && zombie.position.x < 150) {
+            this.isEnd = true;
+            this.currentLevel.stopLevel();
+            this.createLooseScene();
+            this.currentLevel.clearZombieArray();
+            this.currentLevel.clearPlantsArray();
+            clearTimeout(this.timer);
+          }
+      });
+      }  
+      if(!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
+    }
+    trackPosition();
   }
 
   createCells() {
@@ -81,32 +91,21 @@ export default class Game {
   }
 
   createLevel(levelIndex: number) {
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
+    this.isEnd = false;
+    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells)
     this.currentLevel.init();
+    //this.addPause();
+    this.endGame();
+    return this.currentLevel;
   }
 
-  // удалить!!
-  addEventListeners() {
-    document.querySelector('.loose').addEventListener('click', () => {
-      setTimeout(() => {
-        this.createLooseScene();
-      }, 0) 
-    });
-
-    document.querySelector('.win').addEventListener('click', () => {
-      this.createWinScene();
-    });
-
-    document.querySelector('.pause').addEventListener('click', () => {
-      setTimeout(() => {
-        this.createPauseScene();
-      })
-    });
-  }
-
-  createLooseScene() {
-    this.loose = new LooseScene(this.engine);
-    this.loose.init();
+  clearLevel() {
+    let allNodes = this.engine.getSceneNodes('scene');
+    allNodes = allNodes.filter((el) => el.type === 'SpriteNode');
+  
+    allNodes.forEach(node => {
+      node.destroy();
+    }) 
   }
 
   createWinScene() {
@@ -114,8 +113,28 @@ export default class Game {
     this.win.init();
   }
 
+  public createLooseScene() {
+    this.loose = new LooseScene(this.engine);
+    this.loose.init();
+
+    this.loose.restartLevel(() => {
+      this.clearLevel();
+      this.createLevel(0);
+    }) 
+  }
+
   createPauseScene() {
+    this.engine.stop();
     this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');
     this.modalWindow.draw();
+  }
+
+  addPause() {
+    document.addEventListener("visibilitychange", () => {
+      this.currentLevel.pause();
+      if (document.visibilityState === 'hidden') { 
+        this.createPauseScene();
+      }
+    });
   }
 }

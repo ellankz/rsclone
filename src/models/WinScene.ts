@@ -1,7 +1,7 @@
 import { time } from 'console';
 import Engine from '../engine';
 
-const audioUrl = require('../assets/audio/winmusic.mp3');
+// const audioUrl = require('../assets/audio/winmusic.mp3');
 
 export default class WinScene {
   private engine: Engine;
@@ -14,7 +14,7 @@ export default class WinScene {
   }
 
   public init() {
-    this.createWinSound();
+    // this.createWinSound();
     this.createAnimation();
     return this;
   }
@@ -55,9 +55,9 @@ export default class WinScene {
     this.engine.start('animation');
   }
 
-  private createWinSound() {
-    this.winSound.src = audioUrl.default;
-    this.winSound.load();
-    this.winSound.play();
-  }
+  // private createWinSound() {
+  //   this.winSound.src = audioUrl.default;
+  //   this.winSound.load();
+  //   this.winSound.play();
+  // }
 }
