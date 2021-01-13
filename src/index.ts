@@ -8,10 +8,14 @@ container.id = 'game';
 document.body.appendChild(container);
 
 const engine = new Engine(container, {
-  first: ['back', 'main'],
+  first: ['back', 'main', 'top'],
   loader: ['loader-back', 'loader'],
 });
+
+// engine.fullscreen = true;
+
 const game = new Game(engine);
+
 game.init();
 
 // setTimeout(() => {

@@ -14,7 +14,7 @@ export default class Game {
 
   private cells: Cell[][];
 
-  private currentLevel: Level;
+  public currentLevel: Level;
 
   constructor(engine: Engine) {
     this.engine = engine;
@@ -34,7 +34,7 @@ export default class Game {
 
   setupGame() {
     const { engine } = this;
-    engine.createView(['back', 'main']);
+    engine.createView(['back', 'main', 'top']);
     engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
@@ -71,5 +71,6 @@ export default class Game {
   createLevel(levelIndex: number) {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
+    return this.currentLevel;
   }
 }

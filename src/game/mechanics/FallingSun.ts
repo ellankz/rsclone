@@ -32,7 +32,7 @@ export class FallingSun {
     updateSunCountInLevel: (count: number) => void,
   ) {
     this.engine = engine;
-    this.layer = 'main';
+    this.layer = 'top';
     this.scene = 'scene';
     this.isStopped = false;
     this.sunCount = sunCount;
