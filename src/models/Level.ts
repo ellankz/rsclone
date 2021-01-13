@@ -261,7 +261,7 @@ export default class Level {
         this.engine.on(cell.node, 'click', () => {
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             this.plant = this.createPlant(this.preparedToPlant);
-            this.plant.draw(cell);
+            this.plant.putOnField(cell);
             this.plant.row = cell.position.y;
 
             this.occupiedCells.set(cell, this.plant);

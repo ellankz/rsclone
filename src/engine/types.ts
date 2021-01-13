@@ -1,11 +1,12 @@
 export interface Engine {
   size: IVector;
-  canvasOffset: IVector;
+  containerOffset: IVector;
   screens: { [name: string]: ILayer[] };
   activeScreen: string;
   layers: { [name: string]: ILayer };
   container: HTMLElement;
   events: { [event: string]: { [option: string]: any } };
+  fullscreen: boolean;
 
   vector: (x?: number, y?: number) => IVector;
 
@@ -143,7 +144,6 @@ export interface ILayer {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   size: IVector;
-  offset: IVector;
   view: IView;
   nodes: NodesType[];
   screen: string;
@@ -157,6 +157,8 @@ export interface ILayer {
   drawImage: (ImageConfig: any) => void;
   clear: () => void;
   update: () => void;
+
+  resize: (scaleRatio: number, size: IVector) => void;
 }
 
 export interface IView {

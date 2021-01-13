@@ -12,7 +12,7 @@ export default class Event {
 
   events: { [event: string]: Map<NodesType, ((e: any) => void)[]> };
 
-  isPointInside: (point: Vector, rectStart: Vector, size: Vector) => boolean;
+  scaleRatio: number;
 
   constructor(offset: IVector, engine: Engine) {
     this.offset = offset;
@@ -30,11 +30,14 @@ export default class Event {
       }
     });
 
-    this.isPointInside = (point: Vector, rectStart: Vector, size: Vector) => {
-      const xAxis = point.x >= rectStart.x && point.x <= rectStart.x + size.x;
-      const yAxis = point.y >= rectStart.y && point.y <= rectStart.y + size.y;
-      return xAxis && yAxis;
-    };
+    this.scaleRatio = 1;
+  }
+
+  isPointInside(point: Vector, rectStart: Vector, size: Vector) {
+    const targetPoint = new Vector(point.x / this.scaleRatio, point.y / this.scaleRatio);
+    const xAxis = targetPoint.x >= rectStart.x && point.x / this.scaleRatio <= rectStart.x + size.x;
+    const yAxis = targetPoint.y >= rectStart.y && point.y / this.scaleRatio <= rectStart.y + size.y;
+    return xAxis && yAxis;
   }
 
   removeEvent(node: NodesType, event: string, callback: (e: any) => void) {
@@ -125,7 +128,6 @@ export default class Event {
       const size = 'dh' in node && 'dw' in node ? new Vector(node.dw, node.dh) : node.size;
 
       const isInside = this.isPointInside(point, pos, size);
-
       if (event === 'mousemove') {
         if (isInside) {
           options = this.engine.events.mouseenter;
