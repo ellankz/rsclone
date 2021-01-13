@@ -7,6 +7,8 @@ import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 import { StartScreen } from '../models/StartScreen';
 
+import sounds from '../data/audio.json';
+
 export default class Game {
   private engine: Engine;
 
@@ -26,6 +28,7 @@ export default class Game {
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
+      () => this.engine.addAudio(sounds),
     );
   }
 
@@ -49,6 +52,7 @@ export default class Game {
   startGame() {
     this.createCells();
     this.createLevel(0);
+    this.engine.audioPlayer.playSound('menu');
     this.engine.setScreen('first');
   }
 
