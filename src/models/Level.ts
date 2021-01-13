@@ -180,12 +180,13 @@ export default class Level {
   public listenGameEvents() {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
+        if (zombie.position && zombie.position.x < X_HOME) {
+          this.stopLevel();
+        } else {
+          zombie.attack(this.occupiedCells);
+        }
+        
         this.plantsArr.forEach((plant) => {
-          if (zombie.position && zombie.position.x < X_HOME) {
-            this.stopLevel();
-          } else {
-            zombie.attack(this.occupiedCells);
-          }
 
           if (zombie.row === plant.row && zombie.position && !this.isEnd) {
             plant.switchState('attack', zombie, plant);
