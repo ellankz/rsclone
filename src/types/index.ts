@@ -62,8 +62,17 @@ export interface User {
 export interface Game {
   id: string;
   level: number;
-  suns: number;
   win: boolean;
   zombiesKilled: number;
   plantsPlanted: number;
+}
+
+export interface Stats {
+  gamesPlayed: number;
+  highestLevel: number;
+  gamesWon: number;
+  gamesLost: number;
+  percentWon: number;
+  killedZombies: number;
+  plantedPlants: number;
 }

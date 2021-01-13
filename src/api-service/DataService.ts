@@ -1,4 +1,3 @@
-import { sign } from 'crypto';
 import { User, Game } from '../types';
 import { DataLoader } from './DataLoader';
 
@@ -74,7 +73,6 @@ export class DataService {
       const percentWon = Math.round((gamesWon / gameList.length) * 100);
       const killedZombies = gameList.reduce((acc, game) => (acc + game.zombiesKilled), 0);
       const plantedPlants = gameList.reduce((acc, game) => (acc + game.plantsPlanted), 0);
-      const suns = gameList.reduce((acc, game) => (acc + game.plantsPlanted), 0);
       return {
         gamesPlayed,
         highestLevel,
@@ -83,7 +81,6 @@ export class DataService {
         percentWon,
         killedZombies,
         plantedPlants,
-        suns,
       };
     }
 

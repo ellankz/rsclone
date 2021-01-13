@@ -1,21 +1,161 @@
 import { ScreenCreator } from './ScreenCreator';
 import Engine from '../engine';
+import { DataService } from '../api-service/DataService';
+import { ISpriteNode, ITextNode } from '../engine/types';
+import { Stats } from '../types';
 
-const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements'];
+const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements', 'statistics-screen-data'];
 const STATISTIC_SCREEN_SCREEN_NAME: string = 'statisticsScreen';
 const STATISTIC_SCREEN_SCENE_NAME: string = 'statisticsScreen';
 
 export class StatisticsScreen extends ScreenCreator {
-  constructor(engine: Engine) {
+  dataService: DataService;
+
+  isLoading: boolean = false;
+
+  loadingNode: ISpriteNode;
+
+  tableNodes: ITextNode[];
+
+  constructor(engine: Engine, dataService: DataService) {
     super(engine);
     this.createLayers(STATISTICS_SCREEN_LAYERS);
     this.createNodes();
+    this.dataService = dataService;
+    this.tableNodes = [];
     this.engine.createScreen(STATISTIC_SCREEN_SCREEN_NAME, STATISTICS_SCREEN_LAYERS);
     this.engine.createScene(STATISTIC_SCREEN_SCENE_NAME);
   }
 
   public openScreen(): void {
     super.openScreen(STATISTIC_SCREEN_SCREEN_NAME, STATISTIC_SCREEN_SCENE_NAME);
+    this.clearTable();
+    this.displayTable();
+  }
+
+  clearTable() {
+    this.tableNodes.forEach((node) => node.destroy());
+  }
+
+  async displayTable() {
+    const data = await this.loadData() as {
+      mine: Stats | undefined,
+      all: Stats,
+    };
+    this.createColumn('All Players', data.all, this.engine.size.x * 0.2);
+    let myData;
+    if (data.mine) {
+      myData = data.mine;
+    } else {
+      // load from localStorage, this is dummy data
+      myData = {
+        gamesPlayed: 0,
+        highestLevel: 1,
+        gamesWon: 1,
+        gamesLost: 0,
+        percentWon: 100,
+        killedZombies: 14,
+        plantedPlants: 33,
+      };
+    }
+    this.createColumn('My Games', myData, this.engine.size.x * 0.6);
+  }
+
+  createColumn(title: string, data: Stats, posX: number) {
+    this.tableNodes.push(this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(posX, 120),
+      text: title,
+      layer: STATISTICS_SCREEN_LAYERS[2],
+      font: 'serif',
+      fontSize: 30,
+      color: '#333333',
+    }) as ITextNode);
+
+    if (data.gamesPlayed === 0) {
+      this.tableNodes.push(this.engine.createNode({
+        type: 'TextNode',
+        position: this.engine.vector(posX, 160),
+        text: 'There were no games played yet.',
+        layer: STATISTICS_SCREEN_LAYERS[2],
+        font: 'serif',
+        fontSize: 20,
+        color: '#333333',
+      }) as ITextNode);
+    } else {
+      Object.entries(data).forEach((item, index) => {
+        let itemTitle = '';
+        switch (item[0]) {
+          case 'gamesPlayed':
+            itemTitle = 'Games Played:';
+            break;
+          case 'highestLevel':
+            itemTitle = 'Highest Level:';
+            break;
+          case 'gamesWon':
+            itemTitle = 'Games Won:';
+            break;
+          case 'gamesLost':
+            itemTitle = 'Games Lost:';
+            break;
+          case 'percentWon':
+            itemTitle = 'Percent Won (%):';
+            break;
+          case 'killedZombies':
+            itemTitle = 'Zombies Killed:';
+            break;
+          case 'plantedPlants':
+            itemTitle = 'Plants Planted:';
+            break;
+          default:
+            break;
+        }
+        this.tableNodes.push(this.engine.createNode({
+          type: 'TextNode',
+          position: this.engine.vector(posX, 160 + index * 35),
+          text: `${itemTitle} ${item[1].toString()}`,
+          layer: STATISTICS_SCREEN_LAYERS[2],
+          font: 'serif',
+          fontSize: 25,
+          color: '#333333',
+        }) as ITextNode);
+      });
+    }
+  }
+
+  private setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
+    if (isLoading) {
+      const frames = 12;
+      const size = 100;
+      const speed = 100;
+      const dh = 70;
+      const img = this.engine.loader.files['assets/sprites/loading.png'] as HTMLImageElement;
+      const pos = this.engine.vector(
+        (this.engine.size.x / 2) - (30 / 2),
+        (this.engine.size.x / 4),
+      );
+      this.loadingNode = this.engine.createNode({
+        type: 'SpriteNode',
+        position: pos,
+        size: this.engine.vector(size * frames, size),
+        layer: STATISTICS_SCREEN_LAYERS[2],
+        img,
+        frames,
+        startFrame: 0,
+        speed,
+        dh,
+      }).addTo(STATISTIC_SCREEN_SCENE_NAME) as ISpriteNode;
+    } else {
+      this.loadingNode.destroy();
+    }
+  }
+
+  async loadData() {
+    this.setLoading(true);
+    const res = await this.dataService.getStats();
+    this.setLoading(false);
+    return res;
   }
 
   private createNodes(): void {

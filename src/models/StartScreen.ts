@@ -39,7 +39,7 @@ export class StartScreen extends ScreenCreator {
       this.setUserName.bind(this),
       this.userName,
     );
-    this.settingsScreen = new StatisticsScreen(this.engine);
+    this.settingsScreen = new StatisticsScreen(this.engine, this.dataService);
     this.levelSelectionScreen = new LevelSelectionScreen(this.engine, func);
   }
 

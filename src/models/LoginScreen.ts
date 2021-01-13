@@ -22,7 +22,7 @@ export class LoginScreen extends ScreenCreator {
 
   userName: string;
 
-  loadingNode: any;
+  loadingNode: ISpriteNode;
 
   constructor(
     engine: Engine,
