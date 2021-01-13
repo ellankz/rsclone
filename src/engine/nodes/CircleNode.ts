@@ -27,6 +27,7 @@ export default class CircleNode extends Node implements ICircleNode {
       radius: this.radius,
       color: this.color,
       border: this.border,
+      opacity: this.opacity,
     });
   }
 }

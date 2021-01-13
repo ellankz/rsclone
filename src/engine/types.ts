@@ -46,6 +46,7 @@ export type NodesTypeName =
   | 'TextNode'
   | 'ImageNode'
   | 'SpriteNode';
+
 export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode;
 
 export interface INode {
@@ -55,6 +56,7 @@ export interface INode {
   layer: ILayer;
   sceneName: string;
   border?: string;
+  opacity?: number;
 
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
@@ -173,6 +175,7 @@ export interface NodeConfig {
   type: NodesTypeName;
   layer: ILayer;
   border?: string;
+  opacity?: number;
 }
 
 export interface RectNodeConfig extends NodeConfig {
@@ -213,6 +216,7 @@ export interface RectConfig {
   height: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface CircleConfig {
@@ -221,6 +225,7 @@ export interface CircleConfig {
   radius: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface TextConfig {
@@ -231,6 +236,7 @@ export interface TextConfig {
   size?: number;
   color?: string;
   border?: string;
+  opacity?: number;
 }
 
 export interface ImageConfig {
@@ -244,6 +250,7 @@ export interface ImageConfig {
   dh: number;
   dw: number;
   border?: string;
+  opacity?: number;
 }
 
 export interface SceneConfig {
