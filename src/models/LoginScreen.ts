@@ -78,6 +78,18 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
+    buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+
+    // this.setActive(
+    //   buttonClose,
+    //   'assets/images/interface/ButtonActive.png',
+    //   'assets/images/interface/Button.png',
+    // );
+
+    // this.engine.on(buttonClose, 'mousedown', () => {
+    //   buttonClose.opacity = 0.2;
+    // });
     this.setEvent(buttonClose, 'click', () => {
       console.log('CLOSE');
       this.engine.setScreen('startScreen');
@@ -145,7 +157,6 @@ export class LoginScreen extends ScreenCreator {
       innerShadow: 'none',
       placeHolder: 'Enter you login',
     });
-
     const password = new CanvasInput({
       canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
       fontSize: 18,
@@ -161,7 +172,6 @@ export class LoginScreen extends ScreenCreator {
       innerShadow: 'none',
       placeHolder: 'Enter you password',
     });
-
     username.onsubmit(() => {
       password.focus();
     });
@@ -172,7 +182,7 @@ export class LoginScreen extends ScreenCreator {
     this.setEvent(buttonRegister, 'click', () => {
       if (username.value() && password.value()) {
         console.log('Sing up');
-
+        password.value('');
         // SING UP REQUEST
         // const formData = new FormData();
         // formData.append('login', username.value());

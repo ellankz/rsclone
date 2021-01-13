@@ -22,19 +22,42 @@ export class LevelSelectionScreen extends ScreenCreator {
     super.openScreen(LEVEL_SELECTION_SCREEN_SCREEN_NAME, LEVEL_SELECTION_SCREEN_SCENE_NAME);
   }
 
-  private createNodes(): void {
-    // BACKGROUND COLOR
-    const background = this.engine.createNode({
-      type: 'RectNode',
-      position: this.engine.vector(0, 0),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
-      color: '#8B4513',
+  private createLevelCard(backgroundImg: any, disabled: boolean, i: number): any {
+    const LEVEL_CARD = this.engine
+      .loader.files['assets/images/interface/selectLevelIcon_notActive.png'] as HTMLImageElement;
+    const LEVEL_CARD_DISABLED = this.engine
+      .loader.files['assets/images/interface/selectLevelIcon_disabled.png'] as HTMLImageElement;
+
+    const levelCard: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        (backgroundImg.position.x) + 75 + i * LEVEL_CARD.width,
+        (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
+      ),
+      size: this.engine.vector(338, 402),
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
+      img: (disabled) ? LEVEL_CARD_DISABLED : LEVEL_CARD,
+      dh: 250,
     });
 
+    const textButtonClose: any = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        levelCard.position.x + LEVEL_CARD.width / 6.25,
+        levelCard.position.y + LEVEL_CARD.height / 2.2,
+      ),
+      text: `LEVEL ${i + 1}`,
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
+      fontSize: 25,
+      color: '#fff',
+    });
+    return levelCard;
+  }
+
+  private createNodes(): void {
     // BACKGROUND IMG
     const BACKGROUND_IMG = this.engine
-      .loader.files['assets/images/interface/settingBackground.jpg'] as HTMLImageElement;
+      .loader.files['assets/images/interface/settingBackground2L.png'] as HTMLImageElement;
 
     const backgroundImg = this.engine.createNode({
       type: 'ImageNode',
@@ -48,55 +71,25 @@ export class LevelSelectionScreen extends ScreenCreator {
     });
 
     // LEVEL CARDS
-    const LEVEL_CARD = this.engine
-      .loader.files['assets/images/interface/selectLevelIcon_notActive.png'] as HTMLImageElement;
+    const levelCards: Array<any> = [];
 
-    const LEVEL_CARD_DISABLED = this.engine
-      .loader.files['assets/images/interface/selectLevelIcon_disabled.png'] as HTMLImageElement;
-
-    const levelCard1: any = this.engine.createNode({
-      type: 'ImageNode',
-      position: this.engine.vector(
-        (backgroundImg.position.x / 2) + 100,
-        (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
-      ),
-      size: this.engine.vector(338, 402),
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
-      img: LEVEL_CARD,
-      dh: 250,
-    });
-    this.setActive(levelCard1,
-      'assets/images/interface/selectLevelIcon_Active.png',
-      'assets/images/interface/selectLevelIcon_notActive.png');
-    this.setEvent(levelCard1, 'click', () => {
-      this.startLevel();
-      this.engine.stop();
-      this.engine.start('scene');
-    });
-
-    const levelCard2: any = this.engine.createNode({
-      type: 'ImageNode',
-      position: this.engine.vector(
-        (levelCard1.position.x) + (LEVEL_CARD.width * 0.75),
-        (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
-      ),
-      size: this.engine.vector(338, 402),
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
-      img: LEVEL_CARD_DISABLED,
-      dh: 250,
-    });
-
-    const levelCard3: any = this.engine.createNode({
-      type: 'ImageNode',
-      position: this.engine.vector(
-        (levelCard2.position.x) + LEVEL_CARD.width * 0.75,
-        (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
-      ),
-      size: this.engine.vector(338, 402),
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
-      img: LEVEL_CARD_DISABLED,
-      dh: 250,
-    });
+    for (let i = 0; i < 3; i += 1) {
+      let card: any;
+      if (i === 0) {
+        card = this.createLevelCard(backgroundImg, false, i);
+        this.setActive(card,
+          'assets/images/interface/selectLevelIcon_Active.png',
+          'assets/images/interface/selectLevelIcon_notActive.png');
+        this.setEvent(card, 'click', () => {
+          this.startLevel();
+          this.engine.stop();
+          this.engine.start('scene');
+        });
+      } else {
+        card = this.createLevelCard(backgroundImg, true, i);
+      }
+      levelCards.push(card);
+    }
 
     // BUTTON CLOSE
     const BUTTON_IMG = this.engine
@@ -124,6 +117,9 @@ export class LevelSelectionScreen extends ScreenCreator {
       fontSize: 25,
       color: '#333',
     });
+
+    buttonClose.addTo(LEVEL_SELECTION_SCREEN_SCENE_NAME);
+    textButtonClose.addTo(LEVEL_SELECTION_SCREEN_SCENE_NAME);
 
     this.setActive(
       buttonClose,
