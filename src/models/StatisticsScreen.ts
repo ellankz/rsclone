@@ -1,7 +1,7 @@
 import { ScreenCreator } from './ScreenCreator';
 import Engine from '../engine';
 import { DataService } from '../api-service/DataService';
-import { ISpriteNode, ITextNode } from '../engine/types';
+import { IImageNode, ISpriteNode, ITextNode } from '../engine/types';
 import { Stats } from '../types';
 
 const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements', 'statistics-screen-data'];
@@ -132,7 +132,7 @@ export class StatisticsScreen extends ScreenCreator {
       const dh = 70;
       const img = this.engine.loader.files['assets/sprites/loading.png'] as HTMLImageElement;
       const pos = this.engine.vector(
-        (this.engine.size.x / 2) - (30 / 2),
+        (this.engine.size.x / 2) - (70 / 2),
         (this.engine.size.x / 4),
       );
       this.loadingNode = this.engine.createNode({
@@ -160,7 +160,7 @@ export class StatisticsScreen extends ScreenCreator {
 
   private createNodes(): void {
     // BACKGROUND COLOR
-    const background = this.engine.createNode({
+    this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -172,7 +172,7 @@ export class StatisticsScreen extends ScreenCreator {
     const BACKGROUND_IMG = this.engine
       .loader.files['assets/images/interface/settingBackground.jpg'] as HTMLImageElement;
 
-    const backgroundImg = this.engine.createNode({
+    this.engine.createNode({
       type: 'ImageNode',
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       position: this.engine.vector(
@@ -183,11 +183,25 @@ export class StatisticsScreen extends ScreenCreator {
       img: BACKGROUND_IMG,
     });
 
+    // SCREEN TITLE
+    const TITLE_IMG = this.engine
+      .loader.files['assets/images/interface/StatsTitle.png'] as HTMLImageElement;
+
+    this.engine.createNode({
+      type: 'ImageNode',
+      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (TITLE_IMG.width / 2), 27,
+      ),
+      layer: STATISTICS_SCREEN_LAYERS[0],
+      img: TITLE_IMG,
+    });
+
     // BUTTON CLOSE
     const BUTTON_IMG = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
-    const buttonClose: any = this.engine.createNode({
+    const buttonClose = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         (this.engine.size.x / 2) - (BUTTON_IMG.width / 2),
@@ -196,9 +210,9 @@ export class StatisticsScreen extends ScreenCreator {
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: STATISTICS_SCREEN_LAYERS[1],
       img: BUTTON_IMG,
-    });
+    }) as IImageNode;
 
-    const textButtonClose: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonClose.position.x + 16,

@@ -47,6 +47,20 @@ export class LevelSelectionScreen extends ScreenCreator {
       img: BACKGROUND_IMG,
     });
 
+    // SCREEN TITLE
+    const TITLE_IMG = this.engine
+      .loader.files['assets/images/interface/AdventureTitle.png'] as HTMLImageElement;
+
+    this.engine.createNode({
+      type: 'ImageNode',
+      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (TITLE_IMG.width / 2), 27,
+      ),
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
+      img: TITLE_IMG,
+    });
+
     // LEVEL CARDS
     const LEVEL_CARD = this.engine
       .loader.files['assets/images/interface/selectLevelIcon_notActive.png'] as HTMLImageElement;
