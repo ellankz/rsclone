@@ -47,6 +47,7 @@ export class SunFlower extends Plant {
       ).instance;
       sun.addTo('scene');
       sun.switchState('appearance');
+
       setTimeout(() => {
         sun.switchState('live');
       }, SUN_APPEARANCE_STATE);
@@ -55,7 +56,7 @@ export class SunFlower extends Plant {
       }
       return this.sunCreatingTimer;
     };
-    setTimeout(start, SUN_REPRODUCTION);
+    this.timer = setTimeout(start, SUN_REPRODUCTION);
   }
 
   draw(cell: Cell): void {
@@ -66,11 +67,5 @@ export class SunFlower extends Plant {
   switchState(state: string) {
     this.node.switchState(state);
     setTimeout(() => this.node.switchState('basic'), SUNFLOWER_GENERATE_STATE);
-  }
-
-  private isDestroyed(): void {
-    if (this.health <= 0) {
-      this.isDestroyedFlag = true;
-    }
   }
 }
