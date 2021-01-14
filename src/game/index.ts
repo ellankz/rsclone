@@ -5,11 +5,12 @@ import { LevelConfig } from '../types';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
+import { StartScreen } from './screens/StartScreen';
 import { DataService } from '../api-service/DataService';
-import { StartScreen } from '../models/StartScreen';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import ModalWindow from './ModalWindow';
+
 import sounds from '../data/audio.json';
 
 const X_HOME = 150;

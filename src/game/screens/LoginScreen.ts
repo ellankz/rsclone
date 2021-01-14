@@ -1,9 +1,10 @@
-import Engine from '../engine';
+import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
-import '../../node_modules/canvasinput/CanvasInput';
-import { DataService } from '../api-service/DataService';
-import { User } from '../types';
-import { ISpriteNode, ITextNode } from '../engine/types';
+import { DataService } from '../../api-service/DataService';
+import { User } from '../../types';
+import { ISpriteNode, ITextNode } from '../../engine/types';
+
+import '../../../node_modules/canvasinput/CanvasInput';
 
 const { CanvasInput } = window as any;
 
@@ -96,11 +97,11 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
-    textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    // buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    // textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
 
     this.setEvent(buttonClose, 'click', () => {
-      console.log('CLOSE');
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.engine.setScreen('startScreen');
     });
 
@@ -197,10 +198,12 @@ export class LoginScreen extends ScreenCreator {
     };
 
     this.setEvent(buttonClose, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep');
       onModalFinish(this.userName);
     });
 
     this.setEvent(buttonRegister, 'click', async () => {
+      this.engine.audioPlayer.playSound('bleep');
       const name = username.value();
       const pass = password.value();
       if (name && pass) {
@@ -212,12 +215,11 @@ export class LoginScreen extends ScreenCreator {
         } else {
           onModalFinish(name);
         }
-      } else {
-        this.setErrorMessage('Enter data');
       }
     });
 
     this.setEvent(buttonSubmit, 'click', async () => {
+      this.engine.audioPlayer.playSound('bleep');
       const name = username.value();
       const pass = password.value();
       if (name && pass) {

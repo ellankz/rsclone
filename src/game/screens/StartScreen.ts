@@ -1,10 +1,10 @@
-import Engine from '../engine';
+import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
 import { StatisticsScreen } from './StatisticsScreen';
 import { LevelSelectionScreen } from './LevelSelectionScreen';
-import { DataService } from '../api-service/DataService';
-import { ITextNode } from '../engine/types';
+import { DataService } from '../../api-service/DataService';
+import { ITextNode } from '../../engine/types';
 
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
 const START_SCREEN_SCREEN_NAME: string = 'startScreen';
@@ -85,6 +85,7 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(startGameButton, 'click', () => {
+      this.engine.audioPlayer.playSound('menuButtonClick');
       this.levelSelectionScreen.openScreen();
     });
 
@@ -92,6 +93,7 @@ export class StartScreen extends ScreenCreator {
     const SETTINGS_BUTTON = this.engine
       .loader.files['assets/images/interface/startScreen-button_settings-notActive.png'] as HTMLImageElement;
 
+    // const audio = this.engine.audioPlayer.playSound('audio');
     const settingsGameButton: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -110,6 +112,7 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(settingsGameButton, 'click', () => {
+      this.engine.audioPlayer.playSound('menuButtonClick');
       this.settingsScreen.openScreen();
     });
 
@@ -158,6 +161,7 @@ export class StartScreen extends ScreenCreator {
       dh: 45,
     });
     this.setEvent(autorizationButton, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep');
       this.loginScreen.openScreen();
     });
   }

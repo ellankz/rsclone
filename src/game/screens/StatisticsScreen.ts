@@ -1,8 +1,8 @@
 import { ScreenCreator } from './ScreenCreator';
-import Engine from '../engine';
-import { DataService } from '../api-service/DataService';
-import { IImageNode, ISpriteNode, ITextNode } from '../engine/types';
-import { Stats } from '../types';
+import Engine from '../../engine';
+import { DataService } from '../../api-service/DataService';
+import { IImageNode, ISpriteNode, ITextNode } from '../../engine/types';
+import { Stats } from '../../types';
 
 const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements', 'statistics-screen-data'];
 const STATISTIC_SCREEN_SCREEN_NAME: string = 'statisticsScreen';
@@ -230,6 +230,7 @@ export class StatisticsScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.engine.setScreen('startScreen');
     });
   }
