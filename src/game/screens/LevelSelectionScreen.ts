@@ -1,4 +1,4 @@
-import Engine from '../engine';
+import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
 
 const LEVEL_SELECTION_SCREEN_LAYERS: Array<string> = ['levelSelection-screen_background', 'levelSelection-screen_inputs'];

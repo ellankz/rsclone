@@ -5,7 +5,7 @@ import { LevelConfig } from '../types';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
-import { StartScreen } from '../models/StartScreen';
+import { StartScreen } from './screens/StartScreen';
 
 import sounds from '../data/audio.json';
 

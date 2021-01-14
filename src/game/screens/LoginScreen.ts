@@ -1,7 +1,7 @@
-import Engine from '../engine';
+import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
 
-import '../../node_modules/canvasinput/CanvasInput';
+import '../../../node_modules/canvasinput/CanvasInput';
 
 const windowCopy: any = window;
 const { CanvasInput } = windowCopy;

@@ -1,5 +1,5 @@
 import { ScreenCreator } from './ScreenCreator';
-import Engine from '../engine';
+import Engine from '../../engine';
 
 const STATISTICS_SCREEN_LAYERS: Array<string> = ['statistics-screen_background', 'statistics-screen_elements'];
 const STATISTIC_SCREEN_SCREEN_NAME: string = 'statisticsScreen';
