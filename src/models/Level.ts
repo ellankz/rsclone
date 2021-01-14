@@ -9,7 +9,7 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
-import Timer from './Timer';
+import Timer from './scenes/Timer';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;

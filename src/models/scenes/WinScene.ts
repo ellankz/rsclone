@@ -1,5 +1,5 @@
 import { time } from 'console';
-import Engine from '../engine';
+import Engine from '../../engine';
 
 export default class WinScene {
   private engine: Engine;

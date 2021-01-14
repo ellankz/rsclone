@@ -30,7 +30,6 @@ export default class ModalWindow {
   }
 
   public draw() {
-    this.countPause();
     this.drawBG();
     this.drawButton();
     this.drawText();

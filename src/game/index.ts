@@ -5,8 +5,8 @@ import { LevelConfig } from '../types';
 import levels from '../data/levels.json';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
-import WinScene from '../models/WinScene';
-import LooseScene from '../models/LooseScene';
+import WinScene from '../models/scenes/WinScene';
+import LooseScene from '../models/scenes/LooseScene';
 import ModalWindow from './ModalWindow';
 import sounds from '../data/audio.json';
 
