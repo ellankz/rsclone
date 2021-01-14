@@ -84,7 +84,7 @@ export class LoginScreen extends ScreenCreator {
       layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
     });
-    this.engine.createNode({
+    const textButtonClose = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonClose.position.x + 20,
@@ -94,6 +94,14 @@ export class LoginScreen extends ScreenCreator {
       layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: '#333',
+    });
+
+    buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+
+    this.setEvent(buttonClose, 'click', () => {
+      console.log('CLOSE');
+      this.engine.setScreen('startScreen');
     });
 
     // BUTTON SIGN IN
@@ -158,7 +166,6 @@ export class LoginScreen extends ScreenCreator {
       innerShadow: 'none',
       placeHolder: 'Enter login',
     });
-
     const password = new CanvasInput({
       canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[2]).canvas,
       fontSize: 18,
@@ -174,7 +181,6 @@ export class LoginScreen extends ScreenCreator {
       innerShadow: 'none',
       placeHolder: 'Enter password',
     });
-
     username.onsubmit(() => {
       password.focus();
     });

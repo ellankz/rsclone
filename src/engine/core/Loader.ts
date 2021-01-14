@@ -15,12 +15,16 @@ export default class Loader {
 
   filesList: string[];
 
+  loadedAllCallback: () => void;
+
   constructor(
     beforeLoadCallback: () => Promise<void>,
     loadedOneCallback: (percent: number) => void,
+    loadedAllCallback: () => void,
   ) {
     this.beforeLoadCallback = beforeLoadCallback;
     this.loadedOneCallback = loadedOneCallback;
+    this.loadedAllCallback = loadedAllCallback;
     this.filesLoadedCount = 0;
   }
 
@@ -59,5 +63,8 @@ export default class Loader {
   fileLoaded() {
     this.filesLoadedCount += 1;
     this.loadedOneCallback(this.filesLoadedCount / this.filesList.length);
+    if (this.filesLoadedCount >= this.filesList.length) {
+      this.loadedAllCallback();
+    }
   }
 }
