@@ -75,7 +75,7 @@ export interface User {
 }
 
 export interface Game {
-  id: string;
+  id?: string;
   level: number;
   win: boolean;
   zombiesKilled: number;

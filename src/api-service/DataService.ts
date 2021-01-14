@@ -1,3 +1,4 @@
+import { LS_TITLE } from '../constats';
 import { User, Game } from '../types';
 import { DataLoader } from './DataLoader';
 
@@ -43,6 +44,20 @@ export class DataService {
     }
   }
 
+  async saveGame(savedGame: Game) {
+    if (this.token) {
+      DataLoader.postGame(this.token, savedGame);
+    } else {
+      let games = [];
+      const gamesLS = localStorage.getItem(LS_TITLE);
+      if (gamesLS) {
+        games = JSON.parse(gamesLS);
+      }
+      games.push(savedGame);
+      localStorage.setItem(LS_TITLE, JSON.stringify(games));
+    }
+  }
+
   postGame(game: Game) {
     if (!this.token) return;
     DataLoader.postGame(this.token, game);
@@ -55,6 +70,11 @@ export class DataService {
       all = await DataLoader.getAllGames();
       if (this.token) {
         mine = await DataLoader.getMyGames(this.token);
+      } else {
+        const mineLS = localStorage.getItem(LS_TITLE);
+        if (mineLS) {
+          mine = JSON.parse(mineLS);
+        }
       }
     } catch (error) {
       console.error('Error during loading stats', error);

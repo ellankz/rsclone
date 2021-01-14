@@ -12,3 +12,5 @@ export const ROWS_NUM = 5;
 export const COLS_NUM = 9;
 
 export const BASE_SERVER_URL = 'https://rs-plants-vs-zombies.herokuapp.com';
+
+export const LS_TITLE = 'PvZCloneGames';

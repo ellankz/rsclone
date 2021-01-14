@@ -1,8 +1,7 @@
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
-import { LevelConfig } from '../types';
-import levels from '../data/levels.json';
+
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 import { StartScreen } from './screens/StartScreen';
@@ -97,15 +96,16 @@ export default class Game {
     trackPosition();
   }
 
-  stop() {
+  stop(hasWon: boolean) {
     this.isEnd = true;
-    this.currentLevel.stopLevel();
+    this.currentLevel.stopLevel(hasWon);
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
   }
 
   endWin() {
-    this.stop();
+    const hasWon = true;
+    this.stop(hasWon);
     setTimeout(() => {
       this.createWinScene();
       this.currentLevel.updateSunCount(500);
@@ -124,7 +124,8 @@ export default class Game {
   }
 
   endLoose() {
-    this.stop();
+    const hasWon = false;
+    this.stop(hasWon);
     this.createLooseScene();
     this.currentLevel.destroyPlants();
     clearTimeout(this.timer);
@@ -144,7 +145,7 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
+    this.currentLevel = new Level(levelIndex, this.engine, this.cells, this.dataService);
     this.currentLevel.init();
     this.endGame();
     return this.currentLevel;
