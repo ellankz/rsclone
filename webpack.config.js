@@ -58,6 +58,9 @@ module.exports = (env) => ({
       loader: 'babel-loader',
       exclude: [/node_modules/],
     }, {
+      test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+      type: 'asset/inline',
+    }, {
       test: /\.(ts|tsx)$/,
       loader: 'ts-loader',
       include: [path.resolve(__dirname, 'src')],

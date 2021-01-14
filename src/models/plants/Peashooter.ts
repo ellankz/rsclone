@@ -2,6 +2,7 @@ import Engine from '../../engine';
 import { PlantConfig } from '../../types';
 import Plant from '../Plant';
 import Shot from '../Shot';
+import Zombie from '../Zombie';
 
 export class Peashooter extends Plant {
   public shotType?: string;
@@ -13,11 +14,11 @@ export class Peashooter extends Plant {
     this.shotType = this.plantPresets[config.type].shotType;
   }
 
-  startShooting() {
+  startShooting(zombie: Zombie, plant: Plant) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
         const shot = new Shot(this.position, this.engine, this.shotType);
-        shot.draw();
+        shot.draw(zombie, plant);
       };
       setTimeout(() => {
         if (this.shooting === null) {
@@ -29,18 +30,15 @@ export class Peashooter extends Plant {
   }
 
   stopShooting() {
+    super.stopShooting();
     if (this.shotType && this.shooting) {
       window.clearInterval(this.shooting);
       this.shooting = null;
     }
   }
 
-  switchState(state: string) {
+  switchState(state: string, zombie: Zombie, plant: Plant) {
     super.switchState(state);
-    this.startShooting();
-    setTimeout(() => {
-      this.node.switchState('basic');
-      this.stopShooting();
-    }, 3000);
+    this.startShooting(zombie, plant);
   }
 }

@@ -28,6 +28,7 @@ export default class TextNode extends Node implements ITextNode {
       color: this.color,
       text: this.text,
       border: this.border,
+      opacity: this.opacity,
     });
   }
 }

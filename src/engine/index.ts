@@ -23,7 +23,7 @@ import AudioPlayer from './core/AudioPlayer';
 export default class Engine {
   size: Vector;
 
-  canvasOffset: Vector;
+  containerOffset: Vector;
 
   screens: { [name: string]: Layer[] };
 
@@ -35,6 +35,10 @@ export default class Engine {
 
   events: { [event: string]: { [option: string]: any } };
 
+  container: HTMLElement;
+
+  loader: Loader;
+
   private running: boolean;
 
   private scenes: { [name: string]: Scene };
@@ -45,11 +49,13 @@ export default class Engine {
 
   private event: Event;
 
+  private scaleRatio: number;
+
+  private fullscreenMode: boolean;
+
+  private resizeCallback: () => void;
+
   vector: (x?: number, y?: number) => Vector;
-
-  container: HTMLElement;
-
-  loader: Loader;
 
   audioPlayer: any;
 
@@ -59,7 +65,7 @@ export default class Engine {
     screenZIndex?: number,
   ) {
     this.size = null;
-    this.canvasOffset = null;
+    this.containerOffset = null;
     this.activeScreen = '';
     this.activeScene = null;
     this.screenZIndex = screenZIndex || 100;
@@ -71,6 +77,7 @@ export default class Engine {
     this.scenes = {};
     this.event = null;
     this.animation = null;
+    this.fullscreen = false;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
@@ -89,13 +96,14 @@ export default class Engine {
   // Init
   public init(_box: string | HTMLElement, config?: string[] | { [name: string]: string[] }) {
     this.container = typeof _box === 'string' ? document.getElementById(_box) : _box;
+    this.container.style.position = 'relative';
 
     const box: DOMRect = this.container.getBoundingClientRect();
 
-    this.canvasOffset = this.vector(box.left, box.top);
+    this.containerOffset = this.vector(box.left, box.top);
     this.size = this.vector(box.width, box.height);
 
-    this.event = new Event(this.canvasOffset, this);
+    this.event = new Event(this.containerOffset, this);
 
     if (!config) {
       this.createLayer('main', 0);
@@ -175,13 +183,14 @@ export default class Engine {
     });
 
     this.activeScreen = name;
+    if (this.fullscreenMode) this.setFullscreen();
   }
 
   // Layers
   public createLayer(name: string, index?: number) {
     if (this.layers[name]) return;
     const idx = index && index !== 0 ? index : Object.keys(this.layers).length;
-    const layer = new Layer(idx as number, this.size, this.container, this.canvasOffset);
+    const layer = new Layer(idx as number, this.size, this.container);
     this.layers[name] = layer;
 
     layer.update = () => {
@@ -308,6 +317,7 @@ export default class Engine {
   }
 
   // Loader
+
   public preloadFiles(
     beforeLoadCB: () => Promise<void>,
     loadedOneCB: (percent: number) => void,
@@ -318,8 +328,100 @@ export default class Engine {
   }
 
   // AudioPlayer
-  public addAudio(soundList: {[dynamic: string]: string}) {
+  public addAudio(soundList: { [dynamic: string]: string }) {
     this.audioPlayer = new AudioPlayer(soundList, this.loader);
     this.audioPlayer.init();
+  }
+
+  // fullscreen
+  public set fullscreen(value: boolean) {
+    if (this.fullscreenMode !== value) {
+      this.fullscreenMode = value;
+      this.setContainerPosition(value);
+
+      if (value) {
+        const callback = this.setFullscreen.bind(this);
+        this.resizeCallback = callback;
+
+        this.setFullscreen();
+        window.addEventListener('resize', callback);
+      } else {
+        this.cancelFullscreen();
+        if (this.resizeCallback) {
+          window.removeEventListener('resize', this.setFullscreen.bind(this));
+        }
+      }
+    }
+  }
+
+  private setFullscreen() {
+    if (!this.container) return;
+    let scaleRatio = 1;
+
+    const gameAspectRatio = this.size.x / this.size.y;
+    const documentWidth = document.documentElement.clientWidth;
+    const documentHeight = document.documentElement.clientHeight;
+    const windowAspectRatio = documentWidth / documentHeight;
+
+    if (windowAspectRatio > gameAspectRatio) {
+      scaleRatio = documentHeight / this.size.y;
+    } else {
+      scaleRatio = documentWidth / this.size.x;
+    }
+    this.scaleRatio = scaleRatio;
+    this.event.scaleRatio = this.scaleRatio;
+
+    const layers = Object.values(this.layers);
+
+    this.container.style.width = `${this.size.x * this.scaleRatio}px`;
+    this.container.style.height = `${this.size.y * this.scaleRatio}px`;
+
+    const box = this.container.getBoundingClientRect();
+    const offset = new Vector(box.left, box.top);
+    const size = new Vector(box.width, box.height);
+
+    this.event.offset = offset;
+
+    layers.forEach((layer) => {
+      layer.resize(scaleRatio, size);
+      layer.clear();
+      layer.update();
+    });
+  }
+
+  private cancelFullscreen() {
+    if (!this.container) return;
+
+    const scaleRatio = 1;
+    const layers = Object.values(this.layers);
+
+    this.container.style.width = `${this.size.x}px`;
+    this.container.style.height = `${this.size.y}px`;
+
+    layers.forEach((layer) => {
+      layer.resize(scaleRatio, this.size);
+      layer.clear();
+      layer.update();
+    });
+
+    this.event.offset = this.containerOffset;
+  }
+
+  private setContainerPosition(isFullscreen: boolean) {
+    if (this.container) {
+      if (isFullscreen) {
+        this.container.style.top = '50%';
+        this.container.style.left = '50%';
+        this.container.style.transform = 'translate(-50%, -50%)';
+        this.container.style.position = 'fixed';
+        document.body.style.overflow = 'hidden';
+      } else {
+        this.container.style.top = '0';
+        this.container.style.left = '0';
+        this.container.style.transform = 'none';
+        this.container.style.position = 'relative';
+        document.body.style.overflow = 'auto';
+      }
+    }
   }
 }
