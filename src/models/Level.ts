@@ -9,6 +9,7 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import { Shovel } from '../game/mechanics/Shovel';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -50,6 +51,8 @@ export default class Level {
 
   public isEnd: boolean;
 
+  private Shovel: Shovel;
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
@@ -79,6 +82,7 @@ export default class Level {
   startLevel() {
     this.createZombies();
     this.dropSuns();
+    this.addShovel();
     this.listenCellClicks();
     this.listenGameEvents();
   }
@@ -185,9 +189,8 @@ export default class Level {
         } else {
           zombie.attack(this.occupiedCells);
         }
-        
-        this.plantsArr.forEach((plant) => {
 
+        this.plantsArr.forEach((plant) => {
           if (zombie.row === plant.row && zombie.position && !this.isEnd) {
             plant.switchState('attack', zombie, plant);
 
@@ -280,5 +283,15 @@ export default class Level {
       this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
     );
     this.sunFall.init();
+  }
+
+  addShovel(): void {
+    const shovel: any = new Shovel(
+      this.engine,
+      this.occupiedCells,
+      this.cells,
+      this.deletePlant.bind(this),
+      this.plantsArr,
+    );
   }
 }
