@@ -19,7 +19,6 @@ export class StatisticsScreen extends ScreenCreator {
   }
 
   private createNodes(): void {
-    // BACKGROUND COLOR
     const background = this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
@@ -28,7 +27,6 @@ export class StatisticsScreen extends ScreenCreator {
       color: '#8B4513',
     });
 
-    // BACKGROUND IMG
     const BACKGROUND_IMG = this.engine
       .loader.files['assets/images/interface/settingBackground.jpg'] as HTMLImageElement;
 
@@ -43,7 +41,6 @@ export class StatisticsScreen extends ScreenCreator {
       img: BACKGROUND_IMG,
     });
 
-    // BUTTON CLOSE
     const BUTTON_IMG = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
@@ -76,7 +73,7 @@ export class StatisticsScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
   }

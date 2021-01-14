@@ -28,7 +28,6 @@ export class LoginScreen extends ScreenCreator {
   }
 
   private createNodes(): void {
-    // BACKGROUND COLOR
     const backgroundColor = this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
@@ -36,7 +35,7 @@ export class LoginScreen extends ScreenCreator {
       layer: LOGIN_SCREEN_LAYERS[0],
       color: '#323649',
     });
-    // BACKGROUND
+
     const BACKGROUND = this.engine
       .loader.files['assets/images/interface/register.png'] as HTMLImageElement;
 
@@ -51,7 +50,6 @@ export class LoginScreen extends ScreenCreator {
       img: BACKGROUND,
     });
 
-    // BUTTON CLOSE
     const BUTTON_CLOSE = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
@@ -64,8 +62,8 @@ export class LoginScreen extends ScreenCreator {
       size: this.engine.vector(113, 41),
       layer: LOGIN_SCREEN_LAYERS[1],
       img: BUTTON_CLOSE,
-      // dh: this.
     });
+
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
@@ -78,15 +76,11 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
-    // textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
-
     this.setEvent(buttonClose, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
 
-    // BUTTON SUBMIT
     const buttonSubmit: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -109,7 +103,6 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // BUTTON REGISTER
     const buttonRegister: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -132,7 +125,6 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // INPUTS
     const username = new CanvasInput({
       canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
       fontSize: 18,
@@ -171,7 +163,7 @@ export class LoginScreen extends ScreenCreator {
     });
 
     this.setEvent(buttonRegister, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
 
       if (username.value() && password.value()) {
         console.log('Sing up');
@@ -189,7 +181,7 @@ export class LoginScreen extends ScreenCreator {
     });
 
     this.setEvent(buttonSubmit, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       if (username.value() && password.value()) {
         console.log('Log in');
         // LOG IN REQUEST

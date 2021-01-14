@@ -36,7 +36,6 @@ export class StartScreen extends ScreenCreator {
   }
 
   private createNodes(): void {
-    // BACKGROUND
     const BACKGROUND = this.engine
       .loader.files['assets/images/interface/SelectorBackground.png'] as HTMLImageElement;
 
@@ -51,7 +50,6 @@ export class StartScreen extends ScreenCreator {
       img: BACKGROUND,
     });
 
-    // ADVENTURE BUTTON
     const START_GAME_BUTTON = this.engine
       .loader.files['assets/images/interface/startScreen-button-notActive2.png'] as HTMLImageElement;
 
@@ -73,15 +71,13 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(startGameButton, 'click', () => {
-      this.engine.audioPlayer.playSound('menuButtonClick'); // sound---------
+      this.engine.audioPlayer.playSound('menuButtonClick');
       this.levelSelectionScreen.openScreen();
     });
 
-    // SETTINGS BUTTON
     const SETTINGS_BUTTON = this.engine
       .loader.files['assets/images/interface/startScreen-button_settings-notActive.png'] as HTMLImageElement;
 
-    // const audio = this.engine.audioPlayer.playSound('audio');
     const settingsGameButton: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -100,11 +96,10 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(settingsGameButton, 'click', () => {
-      this.engine.audioPlayer.playSound('menuButtonClick'); // sound -------------
+      this.engine.audioPlayer.playSound('menuButtonClick');
       this.settingsScreen.openScreen();
     });
 
-    // USERNAME BACKGROUND
     const LOGIN_CARD_IMG = this.engine
       .loader.files['assets/images/interface/autorization-card.png'] as HTMLImageElement;
 
@@ -120,7 +115,6 @@ export class StartScreen extends ScreenCreator {
       dh: 100,
     });
 
-    // USERNAME TEXT
     const userName: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
@@ -133,7 +127,6 @@ export class StartScreen extends ScreenCreator {
       color: '#fff',
     });
 
-    // LOGIN BUTTON
     const LOGIN_BUTTON_IMG = this.engine
       .loader.files['assets/images/interface/Button2.png'] as HTMLImageElement;
 
@@ -149,7 +142,7 @@ export class StartScreen extends ScreenCreator {
       dh: 45,
     });
     this.setEvent(autorizationButton, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.loginScreen.openScreen();
     });
   }
