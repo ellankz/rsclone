@@ -139,7 +139,8 @@ export default class Zombie {
   }
 
   private eatThePlant(plant: any) {
-    plant.destroy(this);
+    plant.destroy();
+    return this;
   }
 
   public stop() {
