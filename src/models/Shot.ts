@@ -34,7 +34,8 @@ export default class Shot {
       if (node.position.x >= this.engine.size.x + (LEFT_CAMERA_OFFSET_COEF * this.engine.size.x)) {
         node.destroy();
       }
-      if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)) {
+      if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)
+      && zombie.position.x - node.position.x > -100 && plant.health > 0) {
         node.destroy();
         zombie.reduceHealth(plant.damage);
         this.engine.audioPlayer.playSound('shot');

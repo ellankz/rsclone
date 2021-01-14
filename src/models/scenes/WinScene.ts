@@ -4,11 +4,8 @@ import Engine from '../../engine';
 export default class WinScene {
   private engine: Engine;
 
-  private winSound: HTMLAudioElement;
-
   constructor(engine: Engine) {
     this.engine = engine;
-    this.winSound = new Audio();
   }
 
   public init() {

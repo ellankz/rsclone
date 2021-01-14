@@ -131,6 +131,7 @@ export default class Plant {
   destroy() {
     this.isDestroyed();
     this.stopCreatingSuns();
+    this.stopShooting();
     this.node.destroy();
   }
 }

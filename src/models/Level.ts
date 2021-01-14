@@ -232,7 +232,7 @@ export default class Level {
         }
 
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position && !this.isEnd) {
+          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0) {
             plant.switchState('attack', zombie, plant);
 
             if (zombie.health <= 0) {
