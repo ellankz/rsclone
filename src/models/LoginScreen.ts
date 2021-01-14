@@ -78,20 +78,11 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
-    textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    // buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    // textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
 
-    // this.setActive(
-    //   buttonClose,
-    //   'assets/images/interface/ButtonActive.png',
-    //   'assets/images/interface/Button.png',
-    // );
-
-    // this.engine.on(buttonClose, 'mousedown', () => {
-    //   buttonClose.opacity = 0.2;
-    // });
     this.setEvent(buttonClose, 'click', () => {
-      console.log('CLOSE');
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.engine.setScreen('startScreen');
     });
 
@@ -180,6 +171,8 @@ export class LoginScreen extends ScreenCreator {
     });
 
     this.setEvent(buttonRegister, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+
       if (username.value() && password.value()) {
         console.log('Sing up');
         password.value('');
@@ -196,6 +189,7 @@ export class LoginScreen extends ScreenCreator {
     });
 
     this.setEvent(buttonSubmit, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       if (username.value() && password.value()) {
         console.log('Log in');
         // LOG IN REQUEST

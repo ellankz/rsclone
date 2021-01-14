@@ -81,6 +81,7 @@ export class LevelSelectionScreen extends ScreenCreator {
           'assets/images/interface/selectLevelIcon_Active.png',
           'assets/images/interface/selectLevelIcon_notActive.png');
         this.setEvent(card, 'click', () => {
+          this.engine.audioPlayer.playSound('tap'); // sound ---------
           this.startLevel();
           this.engine.stop();
           this.engine.start('scene');
@@ -127,6 +128,7 @@ export class LevelSelectionScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.engine.setScreen('startScreen');
     });
   }

@@ -73,6 +73,7 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(startGameButton, 'click', () => {
+      this.engine.audioPlayer.playSound('menuButtonClick'); // sound---------
       this.levelSelectionScreen.openScreen();
     });
 
@@ -80,6 +81,7 @@ export class StartScreen extends ScreenCreator {
     const SETTINGS_BUTTON = this.engine
       .loader.files['assets/images/interface/startScreen-button_settings-notActive.png'] as HTMLImageElement;
 
+    // const audio = this.engine.audioPlayer.playSound('audio');
     const settingsGameButton: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -98,6 +100,7 @@ export class StartScreen extends ScreenCreator {
     );
 
     this.setEvent(settingsGameButton, 'click', () => {
+      this.engine.audioPlayer.playSound('menuButtonClick'); // sound -------------
       this.settingsScreen.openScreen();
     });
 
@@ -146,6 +149,7 @@ export class StartScreen extends ScreenCreator {
       dh: 45,
     });
     this.setEvent(autorizationButton, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.loginScreen.openScreen();
     });
   }

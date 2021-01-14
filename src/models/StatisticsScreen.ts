@@ -76,6 +76,7 @@ export class StatisticsScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
       this.engine.setScreen('startScreen');
     });
   }
