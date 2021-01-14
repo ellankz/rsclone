@@ -11,5 +11,9 @@ const engine = new Engine(container, {
   first: ['back', 'main', 'top', 'window'],
   loader: ['loader-back', 'loader'],
 });
+
+// engine.fullscreen = true;
+
 const game = new Game(engine);
+
 game.init();

@@ -23,7 +23,6 @@ export default class LooseScene {
   }
 
   private createLooseMessage() {
-    
     function getRandomNumber(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -79,7 +78,7 @@ export default class LooseScene {
     setTimeout(() => {
       this.engine.on(this.modalWindow.buttonNode, 'click', () => {
         restart();
-      })
-    }, 5200)
+      });
+    }, 5200);
   }
 }

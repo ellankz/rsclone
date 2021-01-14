@@ -17,6 +17,7 @@
   - [ImageNode](#imagenode)
   - [SpriteNode](#spritenode)
 - [Loader](#loader)
+- [Fullscreen](#fullscreen)
 - [Notes](#notes)
 - [Examples](#examples)
 
@@ -31,12 +32,13 @@
 ```javascript
 {
   size: Vector,  // размер контейнера
-  canvasOffset: Vector,  // отступ контейнера от границ окна
+  containerOffset: Vector,  // отступ контейнера от границ окна
   screens: { screenName: Layer[] },
   activeScreen: string,
   layers: { layerName: Layer },
-  events: { event: { option: value } }; // опции событий
-  container: HTMLElement
+  events: { event: { option: value } }, // опции событий
+  container: HTMLElement,
+  fullscreen: false,
 }
 ```
 
@@ -483,6 +485,7 @@ setTimeout(() => {
   - `layer` - имя слоя на котором будет отрисовываться элемент
 - дополнительные
   - `border` - добавляет границу, записывается в формате `'10px #cecece'`
+  - `opacity` - число от 0 до 1
 
 #### Типы узлов
 
@@ -496,7 +499,8 @@ setTimeout(() => {
   layer: layerName,
 
   border?: string,
-  color?: string
+  color?: string,
+  opacity?: number
 }
 ```
 
@@ -510,7 +514,8 @@ setTimeout(() => {
   layer: layerName,
 
   border?: string,
-  color?: string
+  color?: string,
+  opacity?: number
 }
 ```
 
@@ -526,7 +531,8 @@ setTimeout(() => {
   font?: string, // font family, default 'serif'
   fontSize?: number, // default 30
   border?: string,
-  color?: string
+  color?: string,
+  opacity?: number
 }
 ```
 
@@ -542,7 +548,8 @@ setTimeout(() => {
 
   dh?: number; // желаемая высота - ширина расчитывается автоматически, default size
   srcPosition?: Vector, // позиция относительно исходной картинки, default {x: 0, y: 0}
-  border?: string
+  border?: string,
+  opacity?: number
 }
 ```
 
@@ -552,7 +559,7 @@ setTimeout(() => {
 
 ! Скорость подбирается вручную и зависит от количества фреймов
 
-! Спрайт должен быть горизонтальным в один ряд
+! Спрайт должен быть горизонтальным (в один ряд)
 
 ```javascript
 {
@@ -566,7 +573,8 @@ setTimeout(() => {
   startFrame?: number, // начальный фрейм считая от 0, default 0
   speed?: number, // скорость задержки - чем меньше значение, тем быстрее анимация, default 0
   dh?: number, // желаемая высота - ширина расчитывается автоматически, default size
-  border?: string
+  border?: string,
+  opacity?: number
 }
 ```
 
@@ -628,6 +636,16 @@ interface SpriteStatesConfig {
 ```javascript
 const image = engine.loader.files['assets/images/image1.png'] as HTMLImageElement;
 const audio = engine.loader.files['assets/audio/audio.mp3'] as HTMLAudioElement;
+```
+
+---
+
+## Fullscreen
+
+Включить полноэкранный режим игры можно установив значение fullscreen в true. Режим можно менять сколько угодно раз.
+
+```
+engine.fullscreen = true;
 ```
 
 ---

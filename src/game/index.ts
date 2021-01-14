@@ -8,6 +8,9 @@ import LoaderScreen from './screens/LoaderScreen';
 import WinScene from '../models/WinScene';
 import LooseScene from '../models/LooseScene';
 import ModalWindow from './ModalWindow';
+import sounds from '../data/audio.json';
+
+const X_HOME = 150;
 
 export default class Game {
   private engine: Engine;
@@ -20,7 +23,7 @@ export default class Game {
 
   private modalWindow: ModalWindow;
 
-  private currentLevel: Level;
+  public currentLevel: Level;
 
   private timer: any;
 
@@ -32,12 +35,13 @@ export default class Game {
   }
 
   public init() {
+    this.setupGame();
     const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
+      () => this.engine.addAudio(sounds),
     );
-    this.setupGame();
   }
 
   setupGame() {
@@ -46,36 +50,71 @@ export default class Game {
     engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
-        //code;
-    };
-  })
-  this.engine.start('scene');
-}
+        // code;
+      };
+    });
+    this.engine.start('scene');
+  }
 
   startGame() {
+    this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.currentLevel = this.createLevel(0);
     this.engine.setScreen('first');
   }
 
   endGame() {
+    let count = 0;
     const trackPosition = () => {
       if (this.currentLevel) {
+        count = this.currentLevel.getRestZombies();
+
+        if (count <= 0) {
+          this.endWin();
+        }
 
         this.currentLevel.zombiesArr.forEach((zombie) => {
-          if (zombie.position && zombie.position.x < 150) {
-            this.isEnd = true;
-            this.currentLevel.stopLevel();
-            this.createLooseScene();
-            this.currentLevel.clearZombieArray();
-            this.currentLevel.clearPlantsArray();
-            clearTimeout(this.timer);
+          if (zombie.position && zombie.position.x < X_HOME) {
+            this.endLoose();
           }
-      });
-      }  
-      if(!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
-    }
+        });
+      }
+      if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
+    };
     trackPosition();
+  }
+
+  stop() {
+    this.isEnd = true;
+    this.currentLevel.stopLevel();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
+  }
+
+  endWin() {
+    this.stop();
+    setTimeout(() => {
+      this.createWinScene();
+      this.currentLevel.updateSunCount(500);
+    }, 3000);
+
+    setTimeout(() => {
+      this.clearLevel();
+      this.currentLevel.destroyPlants();
+    }, 6000);
+
+    setTimeout(() => {
+      this.createLevel(0);
+    }, 10000);
+
+    clearTimeout(this.timer);
+  }
+
+  endLoose() {
+    this.stop();
+    this.createLooseScene();
+    this.currentLevel.destroyPlants();
+    clearTimeout(this.timer);
   }
 
   createCells() {
@@ -92,9 +131,8 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells)
+    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
-    //this.addPause();
     this.endGame();
     return this.currentLevel;
   }
@@ -102,10 +140,10 @@ export default class Game {
   clearLevel() {
     let allNodes = this.engine.getSceneNodes('scene');
     allNodes = allNodes.filter((el) => el.type === 'SpriteNode');
-  
-    allNodes.forEach(node => {
+
+    allNodes.forEach((node) => {
       node.destroy();
-    }) 
+    });
   }
 
   createWinScene() {
@@ -120,7 +158,8 @@ export default class Game {
     this.loose.restartLevel(() => {
       this.clearLevel();
       this.createLevel(0);
-    }) 
+      this.currentLevel.updateSunCount(500);
+    });
   }
 
   createPauseScene() {
@@ -130,9 +169,9 @@ export default class Game {
   }
 
   addPause() {
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       this.currentLevel.pause();
-      if (document.visibilityState === 'hidden') { 
+      if (document.visibilityState === 'hidden') {
         this.createPauseScene();
       }
     });

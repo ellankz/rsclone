@@ -21,8 +21,6 @@ export default class ModalWindow {
 
   textOnTheButton: string;
 
-  pauseCount: number = 0;
-
   constructor(engine: Engine, modalWindowText: string, textOnTheButton: string) {
     this.engine = engine;
     this.bgImage = this.engine.loader.files['assets/images/interface/window.png'] as HTMLImageElement;
@@ -162,10 +160,6 @@ export default class ModalWindow {
 
   public resumeGame() {
     this.engine.start('scene');
-  }
-
-  public countPause() {
-    return this.pauseCount += 1;
   }
 
   private removeModalWindow() {

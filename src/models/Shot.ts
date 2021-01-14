@@ -37,6 +37,7 @@ export default class Shot {
       if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)) {
         node.destroy();
         zombie.reduceHealth(plant.damage);
+        this.engine.audioPlayer.playSound('shot');
       }
     };
 

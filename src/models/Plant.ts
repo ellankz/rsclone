@@ -68,6 +68,11 @@ export default class Plant {
     this.health -= num;
   }
 
+  putOnField(cell: Cell) {
+    this.draw(cell);
+    this.engine.audioPlayer.playSound('plant');
+  }
+
   draw(cell: Cell) {
     const image = this.engine.loader.files[this.image] as HTMLImageElement;
 
@@ -124,8 +129,8 @@ export default class Plant {
   }
 
   destroy() {
-    this.stopCreatingSuns();
     this.isDestroyed();
+    this.stopCreatingSuns();
     this.node.destroy();
   }
 }
