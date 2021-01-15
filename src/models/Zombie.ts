@@ -71,13 +71,11 @@ export default class Zombie {
     this.zombieSpeed = SPEED;
     let start = 0;
 
-    const image = new Image();
-    image.src = this.image;
+    const image = this.engine.loader.files[this.image];
 
     const generateStates = () => {
       const statesArr = Object.entries(this.states).map((state) => {
-        const img = new Image();
-        img.src = state[1].image;
+        const img = this.engine.loader.files[state[1].image];
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
           frames, speed, dh, positionAdjust,
@@ -160,8 +158,7 @@ export default class Zombie {
   private lostHead() {
     this.node.switchState('lost_head');
 
-    const image = new Image();
-    image.src = '../assets/sprites/zombies/basic/lost_head.png';
+    const image = this.engine.loader.files['assets/sprites/zombies/basic/lost_head.png'];
 
     const head = this.engine.createNode({
       type: 'SpriteNode',

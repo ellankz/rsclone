@@ -9,6 +9,7 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import LawnCleaner from './LawnCleaner';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -50,11 +51,14 @@ export default class Level {
 
   public isEnd: boolean;
 
+  public lawnCleaners: LawnCleaner[];
+
   constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
     this.zombiesConfig = levelConfig.zombies;
     this.plantTypes = levelConfig.plantTypes;
     this.engine = engine;
     this.plantCards = [];
+    this.lawnCleaners = [];
     this.preparedToPlant = null;
     this.cells = cells;
     this.occupiedCells = new Map();
@@ -77,6 +81,7 @@ export default class Level {
   }
 
   startLevel() {
+    this.placeLawnCleaners();
     this.createZombies();
     this.dropSuns();
     this.listenCellClicks();
@@ -93,6 +98,28 @@ export default class Level {
 
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
+    });
+  }
+
+  handleZombieNearHome(zombie: Zombie) {
+    const lawnCLeaner = this.lawnCleaners[zombie.row];
+    if (lawnCLeaner) {
+      this.lawnCleaners[zombie.row] = undefined;
+      this.runOverWithLawnCleaner(lawnCLeaner, zombie.row);
+    } else {
+      this.stopLevel();
+    }
+  }
+
+  runOverWithLawnCleaner(lawnCLeaner: LawnCleaner, row: number) {
+    const preparedToDieAgain: Zombie[] = [];
+    this.zombiesArr.forEach((zombie) => {
+      if (row === zombie.row) {
+        preparedToDieAgain.push(zombie);
+      }
+    });
+    lawnCLeaner.run(preparedToDieAgain, () => {
+      this.zombiesArr = this.deleteZombie();
     });
   }
 
@@ -181,13 +208,12 @@ export default class Level {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         if (zombie.position && zombie.position.x < X_HOME) {
-          this.stopLevel();
+          this.handleZombieNearHome(zombie);
         } else {
           zombie.attack(this.occupiedCells);
         }
-        
-        this.plantsArr.forEach((plant) => {
 
+        this.plantsArr.forEach((plant) => {
           if (zombie.row === plant.row && zombie.position && !this.isEnd) {
             plant.switchState('attack', zombie, plant);
 
@@ -273,6 +299,14 @@ export default class Level {
         });
       }
     }
+  }
+
+  placeLawnCleaners() {
+    this.cells[0].forEach((cell, index) => {
+      const lawnCleaner = new LawnCleaner(this.engine, cell, index);
+      lawnCleaner.draw();
+      this.lawnCleaners.push(lawnCleaner);
+    });
   }
 
   dropSuns() {
