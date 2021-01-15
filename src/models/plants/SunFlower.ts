@@ -30,6 +30,7 @@ export class SunFlower extends Plant {
   }
 
   init(cell: Cell) {
+    this.isDestroyedFlag = false;
     const start = (): void => {
       if (this.isDestroyedFlag) {
         clearInterval(this.sunCreatingTimer);
@@ -69,6 +70,7 @@ export class SunFlower extends Plant {
   }
 
   stop(): void {
+    this.isDestroyedFlag = true;
     clearInterval(this.sunCreatingTimer);
   }
 }
