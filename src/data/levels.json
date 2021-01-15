@@ -11,38 +11,6 @@
     {
       "type": "basic",
       "startDelay": 9
-    },
-    {
-      "type": "cone",
-      "startDelay": 9
-    },
-    {
-      "type": "cone",
-      "startDelay": 9
-    },
-    {
-      "type": "basic",
-      "startDelay": 13
-    },
-    {
-      "type": "basic_2",
-      "startDelay": 20
-    },
-    {
-      "type": "bucket",
-      "startDelay": 11
-    },
-    {
-      "type": "basic",
-      "startDelay": 11
-    },
-    {
-      "type": "basic",
-      "startDelay": 7
-    },
-    {
-      "type": "bucket",
-      "startDelay": 10
     }
     ],
     "plantTypes": [

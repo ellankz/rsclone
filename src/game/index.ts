@@ -30,6 +30,8 @@ export default class Game {
 
   private isEnd: boolean;
 
+  public restZombies: number;
+
   constructor(engine: Engine) {
     this.engine = engine;
     this.cells = [];
@@ -68,9 +70,9 @@ export default class Game {
     let count = 0;
     const trackPosition = () => {
       if (this.currentLevel) {
-        count = this.currentLevel.getRestZombies();
-
-        if (count <= 0) {
+        this.restZombies = this.currentLevel.getRestZombies();
+        console.log(this.restZombies)
+        if (this.restZombies <= 0) {
           this.endWin();
         }
 
@@ -93,20 +95,11 @@ export default class Game {
   }
 
   endWin() {
-    setTimeout(() => {
-      this.createWinScene();
-      this.currentLevel.updateSunCount(500);
-    }, 3000);
-
-    setTimeout(() => {
-      this.clearLevel();
-      this.stop();
-    }, 6000);
-
-    setTimeout(() => {
-      this.createLevel(0);
-    }, 10000);
-
+    this.stop();
+    this.createWinScene();
+    this.currentLevel.updateSunCount(500);
+    this.clearLevel();
+    this.createLevel(0);
     clearTimeout(this.timer);
   }
 
@@ -150,6 +143,7 @@ export default class Game {
       plant.destroy();
     });
 
+    this.engine.clearAllTimeouts();
     this.engine.clearTimeouts();
   }
 
@@ -170,7 +164,6 @@ export default class Game {
   }
 
   createPauseScene() {
-    this.engine.pauseTimeout();
     this.engine.stop();
     this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');
     this.modalWindow.draw();
@@ -183,6 +176,7 @@ export default class Game {
       i += 1;
       if (i === 1) {
         if (document.visibilityState === 'hidden') {
+          this.restZombies = this.restZombies;
           this.engine.pauseTimeout();
           this.engine.clearAllTimeouts();
           this.createPauseScene();

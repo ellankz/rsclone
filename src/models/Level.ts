@@ -77,6 +77,7 @@ export default class Level {
 
   startLevel() {
     this.isEnd = false;
+    this.restZombies = this.zombiesConfig.length;
     this.createZombies(this.creatingZombies);
     this.dropSuns();
     this.listenCellClicks();
@@ -156,7 +157,6 @@ export default class Level {
   }
 
   public createZombies(n: number) {
-    this.restZombies = this.zombiesConfig.length;
 
     // Generate row without repeating more then (2) times
     function getRandomNumber(min: number, max: number): number {
@@ -194,6 +194,7 @@ export default class Level {
     // Generate zombies
     for (let i: number = n, j = this.zombiesConfig[0].startDelay * MS; 
       i < this.zombiesConfig.length; i += 1, j += this.zombiesConfig[1].startDelay * MS) {
+        
       let cell: Cell;
       let row: number = null;
 
