@@ -119,7 +119,7 @@ export default class Plant {
   }
 
   public stopCreatingSuns() {
-    clearTimeout(this.timer);
+    clearInterval(this.timer);
   }
 
   public isDestroyed(): void {

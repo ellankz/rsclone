@@ -10,7 +10,7 @@ const SUN_COST = 25;
 const SUNFLOWER_GENERATE_STATE = 600;
 
 export class SunFlower extends Plant {
-  sunCreatingTimer: any;
+  // sunCreatingTimer: any;
 
   isDestroyedFlag: boolean;
 
@@ -33,7 +33,7 @@ export class SunFlower extends Plant {
     this.isDestroyedFlag = false;
     const start = (): void => {
       if (this.isDestroyedFlag) {
-        clearInterval(this.sunCreatingTimer);
+        clearInterval(this.timer);
         return;
       }
       this.switchState('generate');
@@ -56,7 +56,7 @@ export class SunFlower extends Plant {
       }, SUN_APPEARANCE_STATE);
     };
 
-    this.sunCreatingTimer = setInterval(start, SUN_REPRODUCTION);
+    this.timer = setInterval(start, SUN_REPRODUCTION);
   }
 
   draw(cell: Cell): void {
@@ -71,6 +71,6 @@ export class SunFlower extends Plant {
 
   stop(): void {
     this.isDestroyedFlag = true;
-    clearInterval(this.sunCreatingTimer);
+    clearInterval(this.timer);
   }
 }
