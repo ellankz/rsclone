@@ -2,6 +2,8 @@ import Engine from '../../engine';
 import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_WIDTH_COEF, TOP_OFFSET_COEF } from '../../constats';
 import Cell from '../Cell';
 import Plant from '../../models/Plant';
+import { SunFlower } from '../../models/plants/SunFlower';
+import { Peashooter } from '../../models/plants/Peashooter';
 
 const LAYER_NAME: string = 'main';
 const SCENE_NAME: string = 'scene';
@@ -56,35 +58,56 @@ export class Shovel {
   }
 
   private setEvent(): void {
-    const cellClick = (cell: Cell) => {
-      console.log(cell);
+    const cellsFlat: Array<Cell> = this.cells.flat();
+    const functionsArr: Array<(ev: any) => void> = [];
+
+    const cellClick = (event: any, cell: Cell): void => {
       if (this.occupiedCells.has(cell)) {
-        console.log('DESTROY');
-      } else {
-        console.log('empty');
+        const plant: any = this.occupiedCells.get(cell);
+        if (plant instanceof SunFlower) {
+          plant.stopCreatingSuns();
+        } else if (plant instanceof Peashooter) {
+          plant.stopShooting();
+        }
+        plant.health = 0;
+        this.plantsArr = this.deletePlant();
+        plant.destroy();
+        this.occupiedCells.delete(cell);
+        this.engine.audioPlayer.playSound('dig');
       }
+
+      this.toggleState();
+      cellsFlat.forEach((_cell, index) => {
+        this.engine.off(_cell.node, 'click', functionsArr[index]);
+      });
+      this.engine.audioPlayer.playSound('shovel');
     };
 
-    this.engine.on(this.shovelNode, 'click', (e) => {
-      this.isActive = !this.isActive;
+    this.engine.on(this.shovelNode, 'click', () => {
+      this.engine.audioPlayer.playSound('shovel');
       this.toggleState();
+      this.engine.events.click.eventBubbling = this.isActive;
       if (this.isActive) {
-        this.engine.events.click.eventBubbling = true;
-        this.cells.forEach((cellRow) => cellRow.forEach((cell) => {
-          // this.engine.on(cell.node, 'click', cellClick(cell, this.occupiedCells));
-          this.engine.on(cell.node, 'click', () => cellClick(cell));
-        }));
+        cellsFlat.forEach((cell: Cell) => {
+          const f = (ev: any): void => {
+            cellClick.call(cell.node, ev, cell);
+          };
+          functionsArr.push(f);
+        });
+
+        cellsFlat.forEach((cell, index) => {
+          this.engine.on(cell.node, 'click', functionsArr[index]);
+        });
       } else {
-        this.engine.events.click.eventBubbling = false;
-        this.cells.forEach((cellRow) => cellRow.forEach((cell) => {
-          // this.engine.off(cell.node, 'click', cellClick(cell, this.occupiedCells));
-          this.engine.off(cell.node, 'click', () => cellClick(cell));
-        }));
+        cellsFlat.forEach((cell, index) => {
+          this.engine.off(cell.node, 'click', functionsArr[index]);
+        });
       }
     });
   }
 
   private toggleState(): void {
+    this.isActive = !this.isActive;
     if (this.isActive) {
       this.shovelNode.opacity = 0.5;
     } else {
