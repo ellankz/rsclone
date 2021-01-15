@@ -20,6 +20,11 @@ export default class AudioPlayer {
   }
 
   playSound(name: string) {
+    this.elements[name].currentTime = 0;
+    this.elements[name].play();
+  }
+
+  playContinue(name: string) {
     this.elements[name].play();
   }
 
