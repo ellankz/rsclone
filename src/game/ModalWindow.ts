@@ -42,7 +42,7 @@ export default class ModalWindow {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 70,
+          (this.engine.size.x / 2) - 90,
           (this.engine.size.y / 2) - 40,
         ),
         text: this.modalWindowText,
@@ -57,7 +57,7 @@ export default class ModalWindow {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 50,
+          (this.engine.size.x / 2) - 75,
           (this.engine.size.y / 2) - 40,
         ),
         text: this.modalWindowText,
@@ -74,7 +74,7 @@ export default class ModalWindow {
       {
         type: 'ImageNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - (this.bgImage.width / 2) + 90,
+          (this.engine.size.x / 2) - (this.bgImage.width / 2) + 70,
           (this.engine.size.y / 2) - (this.bgImage.height / 2) + 25,
         ),
         size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -90,7 +90,7 @@ export default class ModalWindow {
       {
         type: 'ImageNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 35,
+          (this.engine.size.x / 2) - 55,
           (this.engine.size.y / 2) + 95,
         ),
         size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -106,15 +106,14 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 20,
+          (this.engine.size.x / 2) - 40,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
         layer: 'window',
         font: 'regular-samdan',
         fontSize: 26,
-        color: '#288115',
-        // border: '1px solid black',
+        color: '#0daf1b',
       }) as TextNode;
     }
 
@@ -122,15 +121,14 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 8,
+          (this.engine.size.x / 2) - 28,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
         layer: 'window',
         font: 'regular-samdan',
         fontSize: 28,
-        color: '#288115',
-        border: '1px solid black',
+        color: '#0daf1b',
       }) as TextNode;
     }
   }
@@ -150,15 +148,15 @@ export default class ModalWindow {
 
     this.engine.on(this.buttonNode, 'click', () => {
       this.removeModalWindow();
-
-      if (this.textOnTheButton === 'resume game') {
-        this.resumeGame();
-      }
     });
   }
 
-  public resumeGame() {
-    this.engine.start('scene');
+  public resumeGame(resume: () => void) {
+    this.engine.on(this.buttonNode, 'click', () => {
+      if (this.textOnTheButton === 'resume game') {
+        resume();
+      }
+    });
   }
 
   private removeModalWindow() {

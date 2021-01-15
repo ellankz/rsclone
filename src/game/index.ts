@@ -1,3 +1,4 @@
+import { platform } from 'os';
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
@@ -57,7 +58,7 @@ export default class Game {
   }
 
   startGame() {
-    this.engine.audioPlayer.playSound('menu');
+    // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.currentLevel = this.createLevel(0);
     this.engine.setScreen('first');
@@ -92,7 +93,6 @@ export default class Game {
   }
 
   endWin() {
-    this.stop();
     setTimeout(() => {
       this.createWinScene();
       this.currentLevel.updateSunCount(500);
@@ -100,7 +100,7 @@ export default class Game {
 
     setTimeout(() => {
       this.clearLevel();
-      this.currentLevel.destroyPlants();
+      this.stop();
     }, 6000);
 
     setTimeout(() => {
@@ -113,7 +113,6 @@ export default class Game {
   endLoose() {
     this.stop();
     this.createLooseScene();
-    this.currentLevel.destroyPlants();
     clearTimeout(this.timer);
   }
 
@@ -134,6 +133,7 @@ export default class Game {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
     this.endGame();
+    this.addPause();
     return this.currentLevel;
   }
 
@@ -144,6 +144,13 @@ export default class Game {
     allNodes.forEach((node) => {
       node.destroy();
     });
+
+    const plants = this.currentLevel.getPlants();
+    plants.forEach((plant) => {
+      plant.destroy();
+    });
+
+    this.engine.clearTimeouts();
   }
 
   createWinScene() {
@@ -163,16 +170,30 @@ export default class Game {
   }
 
   createPauseScene() {
+    this.engine.pauseTimeout();
     this.engine.stop();
     this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');
     this.modalWindow.draw();
   }
 
   addPause() {
+    let i = 0;
+
     document.addEventListener('visibilitychange', () => {
-      this.currentLevel.pause();
-      if (document.visibilityState === 'hidden') {
-        this.createPauseScene();
+      i += 1;
+      if (i === 1) {
+        if (document.visibilityState === 'hidden') {
+          this.engine.pauseTimeout();
+          this.engine.clearAllTimeouts();
+          this.createPauseScene();
+
+          this.modalWindow.resumeGame(() => {
+            this.engine.start('scene');
+            this.currentLevel.continueCreatingZombies();
+            this.engine.resumeTimeout();
+            i = 0;
+          });
+        }
       }
     });
   }

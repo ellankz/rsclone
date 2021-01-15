@@ -6,43 +6,43 @@
     }, 
     {
       "type": "basic_2",
-      "startDelay": 8
+      "startDelay": 7
     },
     {
       "type": "basic",
-      "startDelay": 17
+      "startDelay": 9
     },
     {
       "type": "cone",
-      "startDelay": 26
+      "startDelay": 9
     },
     {
       "type": "cone",
-      "startDelay": 35
+      "startDelay": 9
     },
     {
       "type": "basic",
-      "startDelay": 48
+      "startDelay": 13
     },
     {
       "type": "basic_2",
-      "startDelay": 68
+      "startDelay": 20
     },
     {
       "type": "bucket",
-      "startDelay": 79
+      "startDelay": 11
     },
     {
       "type": "basic",
-      "startDelay": 90
+      "startDelay": 11
     },
     {
       "type": "basic",
-      "startDelay": 97
+      "startDelay": 7
     },
     {
       "type": "bucket",
-      "startDelay": 107
+      "startDelay": 10
     }
     ],
     "plantTypes": [

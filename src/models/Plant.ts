@@ -49,6 +49,8 @@ export default class Plant {
 
   public isShooting: boolean;
 
+  public sunCreatingTimer: any;
+
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
     this.damage = this.plantPresets[config.type].damage;
@@ -118,19 +120,19 @@ export default class Plant {
     this.isShooting = false;
   }
 
-  public stopCreatingSuns() {
-    clearTimeout(this.timer);
-  }
-
-  public isDestroyed(): void {
+  public isDestroyed() {
     if (this.health <= 0) {
       this.isDestroyedFlag = true;
     }
+    return this.isDestroyedFlag;
+  }
+
+  clearTimeout() {
+    clearTimeout(this.sunCreatingTimer);
   }
 
   destroy() {
     this.isDestroyed();
-    this.stopCreatingSuns();
     this.stopShooting();
     this.node.destroy();
   }

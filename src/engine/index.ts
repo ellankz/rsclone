@@ -19,6 +19,7 @@ import View from './core/View';
 import Event from './core/Event';
 import Loader from './core/Loader';
 import AudioPlayer from './core/AudioPlayer';
+import Timeout from './core/Timeout';
 
 export default class Engine {
   size: Vector;
@@ -59,6 +60,12 @@ export default class Engine {
 
   audioPlayer: any;
 
+  timeout: any;
+
+  timeouts: Timeout[];
+
+  timeoutArray: number[];
+
   constructor(
     _box: string | HTMLElement,
     config?: string[] | { [name: string]: string[] },
@@ -82,6 +89,9 @@ export default class Engine {
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
     this.init(_box, config);
+
+    this.timeouts = [];
+    this.timeoutArray = [];
   }
 
   // Events
@@ -423,5 +433,45 @@ export default class Engine {
         document.body.style.overflow = 'auto';
       }
     }
+  }
+
+  // For setTimeout as usual
+
+  public newSetTimeout(timerId: number) {
+    this.timeoutArray.push(timerId);
+  }
+
+  public clearAllTimeouts() {
+    for (let i = 0; i < this.timeoutArray.length; i += 1) {
+      window.clearTimeout(this.timeoutArray[i]);
+    }
+  }
+
+  // For setTimeout with pause
+
+  public setTimeout(callback: () => void, delay: number) {
+    this.timeout = new Timeout(callback, delay);
+    this.timeout.resume();
+    this.timeouts.push(this.timeout);
+  }
+
+  public pauseTimeout() {
+    for (let i = 0; i < this.timeouts.length; i += 1) {
+      this.timeouts[i].pause();
+    }
+  }
+
+  public resumeTimeout() {
+    for (let i = 0; i < this.timeouts.length; i += 1) {
+      this.timeouts[i].resume();
+    }
+  }
+
+  public clearTimeouts() {
+    for (let i = 0; i < this.timeouts.length; i += 1) {
+      this.timeouts[i].clearTimeout();
+    }
+    this.timeouts = [];
+    return this.timeouts;
   }
 }

@@ -1,12 +1,13 @@
+import { throws } from 'assert';
+import { threadId } from 'worker_threads';
 import Plant from '../Plant';
 import Engine from '../../engine';
 import { SunCreator } from '../../game/mechanics/SunCreator';
 import Cell from '../../game/Cell';
 
-const SUN_REPRODUCTION = 11000;
+const SUN_REPRODUCTION = 12000;
 const SUN_APPEARANCE_STATE = 350;
 const SUN_POSITION_SHIFT = 30;
-const SUN_COST = 25;
 const SUNFLOWER_GENERATE_STATE = 700;
 
 export class SunFlower extends Plant {
@@ -27,6 +28,7 @@ export class SunFlower extends Plant {
       this.updateSunFunc = updateSunFunc;
       this.sunCount = sunCount;
     }
+    this.timer = null;
   }
 
   init(cell: Cell) {
@@ -51,17 +53,36 @@ export class SunFlower extends Plant {
       setTimeout(() => {
         sun.switchState('live');
       }, SUN_APPEARANCE_STATE);
+
       if (this.isDestroyedFlag) {
         clearTimeout(this.sunCreatingTimer);
       }
       return this.sunCreatingTimer;
     };
-    this.timer = setTimeout(start, SUN_REPRODUCTION);
+    this.timer = this.engine.setTimeout(start, SUN_REPRODUCTION);
+    this.engine.newSetTimeout(this.sunCreatingTimer);
+  }
+
+  clearTimeout() {
+    super.clearTimeout();
+    clearTimeout(this.sunCreatingTimer);
+  }
+
+  isDestroyed() {
+    super.isDestroyed();
+    if (this.health <= 0) {
+      this.isDestroyedFlag = true;
+    }
+    return this.isDestroyedFlag;
   }
 
   draw(cell: Cell): void {
     super.draw(cell);
-    this.init(cell);
+    if (!this.isDestroyedFlag) {
+      this.init(cell);
+    } else {
+      clearTimeout(this.timer);
+    }
   }
 
   switchState(state: string) {
