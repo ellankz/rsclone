@@ -18,7 +18,7 @@ export default class WinScene {
   private createAnimation() {
     const INTERVAL = 0.005;
     let opacity = 0;
-    let timeInterval = INTERVAL;
+    const timeInterval = INTERVAL;
 
     const bg: any = this.engine.createNode({
       type: 'RectNode',

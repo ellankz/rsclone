@@ -70,7 +70,7 @@ export default class Game {
     const trackPosition = () => {
       if (this.currentLevel) {
         this.restZombies = this.currentLevel.getRestZombies();
-        console.log(this.restZombies)
+        // console.log(this.restZombies);
         if (this.restZombies <= 0) {
           this.endWin();
         }
@@ -86,27 +86,60 @@ export default class Game {
     trackPosition();
   }
 
-  stop() {
+  destroySun() {
+    let sun = this.engine.getSceneNodes('scene');
+    sun = sun.filter((node) => node.type === 'SpriteNode');
+    sun = sun.filter((node) => node.name === 'sun');
+    sun.forEach((node) => node.destroy());
+  }
+
+  destroyPlants() {
+    const plants = this.currentLevel.getPlants();
+    plants.forEach((plant) => {
+      plant.reduceAllHealth();
+      plant.destroy();
+    });
+  }
+
+  stopCreatingSuns() {
+    const plants = this.currentLevel.getPlants();
+    plants.forEach((plant) => {
+      plant.reduceAllHealth();
+    });
+  }
+
+  endWin() {
     this.isEnd = true;
+    this.stopCreatingSuns();
     this.currentLevel.stopLevel();
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     this.engine.clearAllTimeouts();
-    this.engine.clearTimeouts();
-  }
 
-  endWin() {
-    this.stop();
-    this.createWinScene();
-    this.currentLevel.updateSunCount(500);
-    this.clearLevel();
-    this.createLevel(0);
+    setTimeout(() => {
+      this.createWinScene();
+      this.currentLevel.updateSunCount(500);
+    }, 5000)
+    setTimeout(() => {
+      this.clearLevel();
+    }, 8000);
+    setTimeout(() => {
+      this.createLevel(0);
+    }, 12000);
+
     clearTimeout(this.timer);
   }
 
   endLoose() {
-    this.stop();
+    // this.stop();
+    this.isEnd = true;
+    this.currentLevel.stopLevel();
+    this.destroySun();
+    this.destroyPlants();
+    this.engine.clearAllTimeouts();
     this.createLooseScene();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
     clearTimeout(this.timer);
   }
 
@@ -127,7 +160,7 @@ export default class Game {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
     this.endGame();
-    this.addPause();
+    // this.addPause();
     return this.currentLevel;
   }
 
@@ -139,11 +172,6 @@ export default class Game {
       node.destroy();
     });
 
-    const plants = this.currentLevel.getPlants();
-    plants.forEach((plant) => {
-      plant.clearTimeout();
-    });
-    
     this.engine.clearAllTimeouts();
     this.engine.clearTimeouts();
   }
@@ -175,20 +203,18 @@ export default class Game {
 
     document.addEventListener('visibilitychange', () => {
       i += 1;
-      if (i === 1) {
-        if (document.visibilityState === 'hidden') {
-          this.restZombies = this.restZombies;
-          this.engine.pauseTimeout();
-          this.engine.clearAllTimeouts();
-          this.createPauseScene();
 
-          this.modalWindow.resumeGame(() => {
-            this.engine.start('scene');
-            this.currentLevel.continueCreatingZombies();
-            this.engine.resumeTimeout();
-            i = 0;
-          }); 
-        }
+      this.engine.clearAllTimeouts();
+
+      if (i === 1) {
+        this.createPauseScene();
+
+        this.modalWindow.resumeGame(() => {
+          this.engine.start('scene');
+          // this.currentLevel.continueCreatingZombies();
+          // this.engine.resumeTimeout();
+          i = 0;
+        });
       }
     });
   }

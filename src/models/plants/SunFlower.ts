@@ -1,18 +1,15 @@
-import { throws } from 'assert';
-import { threadId } from 'worker_threads';
+import { setupMaster } from 'cluster';
 import Plant from '../Plant';
 import Engine from '../../engine';
 import { SunCreator } from '../../game/mechanics/SunCreator';
 import Cell from '../../game/Cell';
 
-const SUN_REPRODUCTION = 12000;
+const SUN_REPRODUCTION = 18000;
 const SUN_APPEARANCE_STATE = 350;
 const SUN_POSITION_SHIFT = 30;
-const SUNFLOWER_GENERATE_STATE = 700;
+const SUNFLOWER_GENERATE_STATE = 600;
 
 export class SunFlower extends Plant {
-  sunCreatingTimer: any;
-
   isDestroyedFlag: boolean;
 
   updateSunFunc?: (sun: number) => void;
@@ -28,67 +25,59 @@ export class SunFlower extends Plant {
       this.updateSunFunc = updateSunFunc;
       this.sunCount = sunCount;
     }
-    this.timer = null;
   }
 
   init(cell: Cell) {
     this.isDestroyedFlag = false;
-    const start = (): void => {
-      this.switchState('generate');
-      this.sunCreatingTimer = setTimeout(start, SUN_REPRODUCTION);
-      const position = this.engine.vector(
-        cell.getLeft() + (cell.cellSize.x - this.width) / 2 + SUN_POSITION_SHIFT,
-        (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2 - SUN_POSITION_SHIFT,
-      );
-      const sun: any = new SunCreator(
-        this.engine,
-        [position.x, position.y],
-        'main',
-        this.updateSunFunc,
-        this.sunCount,
-      ).instance;
-      sun.addTo('scene');
-      sun.switchState('appearance');
 
-      setTimeout(() => {
-        sun.switchState('live');
-      }, SUN_APPEARANCE_STATE);
+    const start = () => {
+      if (this.health <= 0) {
+        clearTimeout(this.timer);
+      } else {
+        this.switchState('generate');
+        const position = this.engine.vector(
+          cell.getLeft() + (cell.cellSize.x - this.width) / 2 + SUN_POSITION_SHIFT,
+          (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2
+        - SUN_POSITION_SHIFT,
+        );
+        const sun: any = new SunCreator(
+          this.engine,
+          [position.x, position.y],
+          'main',
+          'sun',
+          this.updateSunFunc,
+          this.sunCount,
+        ).instance;
+        sun.addTo('scene');
+        sun.switchState('appearance');
 
-      if (this.isDestroyedFlag) {
-        clearTimeout(this.sunCreatingTimer);
+        setTimeout(() => {
+          sun.switchState('live');
+        }, SUN_APPEARANCE_STATE);
+
+        this.timer = setTimeout(start, SUN_REPRODUCTION);
+      // this.engine.newSetTimeout(this.timer);
       }
-      return this.sunCreatingTimer;
     };
-    setTimeout(start, SUN_REPRODUCTION);
-    //this.timer = setTimeout(start, SUN_REPRODUCTION);
-    //this.engine.newSetTimeout(this.sunCreatingTimer);
-    //this.engine.newSetTimeout(this.timer);
-  }
-
-  clearTimeout() {
-    super.clearTimeout();
-    clearTimeout(this.sunCreatingTimer);
-  }
-
-  isDestroyed() {
-    super.isDestroyed();
-    if (this.health <= 0) {
-      this.isDestroyedFlag = true;
-    }
-    return this.isDestroyedFlag;
+    start();
   }
 
   draw(cell: Cell): void {
     super.draw(cell);
     if (!this.isDestroyedFlag) {
-      this.init(cell);
-    } else {
-      clearTimeout(this.timer);
+      setTimeout(() => {
+        this.init(cell);
+      }, SUN_REPRODUCTION);
     }
   }
 
   switchState(state: string) {
     this.node.switchState(state);
     setTimeout(() => this.node.switchState('basic'), SUNFLOWER_GENERATE_STATE);
+  }
+
+  stop(): void {
+    this.isDestroyedFlag = true;
+    clearTimeout(this.timer);
   }
 }

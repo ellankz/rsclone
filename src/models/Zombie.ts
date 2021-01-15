@@ -14,7 +14,7 @@ const X_MAX = -60;
 const Y_MIN = -5;
 const Y_MAX = -70;
 
-const X_AXIS = 590;
+const X_AXIS = 960;
 const Y_AXIS = 5;
 
 const SPEED = 0.17;

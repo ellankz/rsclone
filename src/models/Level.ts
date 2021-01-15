@@ -79,15 +79,21 @@ export default class Level {
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
     this.createZombies(this.creatingZombies);
-    this.dropSuns();
     this.listenCellClicks();
     this.listenGameEvents();
+    setTimeout(() => {
+      this.dropSuns();
+    }, 5000);
+  }
+
+  stopSunFall() {
+    this.sunFall.stop();
   }
 
   stopLevel() {
     this.isEnd = true;
     this.occupiedCells.clear();
-    this.sunFall.stop();
+    this.stopSunFall();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
     });
@@ -157,7 +163,6 @@ export default class Level {
   }
 
   public createZombies(n: number) {
-
     // Generate row without repeating more then (2) times
     function getRandomNumber(min: number, max: number): number {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -195,12 +200,11 @@ export default class Level {
 
     // Generate zombies
     for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
-
       let cell: Cell;
       let row: number = null;
 
       timer += this.zombiesConfig[i].startDelay * MS;
-      
+
       this.zombiesTimer = setTimeout(() => {
         if (!this.isEnd) {
           this.creatingZombies += 1;

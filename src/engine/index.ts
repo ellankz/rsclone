@@ -439,12 +439,15 @@ export default class Engine {
 
   public newSetTimeout(timerId: number) {
     this.timeoutArray.push(timerId);
+    return this.timeoutArray;
   }
 
   public clearAllTimeouts() {
     for (let i = 0; i < this.timeoutArray.length; i += 1) {
       window.clearTimeout(this.timeoutArray[i]);
     }
+    this.timeoutArray = [];
+    return this.timeoutArray;
   }
 
   // For setTimeout with pause
@@ -453,6 +456,7 @@ export default class Engine {
     this.timeout = new Timeout(callback, delay);
     this.timeout.resume();
     this.timeouts.push(this.timeout);
+    return this.timeouts;
   }
 
   public pauseTimeout() {
@@ -465,6 +469,10 @@ export default class Engine {
     for (let i = 0; i < this.timeouts.length; i += 1) {
       this.timeouts[i].resume();
     }
+  }
+
+  public getTimeouts() {
+    return this.timeouts;
   }
 
   public clearTimeouts() {
