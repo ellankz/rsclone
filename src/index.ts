@@ -1,5 +1,4 @@
 import './style/main.scss';
-
 import Game from './game/index';
 import Engine from './engine';
 
@@ -12,8 +11,13 @@ const engine = new Engine(container, {
   loader: ['loader-back', 'loader'],
 });
 
-// engine.fullscreen = true;
+engine.fullscreen = true;
 
 const game = new Game(engine);
 
 game.init();
+
+// setTimeout(() => {
+//   const startGameScreen = new StartScreen(engine);
+//   startGameScreen.openScreen();
+// }, 1000);
