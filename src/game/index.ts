@@ -67,7 +67,6 @@ export default class Game {
   }
 
   endGame() {
-    let count = 0;
     const trackPosition = () => {
       if (this.currentLevel) {
         this.restZombies = this.currentLevel.getRestZombies();
@@ -92,6 +91,8 @@ export default class Game {
     this.currentLevel.stopLevel();
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
+    this.engine.clearAllTimeouts();
+    this.engine.clearTimeouts();
   }
 
   endWin() {
@@ -140,9 +141,9 @@ export default class Game {
 
     const plants = this.currentLevel.getPlants();
     plants.forEach((plant) => {
-      plant.destroy();
+      plant.clearTimeout();
     });
-
+    
     this.engine.clearAllTimeouts();
     this.engine.clearTimeouts();
   }
@@ -186,7 +187,7 @@ export default class Game {
             this.currentLevel.continueCreatingZombies();
             this.engine.resumeTimeout();
             i = 0;
-          });
+          }); 
         }
       }
     });

@@ -11,6 +11,18 @@
     {
       "type": "basic",
       "startDelay": 9
+    },
+    {
+      "type": "cone",
+      "startDelay": 9
+    },
+    {
+      "type": "cone",
+      "startDelay": 9
+    },
+    {
+      "type": "basic",
+      "startDelay": 13
     }
     ],
     "plantTypes": [

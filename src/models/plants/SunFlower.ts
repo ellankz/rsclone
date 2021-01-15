@@ -59,8 +59,10 @@ export class SunFlower extends Plant {
       }
       return this.sunCreatingTimer;
     };
-    this.timer = this.engine.setTimeout(start, SUN_REPRODUCTION);
-    this.engine.newSetTimeout(this.sunCreatingTimer);
+    setTimeout(start, SUN_REPRODUCTION);
+    //this.timer = setTimeout(start, SUN_REPRODUCTION);
+    //this.engine.newSetTimeout(this.sunCreatingTimer);
+    //this.engine.newSetTimeout(this.timer);
   }
 
   clearTimeout() {

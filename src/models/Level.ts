@@ -191,13 +191,16 @@ export default class Level {
       },
     };
 
+    let timer = 0;
+
     // Generate zombies
-    for (let i: number = n, j = this.zombiesConfig[0].startDelay * MS; 
-      i < this.zombiesConfig.length; i += 1, j += this.zombiesConfig[1].startDelay * MS) {
-        
+    for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
+
       let cell: Cell;
       let row: number = null;
 
+      timer += this.zombiesConfig[i].startDelay * MS;
+      
       this.zombiesTimer = setTimeout(() => {
         if (!this.isEnd) {
           this.creatingZombies += 1;
@@ -208,7 +211,7 @@ export default class Level {
           this.zombie.draw(cell, this.occupiedCells);
           this.zombiesArr.push(this.zombie);
         }
-      }, j);
+      }, timer);
 
       this.engine.newSetTimeout(this.zombiesTimer);
     }

@@ -32,14 +32,15 @@ export default class WinScene {
       bg.color = `rgba(255, 255, 255, ${opacity})`;
 
       if (opacity >= 1.1) {
-        opacity = 1;
-        timeInterval = -(INTERVAL);
-      }
-      if (opacity < 0.001) {
-        timeInterval = INTERVAL;
+        // opacity = 1;
+        // timeInterval = -(INTERVAL);
         bg.destroy();
-        bg.clearLayer();
       }
+      // if (opacity < 0.001) {
+      //   timeInterval = INTERVAL;
+      //   bg.destroy();
+      //   //bg.clearLayer();
+      // }
     }).addTo('scene');
   }
 }
