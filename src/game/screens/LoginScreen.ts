@@ -1,10 +1,7 @@
 import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
 
-import '../../../node_modules/canvasinput/CanvasInput';
-
-const windowCopy: any = window;
-const { CanvasInput } = windowCopy;
+import { IInputNode } from '../../engine/types';
 
 const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen_inputs'];
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
@@ -76,10 +73,19 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
+    this.setActive(
+      buttonClose,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
     this.setEvent(buttonClose, 'click', () => {
       this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
+
+    const BUTTON_SUBMIT = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
     const buttonSubmit: any = this.engine.createNode({
       type: 'ImageNode',
@@ -89,7 +95,7 @@ export class LoginScreen extends ScreenCreator {
       ),
       size: this.engine.vector(113, 41),
       layer: LOGIN_SCREEN_LAYERS[1],
-      img: BUTTON_CLOSE,
+      img: BUTTON_SUBMIT,
     });
     const textButtonSubmit: any = this.engine.createNode({
       type: 'TextNode',
@@ -103,6 +109,15 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
+    this.setActive(
+      buttonSubmit,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
+    const BUTTON_REGISTER = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+
     const buttonRegister: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -111,7 +126,7 @@ export class LoginScreen extends ScreenCreator {
       ),
       size: this.engine.vector(113, 41),
       layer: LOGIN_SCREEN_LAYERS[1],
-      img: BUTTON_CLOSE,
+      img: BUTTON_REGISTER,
     });
     const textButtonRegister: any = this.engine.createNode({
       type: 'TextNode',
@@ -125,50 +140,57 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    const username = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
-      fontSize: 18,
-      fontColor: '#212121',
-      fontWeight: 'bold',
-      width: 200,
-      padding: 5,
-      x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.y / 2.5),
-      borderColor: '#FFF',
-      borderRadius: 0,
-      boxShadow: 'none',
-      innerShadow: 'none',
-      placeHolder: 'Enter you login',
+    this.setActive(
+      buttonRegister,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
+    const usernameNode = this.engine.createNode({
+      type: 'InputNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (200 / 2),
+        (this.engine.size.y / 2.5),
+      ),
+      layer: LOGIN_SCREEN_LAYERS[1],
+      size: this.engine.vector(200, 30),
+      placeholder: 'Enter username',
+    }) as IInputNode;
+
+    const passwordNode = this.engine.createNode({
+      type: 'InputNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (200 / 2),
+        (this.engine.size.x / 3.5),
+      ),
+      layer: LOGIN_SCREEN_LAYERS[1],
+      size: this.engine.vector(200, 30),
+      placeholder: 'Enter password',
+    }) as IInputNode;
+
+    this.engine.on(usernameNode, 'click', () => {
+      usernameNode.input.focus();
     });
-    const password = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[1]).canvas,
-      fontSize: 18,
-      fontColor: '#212121',
-      fontWeight: 'bold',
-      width: 200,
-      padding: 5,
-      x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.x / 3.5),
-      borderColor: '#FFF',
-      borderRadius: 0,
-      boxShadow: 'none',
-      innerShadow: 'none',
-      placeHolder: 'Enter you password',
+
+    this.engine.on(passwordNode, 'click', () => {
+      passwordNode.input.focus();
     });
-    username.onsubmit(() => {
-      password.focus();
+
+    usernameNode.input.onsubmit(() => {
+      passwordNode.input.focus();
     });
-    password.onsubmit(() => {
-      password.blur();
+    passwordNode.input.onsubmit(() => {
+      passwordNode.input.blur();
     });
 
     this.setEvent(buttonRegister, 'click', () => {
       this.engine.audioPlayer.playSound('bleep');
 
-      if (username.value() && password.value()) {
+      if (usernameNode.input.value() && passwordNode.input.value()) {
         console.log('Sing up');
-        password.value('');
+        passwordNode.input.value('');
         // SING UP REQUEST
+
         // const formData = new FormData();
         // formData.append('login', username.value());
         // formData.append('password', password.value());
@@ -181,8 +203,8 @@ export class LoginScreen extends ScreenCreator {
     });
 
     this.setEvent(buttonSubmit, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep');
-      if (username.value() && password.value()) {
+      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      if (usernameNode.input.value() && passwordNode.input.value()) {
         console.log('Log in');
         // LOG IN REQUEST
 

@@ -45,9 +45,10 @@ export type NodesTypeName =
   | 'CircleNode'
   | 'TextNode'
   | 'ImageNode'
-  | 'SpriteNode';
+  | 'SpriteNode'
+  | 'InputNode';
 
-export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode;
+export type NodesType = IImageNode | IRectNode | ICircleNode | ISpriteNode | ITextNode | IInputNode;
 
 export interface INode {
   position: IVector;
@@ -126,6 +127,12 @@ export interface ISpriteNode extends INode {
   draw: () => void;
   innerUpdate: () => void;
   switchState: (state: string) => void;
+}
+
+export interface IInputNode extends INode {
+  input: any;
+  placeholder: string;
+  draw: () => void;
 }
 
 export interface IScene {
@@ -207,6 +214,10 @@ export interface SpriteNodeConfig extends NodeConfig {
   startFrame?: number;
   speed?: number;
   states: SpriteStatesConfig;
+}
+
+export interface InputNodeConfig extends NodeConfig {
+  placeholder: string;
 }
 
 export interface RectConfig {

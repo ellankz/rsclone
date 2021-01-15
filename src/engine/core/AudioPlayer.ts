@@ -7,6 +7,8 @@ export default class AudioPlayer {
 
   loader: Loader;
 
+  volume: number = 1;
+
   constructor(list: {[dynamic: string]: string}, loader: Loader) {
     this.sounds = list;
     this.loader = loader;
@@ -20,11 +22,24 @@ export default class AudioPlayer {
   }
 
   playSound(name: string) {
+    this.elements[name].currentTime = 0;
+    this.elements[name].play();
+  }
+
+  playContinue(name: string) {
     this.elements[name].play();
   }
 
   stopSound(name: string) {
     this.elements[name].pause();
     this.elements[name].currentTime = 0;
+  }
+
+  setVolume(volume: number) {
+    this.volume = volume;
+    Object.values(this.elements).forEach((elem) => {
+      // eslint-disable-next-line no-param-reassign
+      elem.volume = this.volume;
+    });
   }
 }
