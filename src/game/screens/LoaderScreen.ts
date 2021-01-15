@@ -102,7 +102,7 @@ export default class LoaderScreen {
       }
     };
 
-    if (percent - this.lastPercent > 0.01) {
+    if (percent - this.lastPercent > 0.01 || percent === 1) {
       this.lastPercent = percent;
       const newUpdateTime = new Date();
       const diff = newUpdateTime.getTime() - this.lastUpdateTime.getTime();

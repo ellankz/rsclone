@@ -33,7 +33,7 @@ module.exports = (env) => ({
 
   module: {
     rules: [{
-      test: /\.(png|jpe?g|gif)$/i,
+      test: /\.(png|jpe?g|gif|xml|svg|webmanifest|ico)$/i,
       loader: 'file-loader',
       options: {
         name: '[path][name].[ext]',
