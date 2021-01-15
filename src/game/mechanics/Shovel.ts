@@ -56,7 +56,6 @@ export class Shovel {
   }
 
   private setEvent(): void {
-
     const cellClick = (cell: Cell) => {
       console.log(cell);
       if (this.occupiedCells.has(cell)) {
