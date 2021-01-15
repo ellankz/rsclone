@@ -7,7 +7,7 @@ const SUN_REPRODUCTION = 11000;
 const SUN_APPEARANCE_STATE = 350;
 const SUN_POSITION_SHIFT = 30;
 const SUN_COST = 25;
-const SUNFLOWER_GENERATE_STATE = 700;
+const SUNFLOWER_GENERATE_STATE = 600;
 
 export class SunFlower extends Plant {
   sunCreatingTimer: any;
@@ -30,10 +30,12 @@ export class SunFlower extends Plant {
   }
 
   init(cell: Cell) {
-    this.isDestroyedFlag = false;
     const start = (): void => {
+      if (this.isDestroyedFlag) {
+        clearInterval(this.sunCreatingTimer);
+        return;
+      }
       this.switchState('generate');
-      this.sunCreatingTimer = setTimeout(start, SUN_REPRODUCTION);
       const position = this.engine.vector(
         cell.getLeft() + (cell.cellSize.x - this.width) / 2 + SUN_POSITION_SHIFT,
         (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2 - SUN_POSITION_SHIFT,
@@ -51,12 +53,9 @@ export class SunFlower extends Plant {
       setTimeout(() => {
         sun.switchState('live');
       }, SUN_APPEARANCE_STATE);
-      if (this.isDestroyedFlag) {
-        clearTimeout(this.sunCreatingTimer);
-      }
-      return this.sunCreatingTimer;
     };
-    this.timer = setTimeout(start, SUN_REPRODUCTION);
+
+    this.sunCreatingTimer = setInterval(start, SUN_REPRODUCTION);
   }
 
   draw(cell: Cell): void {
@@ -67,5 +66,9 @@ export class SunFlower extends Plant {
   switchState(state: string) {
     this.node.switchState(state);
     setTimeout(() => this.node.switchState('basic'), SUNFLOWER_GENERATE_STATE);
+  }
+
+  stop(): void {
+    clearInterval(this.sunCreatingTimer);
   }
 }
