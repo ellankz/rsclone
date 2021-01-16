@@ -1,7 +1,9 @@
-import './style/main.scss';
-
 import Game from './game/index';
 import Engine from './engine';
+
+import './style/main.scss';
+
+require.context('./assets/favicon', true, /\.(png|svg|xml|ico|webmanifest)$/);
 
 const container = document.createElement('div');
 container.id = 'game';

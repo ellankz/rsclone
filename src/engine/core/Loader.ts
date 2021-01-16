@@ -47,12 +47,14 @@ export default class Loader {
         const image = new Image();
         image.src = path;
         image.addEventListener('load', () => this.fileLoaded());
+        image.addEventListener('error', () => this.retryLoadFile(ext, path));
         return [path, image];
       }
       if (ext === 'mp3') {
         const audio = new Audio();
         audio.src = path;
         audio.addEventListener('canplaythrough', () => this.fileLoaded());
+        audio.addEventListener('error', () => this.retryLoadFile(ext, path));
         return [path, audio];
       }
       return [path, undefined];
@@ -65,6 +67,23 @@ export default class Loader {
     this.loadedOneCallback(this.filesLoadedCount / this.filesList.length);
     if (this.filesLoadedCount >= this.filesList.length) {
       this.loadedAllCallback();
+    }
+  }
+
+  retryLoadFile(ext: string, path: string) {
+    if (ext === 'png' || ext === 'jpg') {
+      const image = new Image();
+      image.src = path;
+      image.addEventListener('load', () => this.fileLoaded());
+      image.addEventListener('error', () => this.fileLoaded());
+      this.files[path] = image;
+    }
+    if (ext === 'mp3') {
+      const audio = new Audio();
+      audio.src = path;
+      audio.addEventListener('canplaythrough', () => this.fileLoaded());
+      audio.addEventListener('error', () => this.fileLoaded());
+      this.files[path] = audio;
     }
   }
 }
