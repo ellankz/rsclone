@@ -11,7 +11,7 @@ export class LevelSelectionScreen extends ScreenCreator {
 
   private levelCards: Array<ImageNode> = [];
 
-  private numberOfLevels: number = 9;
+  private numberOfLevels: number = 10;
 
   private numberOfActiveLevels: number = 1;
 
@@ -105,12 +105,38 @@ export class LevelSelectionScreen extends ScreenCreator {
     );
 
     const levelsView = this.engine.createView([LEVEL_SELECTION_SCREEN_LAYERS[1]]);
+
+    let isButtonFree: boolean = true;
+
     this.engine.on(buttonRight, 'click', () => {
-      levelsView.move(this.engine.vector(this.engine.size.x, 0));
+      if ((levelsView.position.x <= this.engine.size.x * (this.numberOfLevels / 3 - 1))
+        && isButtonFree === true) {
+        isButtonFree = false;
+        let fieldSize: number = this.engine.size.x;
+        const animation: any = setInterval(() => {
+          levelsView.move(this.engine.vector(10, 0));
+          fieldSize -= 10;
+          if (fieldSize === 0) {
+            clearInterval(animation);
+            isButtonFree = true;
+          }
+        }, 5);
+      }
     });
 
     this.engine.on(buttonLeft, 'click', () => {
-      levelsView.move(this.engine.vector(-this.engine.size.x, 0));
+      if ((levelsView.position.x - this.engine.size.x >= 0) && isButtonFree === true) {
+        isButtonFree = false;
+        let fieldSize: number = this.engine.size.x;
+        const animation: any = setInterval(() => {
+          levelsView.move(this.engine.vector(-10, 0));
+          fieldSize -= 10;
+          if (fieldSize === 0) {
+            clearInterval(animation);
+            isButtonFree = true;
+          }
+        }, 5);
+      }
     });
   }
 
@@ -157,7 +183,7 @@ export class LevelSelectionScreen extends ScreenCreator {
         (this.engine.size.x / 2) - (BUTTON_IMG.width / 2),
         (this.engine.size.y) - (BUTTON_IMG.width / 2),
       ),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      size: this.engine.vector(113, 41),
       layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
       img: BUTTON_IMG,
     });
