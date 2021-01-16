@@ -65,6 +65,7 @@ export default class Game {
   startGame() {
     // this.engine.audioPlayer.playSound('menu');
     this.createCells();
+    this.addPause();
     this.currentLevel = this.createLevel(0);
     this.engine.setScreen('first');
   }
@@ -86,7 +87,6 @@ export default class Game {
     this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
     this.currentLevel.init();
     this.endGame();
-    this.addPause();
     return this.currentLevel;
   }
 
