@@ -1,22 +1,42 @@
 import Engine from '../../engine';
 import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
-import { IInputNode } from '../../engine/types';
+import { DataService } from '../../api-service/DataService';
+import { User } from '../../types';
+import { ISpriteNode, ITextNode, IInputNode } from '../../engine/types';
 
-const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen_inputs'];
+const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen-text', 'login-screen_inputs'];
+
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
 const LOGIN_SCREEN_SCENE_NAME: string = 'loginScreen';
 
 export class LoginScreen extends ScreenCreator {
-  private username: string;
+  dataService: DataService;
 
-  private password: string;
+  error: { message: string; node: ITextNode };
 
-  constructor(engine: Engine) {
+  isLoading: boolean = false;
+
+  setUserName: (name: string) => void;
+
+  userName: string;
+
+  loadingNode: ISpriteNode;
+
+  constructor(
+    engine: Engine,
+    dataService: DataService,
+    setUserNameCB: (name: string) => void,
+    userName: string,
+  ) {
     super(engine);
+    this.dataService = dataService;
     this.createLayers(LOGIN_SCREEN_LAYERS);
     this.createNodes();
+    this.createErrorMessage();
     this.engine.createScreen(LOGIN_SCREEN_SCREEN_NAME, LOGIN_SCREEN_LAYERS);
     this.engine.createScene(LOGIN_SCREEN_SCENE_NAME);
+    this.setUserName = setUserNameCB;
+    this.userName = userName;
   }
 
   public openScreen(): void {
@@ -56,7 +76,7 @@ export class LoginScreen extends ScreenCreator {
         (background.position.y) + (BACKGROUND.height / 1.18),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
     });
 
@@ -67,7 +87,7 @@ export class LoginScreen extends ScreenCreator {
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: TEXT_BUTTONS_COLOR,
       font: TEXT_BUTTONS_FONT,
@@ -94,17 +114,17 @@ export class LoginScreen extends ScreenCreator {
         (background.position.y) + (BACKGROUND.height / 1.5),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_SUBMIT,
     });
-    const textButtonSubmit: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonSubmit.position.x + 30,
         buttonSubmit.position.y + 10,
       ),
-      text: 'Log in',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      text: 'Sign in',
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: TEXT_BUTTONS_COLOR,
       font: TEXT_BUTTONS_FONT,
@@ -126,17 +146,17 @@ export class LoginScreen extends ScreenCreator {
         (background.position.y) + (BACKGROUND.height / 1.5),
       ),
       size: this.engine.vector(113, 41),
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_REGISTER,
     });
-    const textButtonRegister: any = this.engine.createNode({
+    this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         buttonRegister.position.x + 25,
         buttonRegister.position.y + 10,
       ),
       text: 'Sing up',
-      layer: LOGIN_SCREEN_LAYERS[1],
+      layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
       color: TEXT_BUTTONS_COLOR,
       font: TEXT_BUTTONS_FONT,
@@ -185,40 +205,107 @@ export class LoginScreen extends ScreenCreator {
       passwordNode.input.blur();
     });
 
-    this.setEvent(buttonRegister, 'click', () => {
+    const onModalFinish = (name: string) => {
+      if (name !== this.userName) this.setUserName(name);
+      this.closeScreen();
+      usernameNode.input.value('');
+      passwordNode.input.value('');
+      this.setErrorMessage('');
+    };
+
+    this.setEvent(buttonClose, 'click', () => {
       this.engine.audioPlayer.playSound('bleep');
+      onModalFinish(this.userName);
+    });
 
-      if (usernameNode.input.value() && passwordNode.input.value()) {
-        console.log('Sing up');
-        passwordNode.input.value('');
-        // SING UP REQUEST
-
-        // const formData = new FormData();
-        // formData.append('login', username.value());
-        // formData.append('password', password.value());
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/url'); // url
-        // xhr.send(formData);
-      } else {
-        console.log('Enter data');
+    this.setEvent(buttonRegister, 'click', async () => {
+      this.engine.audioPlayer.playSound('bleep');
+      const name = usernameNode.input.value();
+      const pass = passwordNode.input.value();
+      if (name && pass) {
+        this.setLoading(true);
+        const res = await this.dataService.signup({ login: name, password: pass } as User);
+        this.setLoading(false);
+        if (!res) {
+          this.setErrorMessage('Username is taken');
+        } else {
+          onModalFinish(name);
+        }
       }
     });
 
-    this.setEvent(buttonSubmit, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
-      if (usernameNode.input.value() && passwordNode.input.value()) {
-        console.log('Log in');
-        // LOG IN REQUEST
-
-        // const formData = new FormData();
-        // formData.append('login', username.value());
-        // formData.append('password', password.value());
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/url'); // url
-        // xhr.send(formData);
+    this.setEvent(buttonSubmit, 'click', async () => {
+      this.engine.audioPlayer.playSound('bleep');
+      const name = usernameNode.input.value();
+      const pass = passwordNode.input.value();
+      if (name && pass) {
+        this.setLoading(true);
+        const res = await this.dataService.login({ login: name, password: pass } as User);
+        this.setLoading(false);
+        if (!res) {
+          this.setErrorMessage('Sign in failed');
+        } else {
+          onModalFinish(name);
+        }
       } else {
-        console.log('Enter data');
+        this.setErrorMessage('Enter data');
       }
     });
+  }
+
+  private setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
+    if (isLoading) {
+      const frames = 12;
+      const size = 100;
+      const speed = 100;
+      const dh = 30;
+      const img = this.engine.loader.files['assets/sprites/loading.png'] as HTMLImageElement;
+      const pos = this.engine.vector(
+        (this.engine.size.x / 2) - (30 / 2),
+        (this.engine.size.x / 3),
+      );
+      this.loadingNode = this.engine.createNode({
+        type: 'SpriteNode',
+        position: pos,
+        size: this.engine.vector(size * frames, size),
+        layer: LOGIN_SCREEN_LAYERS[1],
+        img,
+        frames,
+        startFrame: 0,
+        speed,
+        dh,
+      }).addTo(LOGIN_SCREEN_SCENE_NAME) as ISpriteNode;
+    } else {
+      this.loadingNode.destroy();
+    }
+  }
+
+  private createErrorMessage() {
+    const { engine } = this;
+    this.error = {
+      message: '',
+      node: engine.createNode({
+        type: 'TextNode',
+        position: engine.vector(
+          (engine.size.x / 2) - (200 / 2),
+          (engine.size.y / 3),
+        ),
+        text: '',
+        layer: LOGIN_SCREEN_LAYERS[1],
+        fontSize: 25,
+        color: '#d20707',
+      }) as ITextNode,
+    };
+  }
+
+  private setErrorMessage(message: string) {
+    this.error.message = message;
+    this.error.node.text = message;
+    this.error.node.clearLayer();
+  }
+
+  private closeScreen() {
+    this.engine.setScreen('startScreen');
   }
 }
