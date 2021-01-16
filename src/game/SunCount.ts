@@ -1,7 +1,8 @@
 import {
   LEFT_CAMERA_OFFSET_COEF,
   PLANT_CARD_WIDTH_COEF,
-  SUN_COUNT_HEIGHT_COEF, SUN_COUNT_WIDTH_COEF,
+  SUN_COUNT_HEIGHT_COEF,
+  SUN_COUNT_WIDTH_COEF,
   TOP_OFFSET_COEF,
 } from '../constats';
 import Engine from '../engine';
@@ -10,7 +11,7 @@ import { ITextNode } from '../engine/types';
 const SUNBACK_URL = 'assets/images/interface/SunBack.png';
 
 export default class SunCount {
-  count: {suns: number};
+  count: { suns: number };
 
   engine: Engine;
 
@@ -20,7 +21,7 @@ export default class SunCount {
 
   localCount: number;
 
-  constructor(engine: Engine, sunCount: {suns: number}) {
+  constructor(engine: Engine, sunCount: { suns: number }) {
     this.count = sunCount;
     this.engine = engine;
     this.bgImage = this.engine.loader.files[SUNBACK_URL] as HTMLImageElement;
@@ -48,27 +49,27 @@ export default class SunCount {
   }
 
   private drawBG() {
-    this.engine.createNode(
-      {
-        type: 'ImageNode',
-        position: this.engine.vector(
-          this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.2,
-          this.engine.size.y * TOP_OFFSET_COEF,
-        ),
-        size: this.engine.vector(
-          this.engine.size.x * SUN_COUNT_WIDTH_COEF, this.engine.size.y * SUN_COUNT_HEIGHT_COEF,
-        ),
-        layer: 'main',
-        img: this.bgImage,
-        dh: this.engine.size.y * SUN_COUNT_HEIGHT_COEF * 1.5,
-      },
-    );
+    this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.2,
+        this.engine.size.y * TOP_OFFSET_COEF,
+      ),
+      size: this.engine.vector(
+        this.engine.size.x * SUN_COUNT_WIDTH_COEF,
+        this.engine.size.y * SUN_COUNT_HEIGHT_COEF,
+      ),
+      layer: 'main',
+      img: this.bgImage,
+      dh: this.engine.size.y * SUN_COUNT_HEIGHT_COEF * 1.5,
+    });
   }
 
   public update() {
     if (this.localCount !== this.count.suns) {
       this.localCount = this.count.suns;
       this.textNode.text = this.count.suns.toString();
+      this.textNode.clearLayer();
     }
   }
 }

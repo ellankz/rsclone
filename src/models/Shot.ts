@@ -1,4 +1,3 @@
-import { time } from 'console';
 import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
 import Engine from '../engine';
 import Vector from '../engine/core/Vector';
@@ -33,7 +32,7 @@ export default class Shot {
 
     const update = (node: any) => {
       node.move(this.engine.vector(SHOT_SPEED, 0));
-      if (node.position.x >= this.engine.size.x + (LEFT_CAMERA_OFFSET_COEF * this.engine.size.x)) {
+      if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
       }
       if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)
@@ -45,16 +44,21 @@ export default class Shot {
     };
 
     image.addEventListener('load', () => {
-      this.shoot = this.engine.createNode({
-        type: 'ImageNode',
-        position: this.engine.vector(
-          this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
-        ),
-        size: this.engine.vector(image.width, image.height),
-        layer: 'top',
-        img: image,
-        dh: image.height,
-      }, update)
+      this.shoot = this.engine
+        .createNode(
+          {
+            type: 'ImageNode',
+            position: this.engine.vector(
+              this.position.x + SHOT_OFFSET_X,
+              this.position.y + SHOT_OFFSET_Y,
+            ),
+            size: this.engine.vector(image.width, image.height),
+            layer: `row-${plant.cell.position.y + 1}`,
+            img: image,
+            dh: image.height,
+          },
+          update,
+        )
         .addTo('scene');
     });
   }

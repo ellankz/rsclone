@@ -10,7 +10,7 @@ import Vector from '../engine/core/Vector';
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
 const X_MIN = -20;
-const X_MAX = -60;
+const X_MAX = -90;
 const Y_MIN = -5;
 const Y_MAX = -70;
 
@@ -109,7 +109,7 @@ export default class Zombie {
           type: 'SpriteNode',
           position: this.engine.vector(X_AXIS, cell.getBottom() - this.height - Y_AXIS),
           size: this.engine.vector(this.width * this.frames, this.height),
-          layer: 'top',
+          layer: `row-${this.row + 1}`,
           img: image,
           frames: this.frames,
           startFrame: 0,
@@ -194,7 +194,7 @@ export default class Zombie {
         type: 'SpriteNode',
         position: this.engine.vector(this.position.x + 60, this.position.y),
         size: this.engine.vector(150 * 12, 186),
-        layer: 'top',
+        layer: `row-${this.row + 1}`,
         img: image,
         frames: 12,
         width: 150,

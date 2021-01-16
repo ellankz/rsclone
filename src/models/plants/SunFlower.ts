@@ -1,7 +1,5 @@
-import { setupMaster } from 'cluster';
 import Plant from '../Plant';
 import Engine from '../../engine';
-import Timeout from '../../engine/core/Timeout';
 import { SunCreator } from '../../game/mechanics/SunCreator';
 import Cell from '../../game/Cell';
 
@@ -19,9 +17,7 @@ export class SunFlower extends Plant {
 
   start: () => void;
 
-  constructor(engine: Engine,
-    updateSunFunc?: (sun: number) => void,
-    sunCount?: { suns:number }) {
+  constructor(engine: Engine, updateSunFunc?: (sun: number) => void, sunCount?: { suns: number }) {
     super({ type: 'SunFlower' }, engine);
     this.isDestroyedFlag = false;
     if (updateSunFunc && sunCount) {
@@ -38,13 +34,12 @@ export class SunFlower extends Plant {
         this.switchState('generate');
         const position = this.engine.vector(
           cell.getLeft() + (cell.cellSize.x - this.width) / 2 + SUN_POSITION_SHIFT,
-          (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2
-        - SUN_POSITION_SHIFT,
+          cell.getBottom() - this.height - (cell.cellSize.y - this.height) / 2 - SUN_POSITION_SHIFT,
         );
         const sun: any = new SunCreator(
           this.engine,
           [position.x, position.y],
-          'main',
+          'top',
           'sun',
           this.updateSunFunc,
           this.sunCount,

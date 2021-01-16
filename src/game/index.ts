@@ -1,4 +1,3 @@
-import { platform } from 'os';
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
@@ -59,8 +58,11 @@ export default class Game {
     const { engine } = this;
     engine.createView(['back', 'main', 'top']);
     engine.createScene('scene', function Scene() {
-      this.update = () => {
-        // code;
+      this.init = () => {
+        engine.events.click.eventBubbling = true;
+      };
+      this.exit = () => {
+        engine.events.click.eventBubbling = false;
       };
     });
     this.engine.start('scene');
@@ -68,7 +70,9 @@ export default class Game {
 
   runFirstScreen(): void {
     const startGameScreen = new StartScreen(
-      this.engine, this.startGame.bind(this), this.dataService,
+      this.engine,
+      this.startGame.bind(this),
+      this.dataService,
     );
     this.engine.setScreen('startScreen');
   }

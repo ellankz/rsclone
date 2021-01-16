@@ -33,17 +33,22 @@ export class Sun {
 
   states: SpriteStatesConfig;
 
-  constructor(engine: Engine,
+  removeEventBubbling?: string[];
+
+  constructor(
+    engine: Engine,
     layerName: string,
     posCoordinates?: Array<number>,
     dh?: number,
     speed?: number,
-    name?: string) {
+    name?: string,
+  ) {
     this.type = 'SpriteNode';
     this.position = engine.vector(posCoordinates[0] || 0, posCoordinates[1] || 0);
     this.size = engine.vector(1716, 78);
     this.layer = layerName;
     this.name = 'sun';
+    this.removeEventBubbling = ['click'];
 
     this.img = engine.loader.files[SUN_IMG] as HTMLImageElement;
     const sunOpacity = engine.loader.files[SUN_OPACITY_IMG] as HTMLImageElement;

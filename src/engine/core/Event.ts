@@ -147,7 +147,7 @@ export default class Event {
             this.hovered = [];
           }
 
-          if (!eventBubbling) return;
+          if (!eventBubbling || node.removeEventBubbling.includes(event)) return;
         } else if (this.hovered.includes(node)) {
           this.hovered.splice(this.hovered.indexOf(node), 1);
 
@@ -160,7 +160,7 @@ export default class Event {
           this.events[event].get(node).forEach((cb) => cb(e));
         }
 
-        if (!eventBubbling) return;
+        if (!eventBubbling || node.removeEventBubbling.includes(event)) return;
       }
     }
   }

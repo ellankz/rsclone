@@ -24,6 +24,8 @@ export default class Node implements INode {
 
   name?: string;
 
+  removeEventBubbling: string[];
+
   addTo: (sceneName: string) => NodesType;
 
   destroy: () => void;
@@ -46,6 +48,8 @@ export default class Node implements INode {
     this.addTo = null;
     this.destroy = null;
     this.removeAllEvents = null;
+
+    this.removeEventBubbling = params.removeEventBubbling || [];
 
     if (update) {
       this.update = update;

@@ -103,7 +103,7 @@ export default class Plant {
         type: 'SpriteNode',
         position: this.position,
         size: this.engine.vector(this.width * this.frames, this.height),
-        layer: 'main',
+        layer: `row-${cell.position.y}`,
         img: image,
         frames: this.frames,
         startFrame: 0,
@@ -158,7 +158,6 @@ export default class Plant {
   public continue() {
     this.isDestroyedFlag = false;
   }
-
 
   public isZombieInAttackArea(zombie: Zombie) {
     if (!this.states || !this.states.attack || !zombie.position) return false;

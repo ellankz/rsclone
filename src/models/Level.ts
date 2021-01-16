@@ -15,7 +15,6 @@ import { CherryBomb } from './plants/CherryBomb';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 
-
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
@@ -151,7 +150,7 @@ export default class Level {
       zombie.stop();
     });
     this.plantsArr.forEach((plant) => {
-      plant.stopShooting();
+      plant.stopAttack();
       plant.isDestroyed();
     });
     this.dataService.saveGame({
