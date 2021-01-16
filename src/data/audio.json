@@ -3,6 +3,8 @@
   "shot": "assets/audio/shot.mp3",
   "plant": "assets/audio/plant.mp3",
   "menu": "assets/audio/mountains.mp3",
+  "win": "assets/audio/winmusic.mp3",
+  "eat": "assets/audio/chomp(eat).mp3",
   "menuButtonClick": "assets/audio/buttonclick(menu).mp3",
   "bleep": "assets/audio/bleep.mp3",
   "tap": "assets/audio/tap(menu).mp3",

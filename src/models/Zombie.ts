@@ -14,29 +14,30 @@ const X_MAX = -60;
 const Y_MIN = -5;
 const Y_MAX = -70;
 
-const X_AXIS = 980;
+const X_AXIS = 960;
 const Y_AXIS = 5;
 
-const SPEED = 0.17;
+// const SPEED = 0.17;
+const SPEED = 1.7;
 
 export default class Zombie {
   private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
 
-  public speed: number;
+  private speed: number;
 
   public health: number;
 
   public damage: number;
 
-  public width: number;
+  private width: number;
 
-  public height: number;
+  private height: number;
 
-  public image: string;
+  private image: string;
 
-  public name: string;
+  private name: string;
 
-  public frames: number;
+  private frames: number;
 
   public startDelay: number;
 
@@ -133,10 +134,12 @@ export default class Zombie {
 
   private makeDamage(plant: any) {
     plant.reduceHealth(this.damage);
+    this.engine.audioPlayer.playSound('eat');
   }
 
   private eatThePlant(plant: any) {
-    plant.destroy(this);
+    plant.destroy();
+    return this;
   }
 
   public stop() {

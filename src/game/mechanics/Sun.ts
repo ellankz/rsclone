@@ -25,6 +25,8 @@ export class Sun {
 
   speed?: number;
 
+  name?: string;
+
   dh?: number;
 
   engine: Engine;
@@ -35,11 +37,13 @@ export class Sun {
     layerName: string,
     posCoordinates?: Array<number>,
     dh?: number,
-    speed?: number) {
+    speed?: number,
+    name?: string) {
     this.type = 'SpriteNode';
     this.position = engine.vector(posCoordinates[0] || 0, posCoordinates[1] || 0);
     this.size = engine.vector(1716, 78);
     this.layer = layerName;
+    this.name = 'sun';
 
     this.img = engine.loader.files[SUN_IMG] as HTMLImageElement;
     const sunOpacity = engine.loader.files[SUN_OPACITY_IMG] as HTMLImageElement;
@@ -83,5 +87,6 @@ export class Sun {
     if (dh) {
       this.dh = dh;
     }
+    this.name = name;
   }
 }

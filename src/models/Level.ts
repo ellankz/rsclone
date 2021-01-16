@@ -10,14 +10,15 @@ import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 import LawnCleaner from './LawnCleaner';
+import levels from '../data/levels.json';
+import { DataService } from '../api-service/DataService';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
-const X_HOME = 150;
 
 export default class Level {
-  private zombiesArr: Zombie[] = [];
+  public zombiesArr: Zombie[] = [];
 
   private zombie: Zombie;
 
@@ -53,9 +54,30 @@ export default class Level {
 
   public lawnCleaners: LawnCleaner[];
 
-  constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
-    this.zombiesConfig = levelConfig.zombies;
-    this.plantTypes = levelConfig.plantTypes;
+  private timer: any;
+
+  public zombiesTimer: any;
+
+  public restZombies: number;
+
+  private zombiesKilled: number = 0;
+
+  private plantsPlanted: number = 0;
+
+  levelConfig: LevelConfig;
+
+  levelIndex: number;
+
+  dataService: DataService;
+
+  public creatingZombies: number = 0;
+
+  constructor(levelIndex: number, engine: Engine, cells: Cell[][], dataService: DataService) {
+    this.levelIndex = levelIndex;
+    this.dataService = dataService;
+    this.levelConfig = levels[levelIndex] as LevelConfig;
+    this.zombiesConfig = this.levelConfig.zombies;
+    this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
     this.plantCards = [];
     this.lawnCleaners = [];
@@ -72,33 +94,73 @@ export default class Level {
     return this;
   }
 
-  public get zombies() {
+  stopSunFall() {
+    if (this.sunFall) this.sunFall.stop();
+  }
+
+  resumeSunFall() {
+    this.dropSuns();
+  }
+
+  public getZombies() {
     return this.zombiesArr;
   }
 
-  public get plants() {
+  public getPlants() {
     return this.plantsArr;
   }
 
-  startLevel() {
-    this.placeLawnCleaners();
-    this.createZombies();
-    this.dropSuns();
-    this.listenCellClicks();
-    this.listenGameEvents();
+  public clearZombieArray() {
+    this.zombiesArr = [];
+    return this.zombiesArr;
   }
 
-  stopLevel() {
+  public clearPlantsArray() {
+    this.plantsArr = [];
+    return this.plantsArr;
+  }
+
+  public getRestZombies() {
+    return this.restZombies;
+  }
+
+  private reduceZombies() {
+    this.zombiesKilled += 1;
+    this.restZombies -= 1;
+    return this.restZombies;
+  }
+
+  startLevel() {
+    this.isEnd = false;
+    this.restZombies = this.zombiesConfig.length;
+    this.placeLawnCleaners();
+    this.createZombies(this.creatingZombies);
+    this.listenCellClicks();
+    this.listenGameEvents();
+    this.dropSuns();
+  }
+
+  stopLevel(hasWon: boolean) {
     this.isEnd = true;
-    this.sunFall.stop();
-
-    this.plantsArr.forEach((plant) => {
-      plant.stopShooting();
-    });
-
+    this.occupiedCells.clear();
+    this.stopSunFall();
+    this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
     });
+    this.plantsArr.forEach((plant) => {
+      plant.stopShooting();
+      plant.isDestroyed();
+    });
+    this.dataService.saveGame({
+      level: this.levelIndex + 1,
+      win: hasWon,
+      zombiesKilled: this.zombiesKilled,
+      plantsPlanted: this.plantsPlanted,
+    });
+    this.zombiesKilled = 0;
+    this.plantsPlanted = 0;
+    clearTimeout(this.timer);
   }
 
   handleZombieNearHome(zombie: Zombie) {
@@ -106,9 +168,9 @@ export default class Level {
     if (lawnCLeaner) {
       this.lawnCleaners[zombie.row] = undefined;
       this.runOverWithLawnCleaner(lawnCLeaner, zombie.row);
-    } else {
-      this.stopLevel();
+      return true;
     }
+    return false;
   }
 
   runOverWithLawnCleaner(lawnCLeaner: LawnCleaner, row: number) {
@@ -151,10 +213,11 @@ export default class Level {
         break;
     }
     this.plantsArr.push(newPlant);
+    this.plantsPlanted += 1;
     return newPlant;
   }
 
-  public createZombies() {
+  public createZombies(n: number) {
     // Generate row without repeating more then (2) times
     function getRandomNumber(min: number, max: number): number {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -188,33 +251,48 @@ export default class Level {
       },
     };
 
+    let timer = 0;
+
     // Generate zombies
-    for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
+    for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
       let row: number = null;
 
-      setTimeout(() => {
-        row = random.nextRandom(0, ROWS_NUM - 1);
-        this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
-        cell = this.cells[0][row];
-        this.zombie.row = row;
-        this.zombie.draw(cell, this.occupiedCells);
-        this.zombiesArr.push(this.zombie);
-      }, this.zombiesConfig[i].startDelay * MS);
+      timer += this.zombiesConfig[i].startDelay * MS;
+
+      this.zombiesTimer = setTimeout(() => {
+        if (!this.isEnd) {
+          this.creatingZombies += 1;
+          row = random.nextRandom(0, ROWS_NUM - 1);
+          this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
+          cell = this.cells[0][row];
+          this.zombie.row = row;
+          this.zombie.draw(cell, this.occupiedCells);
+          this.zombiesArr.push(this.zombie);
+        }
+      }, timer);
+
+      this.engine.newSetTimeout(this.zombiesTimer);
     }
+
+    return this.creatingZombies;
+  }
+
+  continueCreatingZombies() {
+    this.createZombies(this.creatingZombies);
   }
 
   public listenGameEvents() {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-        if (zombie.position && zombie.position.x < X_HOME) {
-          this.handleZombieNearHome(zombie);
-        } else {
-          zombie.attack(this.occupiedCells);
+        zombie.attack(this.occupiedCells);
+        if (zombie.health <= 0) {
+          this.reduceZombies();
         }
 
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position && !this.isEnd) {
+          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0
+            && zombie.position.x < 950) {
             plant.switchState('attack', zombie, plant);
 
             if (zombie.health <= 0) {
@@ -222,13 +300,16 @@ export default class Level {
               plant.switchState('basic');
               plant.stopShooting();
             }
+
+            plant.isDestroyed();
           }
         });
       });
+
       this.zombiesArr = this.deleteZombie();
       this.plantsArr = this.deletePlant();
 
-      setTimeout(trackPosition, 1000);
+      if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
     };
     trackPosition();
   }
@@ -307,6 +388,13 @@ export default class Level {
       lawnCleaner.draw();
       this.lawnCleaners.push(lawnCleaner);
     });
+  }
+
+  clearLawnCleaners() {
+    this.lawnCleaners.forEach((cleaner) => {
+      if (cleaner && cleaner.node) cleaner.node.destroy();
+    });
+    this.lawnCleaners = [];
   }
 
   dropSuns() {

@@ -14,7 +14,7 @@ export default class LawnCleaner {
 
   private engine: Engine;
 
-  private node: IImageNode;
+  public node: IImageNode;
 
   private image: HTMLImageElement;
 
