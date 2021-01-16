@@ -2,15 +2,15 @@ import { platform } from 'os';
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';
-import { LevelConfig } from '../types';
-import levels from '../data/levels.json';
+
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
+import { StartScreen } from './screens/StartScreen';
+import { DataService } from '../api-service/DataService';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import Pause from '../models/scenes/Pause';
 import ModalWindow from './ModalWindow';
-import { StartScreen } from './screens/StartScreen';
 
 import sounds from '../data/audio.json';
 
@@ -35,16 +35,18 @@ export default class Game {
 
   private isEnd: boolean;
 
+  dataService: DataService;
+
   public restZombies: number;
 
-  constructor(engine: Engine) {
+  constructor(engine: Engine, dataService: DataService) {
     this.engine = engine;
     this.cells = [];
+    this.dataService = dataService;
   }
 
   public init() {
     this.setupGame();
-    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
@@ -65,7 +67,9 @@ export default class Game {
   }
 
   runFirstScreen(): void {
-    const startGameScreen = new StartScreen(this.engine, this.startGame.bind(this));
+    const startGameScreen = new StartScreen(
+      this.engine, this.startGame.bind(this), this.dataService,
+    );
     this.engine.setScreen('startScreen');
   }
 
@@ -91,7 +95,7 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
+    this.currentLevel = new Level(levelIndex, this.engine, this.cells, this.dataService);
     this.currentLevel.init();
     this.endGame();
     return this.currentLevel;
@@ -119,7 +123,8 @@ export default class Game {
   endWin() {
     this.isEnd = true;
     this.reducePlantsHealth();
-    this.currentLevel.stopLevel();
+    const hasWon = true;
+    this.currentLevel.stopLevel(hasWon);
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     this.engine.clearAllTimeouts();
@@ -140,7 +145,8 @@ export default class Game {
 
   endLoose() {
     this.isEnd = true;
-    this.currentLevel.stopLevel();
+    const hasWon = false;
+    this.currentLevel.stopLevel(hasWon);
     this.destroySun();
     this.reducePlantsHealth();
     this.destroyPlants();
