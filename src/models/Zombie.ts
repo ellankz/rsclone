@@ -185,8 +185,7 @@ export default class Zombie {
   private lostHead() {
     this.node.switchState('lost_head');
 
-    const image = new Image();
-    image.src = '../assets/sprites/zombies/basic/lost_head.png';
+    const image = this.engine.loader.files['assets/sprites/zombies/basic/lost_head.png'];
 
     const head = this.engine
       .createNode({
@@ -224,6 +223,16 @@ export default class Zombie {
     setTimeout(() => {
       this.node.destroy();
     }, 2800);
+  }
+
+  public burn() {
+    if (this.isDestroyedFlag) return;
+    this.isDestroyedFlag = true;
+    this.zombieSpeed = 0;
+    this.node.switchState('burn');
+    setTimeout(() => {
+      this.node.destroy();
+    }, 2200);
   }
 
   private trackPosition() {

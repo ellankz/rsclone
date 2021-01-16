@@ -11,6 +11,7 @@ import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 import { WallNut } from './plants/WallNut';
 import { Chomper } from './plants/Chomper';
+import { CherryBomb } from './plants/CherryBomb';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -127,6 +128,9 @@ export default class Level {
         break;
       case 'Chomper':
         newPlant = new Chomper({ type }, this.engine);
+        break;
+      case 'CherryBomb':
+        newPlant = new CherryBomb({ type }, this.engine, this.zombies, this.occupiedCells);
         break;
       default:
         newPlant = new Plant({ type }, this.engine);

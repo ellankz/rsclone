@@ -152,7 +152,8 @@ export default class Plant {
   }
 
   public isZombieInAttackArea(zombie: Zombie) {
-    if (!this.states.attack || !zombie.position || zombie.position.x <= 200) return false;
+    if (!this.states || !this.states.attack || !zombie.position) return false;
+
     return zombie.row === this.cell.position.y && zombie.position.x > this.position.x;
   }
 

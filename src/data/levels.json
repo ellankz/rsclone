@@ -46,6 +46,6 @@
         "startDelay": 107
       }
     ],
-    "plantTypes": ["SunFlower", "Peashooter", "WallNut", "Chomper"]
+    "plantTypes": ["SunFlower", "Peashooter", "WallNut", "Chomper", "CherryBomb"]
   }
 ]

@@ -4,10 +4,11 @@ import { PlantConfig } from '../../types';
 import Plant from '../Plant';
 import Zombie from '../Zombie';
 
+const MS = 1000;
 const POSITION_ADJUST_X = 17;
 const POSITION_ADJUST_Y = -20;
 const ATTACK_OFFSET_X = -15;
-const SLEEPING_TIME = 40 * 1000;
+const SLEEPING_TIME = 40 * MS;
 const ATTACK_TIME = 1000;
 
 export class Chomper extends Plant {
@@ -30,36 +31,13 @@ export class Chomper extends Plant {
       return true;
     }
     return false;
-    //  if (this.cells) {
-    //    const xOffset = ATTACK_OFFSET_X;
-    //    const yOffset = ATTACK_OFFSET_Y;
-    //    const x = this.cell.position.x;
-    //    const y = this.cell.position.y;
-
-    //    const topRow = y - yOffset >= 0 ? y - yOffset : 0;
-    //    const bottomRow = y + yOffset < this.cells.length ? y + yOffset : this.cells.length - 1;
-
-    //    let leftLimit = this.cell.getLeft() + this.cell.cellSize.x * xOffset;
-    //    let rightLimit = this.cell.getRight() + this.cell.cellSize.x * xOffset;
-
-    //    const rightBoundary = this.cells[0][this.cells[0].length - 1].getRight();
-
-    //    if (leftLimit < 0) leftLimit = 0;
-    //    if (rightLimit > rightBoundary) rightLimit = rightBoundary;
-
-    //    if (zombie.row >= topRow && zombie.row <= bottomRow) {
-    //      if (zombie.node.position.x + zombie.node.size.x >= rightLimit) {
-    //        if (zombie.node.position.x <= leftLimit) return true;
-    //      }
-    //    }
-    //  }
-    //  return false;
   }
 
   attack(zombie: Zombie) {
     setTimeout(() => {
       if (this.sleeping) return;
       super.attack(zombie);
+      zombie.node.destroy();
     }, ATTACK_TIME);
   }
 

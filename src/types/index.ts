@@ -60,7 +60,7 @@ export interface PlantStatesPreset {
   };
 }
 
-export type PlantType = 'SunFlower' | 'Peashooter' | 'WallNut' | 'Chomper';
+export type PlantType = 'SunFlower' | 'Peashooter' | 'WallNut' | 'Chomper' | 'CherryBomb';
 
 export interface PlantConfig {
   type: PlantType;

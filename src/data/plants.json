@@ -131,5 +131,32 @@
         }
       }
     }
+  },
+  "CherryBomb": {
+    "cost": 150,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 1000,
+    "width": 112,
+    "height": 81,
+    "image": "assets/sprites/plants/CherryBomb/0.png",
+    "name": "CherryBomb",
+    "frames": 7,
+    "speed": 140,
+    "states": {
+      "boom": {
+        "image": "assets/sprites/plants/CherryBomb/1.png",
+        "frames": 11,
+        "speed": 80,
+        "width": 200,
+        "height": 197,
+        "dh": 197,
+        "positionAdjust": {
+          "x": -45,
+          "y": -120
+        }
+      }
+    }
   }
 }
