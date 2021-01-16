@@ -3,6 +3,8 @@ import Game from './game';
 import Engine from './engine';
 import { DataService } from './api-service/DataService';
 
+require.context('./assets/favicon', true, /\.(png|svg|xml|ico|webmanifest)$/);
+
 const container = document.createElement('div');
 container.id = 'game';
 document.body.appendChild(container);

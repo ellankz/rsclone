@@ -55,7 +55,6 @@ export class LevelSelectionScreen extends ScreenCreator {
   }
 
   private createNodes(): void {
-    // BACKGROUND IMG
     const BACKGROUND_IMG = this.engine
       .loader.files['assets/images/interface/settingBackground2L.png'] as HTMLImageElement;
 
@@ -70,7 +69,6 @@ export class LevelSelectionScreen extends ScreenCreator {
       img: BACKGROUND_IMG,
     });
 
-    // LEVEL CARDS
     const levelCards: Array<any> = [];
 
     for (let i = 0; i < 3; i += 1) {
@@ -81,7 +79,7 @@ export class LevelSelectionScreen extends ScreenCreator {
           'assets/images/interface/selectLevelIcon_Active.png',
           'assets/images/interface/selectLevelIcon_notActive.png');
         this.setEvent(card, 'click', () => {
-          this.engine.audioPlayer.playSound('tap'); // sound ---------
+          this.engine.audioPlayer.playSound('tap');
           this.startLevel();
           this.engine.stop();
           this.engine.start('scene');
@@ -92,7 +90,6 @@ export class LevelSelectionScreen extends ScreenCreator {
       levelCards.push(card);
     }
 
-    // BUTTON CLOSE
     const BUTTON_IMG = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
@@ -128,7 +125,7 @@ export class LevelSelectionScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
   }

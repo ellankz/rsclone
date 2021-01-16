@@ -168,7 +168,6 @@ export class StatisticsScreen extends ScreenCreator {
       color: '#8B4513',
     });
 
-    // BACKGROUND IMG
     const BACKGROUND_IMG = this.engine
       .loader.files['assets/images/interface/settingBackground.jpg'] as HTMLImageElement;
 
@@ -230,7 +229,7 @@ export class StatisticsScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
   }

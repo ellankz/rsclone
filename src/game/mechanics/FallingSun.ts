@@ -21,6 +21,8 @@ export class FallingSun {
 
   cells: Cell[][];
 
+  name: string;
+
   updateSunCountInLevel: (count: number) => void;
 
   sunFallingTimer: any;
@@ -34,6 +36,7 @@ export class FallingSun {
     this.engine = engine;
     this.layer = 'top';
     this.scene = 'scene';
+    this.name = 'sun';
     this.isStopped = false;
     this.sunCount = sunCount;
     this.cells = cells;
@@ -43,16 +46,17 @@ export class FallingSun {
   init(): void {
     this.isStopped = false;
     const start = (): void => {
-      this.sunFallingTimer = setTimeout(start, this.delay);
       const sun: any = this.createSun();
       sun.addTo(this.scene);
 
       if (this.isStopped) {
         clearTimeout(this.sunFallingTimer);
       }
-      return this.sunFallingTimer;
+
+      this.sunFallingTimer = setTimeout(start, this.delay);
+      this.engine.newSetTimeout(this.sunFallingTimer);
     };
-    setTimeout(start, this.delay);
+    start();
   }
 
   createSun(): any {
@@ -63,7 +67,7 @@ export class FallingSun {
     const sunPositionCoordinates: Array<number> = [coordinates.x, SUN_INITIAL_POSITION];
     const sun: any = new SunCreator(
       this.engine, sunPositionCoordinates,
-      this.layer, this.updateSunCountInLevel,
+      this.layer, this.name, this.updateSunCountInLevel,
       this.sunCount,
       () => this.updateSun(sun, coordinates.y),
     ).instance;

@@ -9,7 +9,6 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
-import Timer from './scenes/Timer';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 
@@ -68,6 +67,8 @@ export default class Level {
 
   dataService: DataService;
 
+  public creatingZombies: number = 0;
+
   constructor(levelIndex: number, engine: Engine, cells: Cell[][], dataService: DataService) {
     this.levelIndex = levelIndex;
     this.dataService = dataService;
@@ -89,11 +90,19 @@ export default class Level {
     return this;
   }
 
-  public get zombies() {
+  stopSunFall() {
+    if (this.sunFall) this.sunFall.stop();
+  }
+
+  resumeSunFall() {
+    this.dropSuns();
+  }
+
+  public getZombies() {
     return this.zombiesArr;
   }
 
-  public get plants() {
+  public getPlants() {
     return this.plantsArr;
   }
 
@@ -119,22 +128,24 @@ export default class Level {
 
   startLevel() {
     this.isEnd = false;
-    this.createZombies();
-    this.dropSuns();
+    this.restZombies = this.zombiesConfig.length;
+    this.createZombies(this.creatingZombies);
     this.listenCellClicks();
     this.listenGameEvents();
+    this.dropSuns();
   }
 
   stopLevel(hasWon: boolean) {
     this.isEnd = true;
-    this.sunFall.stop();
+    this.occupiedCells.clear();
+    this.stopSunFall();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
     });
     this.plantsArr.forEach((plant) => {
       plant.stopShooting();
+      plant.isDestroyed();
     });
-    // send game
     this.dataService.saveGame({
       level: this.levelIndex + 1,
       win: hasWon,
@@ -143,15 +154,7 @@ export default class Level {
     });
     this.zombiesKilled = 0;
     this.plantsPlanted = 0;
-
     clearTimeout(this.timer);
-  }
-
-  public destroyPlants() {
-    this.plantsArr.forEach((plant) => {
-      plant.stopShooting();
-      plant.destroy();
-    });
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
@@ -186,9 +189,7 @@ export default class Level {
     return newPlant;
   }
 
-  public createZombies() {
-    this.restZombies = this.zombiesConfig.length;
-
+  public createZombies(n: number) {
     // Generate row without repeating more then (2) times
     function getRandomNumber(min: number, max: number): number {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -222,13 +223,18 @@ export default class Level {
       },
     };
 
+    let timer = 0;
+
     // Generate zombies
-    for (let i: number = 0; i < this.zombiesConfig.length; i += 1) {
+    for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
       let row: number = null;
 
-      this.zombiesTimer = new Timer(() => {
+      timer += this.zombiesConfig[i].startDelay * MS;
+
+      this.zombiesTimer = setTimeout(() => {
         if (!this.isEnd) {
+          this.creatingZombies += 1;
           row = random.nextRandom(0, ROWS_NUM - 1);
           this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
           cell = this.cells[0][row];
@@ -236,17 +242,16 @@ export default class Level {
           this.zombie.draw(cell, this.occupiedCells);
           this.zombiesArr.push(this.zombie);
         }
-      }, this.zombiesConfig[i].startDelay * MS);
-      this.resume();
+      }, timer);
+
+      this.engine.newSetTimeout(this.zombiesTimer);
     }
+
+    return this.creatingZombies;
   }
 
-  public pause() {
-    this.zombiesTimer.pause();
-  }
-
-  public resume() {
-    this.zombiesTimer.resume();
+  continueCreatingZombies() {
+    this.createZombies(this.creatingZombies);
   }
 
   public listenGameEvents() {
@@ -258,7 +263,8 @@ export default class Level {
         }
 
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0) {
+          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0
+            && zombie.position.x < 950) {
             plant.switchState('attack', zombie, plant);
 
             if (zombie.health <= 0) {
@@ -266,6 +272,8 @@ export default class Level {
               plant.switchState('basic');
               plant.stopShooting();
             }
+
+            plant.isDestroyed();
           }
         });
       });

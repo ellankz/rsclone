@@ -1,3 +1,4 @@
+import { time } from 'console';
 import Engine from '../../engine';
 import ModalWindow from '../../game/ModalWindow';
 
@@ -8,11 +9,14 @@ export default class LooseScene {
 
   public modalWindow: ModalWindow;
 
+  private bg: any;
+
   constructor(engine: Engine) {
     this.engine = engine;
   }
 
   public init() {
+    this.createBg();
     this.createLooseMessage();
     setTimeout(() => {
       this.message.destroy();
@@ -20,6 +24,28 @@ export default class LooseScene {
     }, 5100);
 
     return this;
+  }
+
+  private createBg() {
+    const INTERVAL = 0.005;
+    let opacity = 0;
+    let timeInterval = INTERVAL;
+
+    this.bg = this.engine.createNode({
+      type: 'RectNode',
+      position: this.engine.vector(0, 0),
+      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      layer: 'top',
+      color: `rgba(0, 0, 0, ${opacity})`,
+    }, () => {
+      if (opacity >= 0.5) {
+        timeInterval = 0;
+        this.bg.color = `rgba(0, 0, 0, ${opacity})`;
+      } else {
+        opacity += timeInterval;
+        this.bg.color = `rgba(0, 0, 0, ${opacity})`;
+      }
+    }).addTo('scene');
   }
 
   private createLooseMessage() {
@@ -78,6 +104,7 @@ export default class LooseScene {
     setTimeout(() => {
       this.engine.on(this.modalWindow.buttonNode, 'click', () => {
         restart();
+        this.bg.destroy();
       });
     }, 5200);
   }

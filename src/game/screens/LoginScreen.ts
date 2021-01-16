@@ -2,11 +2,7 @@ import Engine from '../../engine';
 import { ScreenCreator } from './ScreenCreator';
 import { DataService } from '../../api-service/DataService';
 import { User } from '../../types';
-import { ISpriteNode, ITextNode } from '../../engine/types';
-
-import '../../../node_modules/canvasinput/CanvasInput';
-
-const { CanvasInput } = window as any;
+import { ISpriteNode, ITextNode, IInputNode } from '../../engine/types';
 
 const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen-text', 'login-screen_inputs'];
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
@@ -71,7 +67,6 @@ export class LoginScreen extends ScreenCreator {
       img: BACKGROUND,
     });
 
-    // BUTTON CLOSE
     const BUTTON_CLOSE = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
@@ -97,15 +92,21 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // buttonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
-    // textButtonClose.addTo(LOGIN_SCREEN_SCENE_NAME);
+    this.setActive(
+      buttonClose,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
 
     this.setEvent(buttonClose, 'click', () => {
-      this.engine.audioPlayer.playSound('bleep'); // sound ---------
+      this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });
 
     // BUTTON SIGN IN
+    const BUTTON_SUBMIT = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+
     const buttonSubmit = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -114,7 +115,7 @@ export class LoginScreen extends ScreenCreator {
       ),
       size: this.engine.vector(113, 41),
       layer: LOGIN_SCREEN_LAYERS[2],
-      img: BUTTON_CLOSE,
+      img: BUTTON_SUBMIT,
     });
     this.engine.createNode({
       type: 'TextNode',
@@ -128,7 +129,15 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // BUTTON REGISTER
+    this.setActive(
+      buttonSubmit,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
+    const BUTTON_REGISTER = this.engine
+      .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+
     const buttonRegister: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -137,7 +146,7 @@ export class LoginScreen extends ScreenCreator {
       ),
       size: this.engine.vector(113, 41),
       layer: LOGIN_SCREEN_LAYERS[2],
-      img: BUTTON_CLOSE,
+      img: BUTTON_REGISTER,
     });
     this.engine.createNode({
       type: 'TextNode',
@@ -151,49 +160,54 @@ export class LoginScreen extends ScreenCreator {
       color: '#333',
     });
 
-    // INPUTS
-    const username = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[2]).canvas,
-      fontSize: 18,
-      fontColor: '#212121',
-      fontWeight: 'bold',
-      width: 200,
-      padding: 5,
-      x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.y / 2.5),
-      borderColor: '#FFF',
-      borderRadius: 0,
-      boxShadow: 'none',
-      innerShadow: 'none',
-      placeHolder: 'Enter login',
+    this.setActive(
+      buttonRegister,
+      'assets/images/interface/ButtonActive.png',
+      'assets/images/interface/Button.png',
+    );
+
+    const usernameNode = this.engine.createNode({
+      type: 'InputNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (200 / 2),
+        (this.engine.size.y / 2.5),
+      ),
+      layer: LOGIN_SCREEN_LAYERS[1],
+      size: this.engine.vector(200, 30),
+      placeholder: 'Enter username',
+    }) as IInputNode;
+
+    const passwordNode = this.engine.createNode({
+      type: 'InputNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - (200 / 2),
+        (this.engine.size.x / 3.5),
+      ),
+      layer: LOGIN_SCREEN_LAYERS[1],
+      size: this.engine.vector(200, 30),
+      placeholder: 'Enter password',
+    }) as IInputNode;
+
+    this.engine.on(usernameNode, 'click', () => {
+      usernameNode.input.focus();
     });
-    const password = new CanvasInput({
-      canvas: this.engine.getLayer(LOGIN_SCREEN_LAYERS[2]).canvas,
-      fontSize: 18,
-      fontColor: '#212121',
-      fontWeight: 'bold',
-      width: 200,
-      padding: 5,
-      x: (this.engine.size.x / 2) - (200 / 2),
-      y: (this.engine.size.x / 3.5),
-      borderColor: '#FFF',
-      borderRadius: 0,
-      boxShadow: 'none',
-      innerShadow: 'none',
-      placeHolder: 'Enter password',
+
+    this.engine.on(passwordNode, 'click', () => {
+      passwordNode.input.focus();
     });
-    username.onsubmit(() => {
-      password.focus();
+
+    usernameNode.input.onsubmit(() => {
+      passwordNode.input.focus();
     });
-    password.onsubmit(() => {
-      password.blur();
+    passwordNode.input.onsubmit(() => {
+      passwordNode.input.blur();
     });
 
     const onModalFinish = (name: string) => {
       if (name !== this.userName) this.setUserName(name);
       this.closeScreen();
-      username.value('');
-      password.value('');
+      usernameNode.input.value('');
+      passwordNode.input.value('');
       this.setErrorMessage('');
     };
 
@@ -204,8 +218,8 @@ export class LoginScreen extends ScreenCreator {
 
     this.setEvent(buttonRegister, 'click', async () => {
       this.engine.audioPlayer.playSound('bleep');
-      const name = username.value();
-      const pass = password.value();
+      const name = usernameNode.input.value();
+      const pass = passwordNode.input.value();
       if (name && pass) {
         this.setLoading(true);
         const res = await this.dataService.signup({ login: name, password: pass } as User);
@@ -220,8 +234,8 @@ export class LoginScreen extends ScreenCreator {
 
     this.setEvent(buttonSubmit, 'click', async () => {
       this.engine.audioPlayer.playSound('bleep');
-      const name = username.value();
-      const pass = password.value();
+      const name = usernameNode.input.value();
+      const pass = passwordNode.input.value();
       if (name && pass) {
         this.setLoading(true);
         const res = await this.dataService.login({ login: name, password: pass } as User);
