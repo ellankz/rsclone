@@ -83,27 +83,32 @@ export class Shovel {
       this.engine.audioPlayer.playSound('shovel');
     };
 
-    this.engine.on(this.shovelNode, 'click', () => {
-      this.engine.audioPlayer.playSound('shovel');
-      this.toggleState();
-      this.engine.events.click.eventBubbling = this.isActive;
-      if (this.isActive) {
-        cellsFlat.forEach((cell: Cell) => {
-          const f = (ev: any): void => {
-            cellClick.call(cell.node, ev, cell);
-          };
-          functionsArr.push(f);
-        });
+    const event = (e: any): void => {
+      if (e instanceof MouseEvent || (e instanceof KeyboardEvent && e.code === 'KeyS')) {
+        this.engine.audioPlayer.playSound('shovel');
+        this.toggleState();
+        this.engine.events.click.eventBubbling = this.isActive;
+        if (this.isActive) {
+          cellsFlat.forEach((cell: Cell) => {
+            const f = (ev: any): void => {
+              cellClick.call(cell.node, ev, cell);
+            };
+            functionsArr.push(f);
+          });
 
-        cellsFlat.forEach((cell, index) => {
-          this.engine.on(cell.node, 'click', functionsArr[index]);
-        });
-      } else {
-        cellsFlat.forEach((cell, index) => {
-          this.engine.off(cell.node, 'click', functionsArr[index]);
-        });
+          cellsFlat.forEach((cell, index) => {
+            this.engine.on(cell.node, 'click', functionsArr[index]);
+          });
+        } else {
+          cellsFlat.forEach((cell, index) => {
+            this.engine.off(cell.node, 'click', functionsArr[index]);
+          });
+        }
       }
-    });
+    };
+
+    window.addEventListener('keypress', event);
+    this.engine.on(this.shovelNode, 'click', event);
   }
 
   private toggleState(): void {
