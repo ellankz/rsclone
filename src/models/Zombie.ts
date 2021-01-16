@@ -17,8 +17,7 @@ const Y_MAX = -70;
 const X_AXIS = 960;
 const Y_AXIS = 5;
 
-// const SPEED = 0.17;
-const SPEED = 1.7;
+const SPEED = 0.17;
 
 export default class Zombie {
   private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
