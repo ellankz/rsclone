@@ -1,5 +1,5 @@
 import Engine from '../../engine';
-import { ScreenCreator } from './ScreenCreator';
+import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
 
 const LEVEL_SELECTION_SCREEN_LAYERS: Array<string> = ['levelSelection-screen_background', 'levelSelection-screen_inputs'];
 const LEVEL_SELECTION_SCREEN_SCREEN_NAME: string = 'levelSelectionScreen';
@@ -43,12 +43,13 @@ export class LevelSelectionScreen extends ScreenCreator {
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        levelCard.position.x + LEVEL_CARD.width / 6.25,
+        levelCard.position.x + LEVEL_CARD.width / 4.5,
         levelCard.position.y + LEVEL_CARD.height / 2.2,
       ),
       text: `LEVEL ${i + 1}`,
       layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
       fontSize: 25,
+      font: TEXT_BUTTONS_FONT,
       color: '#fff',
     });
     return levelCard;
@@ -107,13 +108,14 @@ export class LevelSelectionScreen extends ScreenCreator {
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonClose.position.x + 16,
+        buttonClose.position.x + 36,
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
       layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     buttonClose.addTo(LEVEL_SELECTION_SCREEN_SCENE_NAME);

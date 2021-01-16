@@ -1,6 +1,5 @@
 import Engine from '../../engine';
-import { ScreenCreator } from './ScreenCreator';
-
+import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
 import { IInputNode } from '../../engine/types';
 
 const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen_inputs'];
@@ -64,13 +63,14 @@ export class LoginScreen extends ScreenCreator {
     const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonClose.position.x + 20,
+        buttonClose.position.x + 30,
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
       layer: LOGIN_SCREEN_LAYERS[1],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
@@ -100,13 +100,14 @@ export class LoginScreen extends ScreenCreator {
     const textButtonSubmit: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonSubmit.position.x + 20,
+        buttonSubmit.position.x + 30,
         buttonSubmit.position.y + 10,
       ),
       text: 'Log in',
       layer: LOGIN_SCREEN_LAYERS[1],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
@@ -131,13 +132,14 @@ export class LoginScreen extends ScreenCreator {
     const textButtonRegister: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonRegister.position.x + 15,
+        buttonRegister.position.x + 25,
         buttonRegister.position.y + 10,
       ),
       text: 'Sing up',
       layer: LOGIN_SCREEN_LAYERS[1],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
