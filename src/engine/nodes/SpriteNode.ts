@@ -30,6 +30,8 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   interval: number;
 
+  private state: string;
+
   private animation = false;
 
   private states: SpriteStatesConfig;
@@ -43,6 +45,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.frames = params.frames;
     this.startFrame = params.startFrame || 0;
     this.speed = params.speed || 0;
+    this.state = 'basic';
 
     this.frameW = this.size.x / this.frames;
     this.frameH = this.size.y;
@@ -123,6 +126,11 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.srcY = 0;
 
     this.setDwDH(state.dh || this.dh);
+    this.state = stateName;
+  }
+
+  public get currentState() {
+    return this.state;
   }
 
   private setDwDH(providedDH: number) {

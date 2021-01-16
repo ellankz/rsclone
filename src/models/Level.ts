@@ -9,6 +9,8 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import { WallNut } from './plants/WallNut';
+import { Chomper } from './plants/Chomper';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -24,7 +26,7 @@ export default class Level {
 
   private plant: Plant;
 
-  public sunCount: {suns: number} = { suns: 500 };
+  public sunCount: { suns: number } = { suns: 500 };
 
   public width: number = COLS_NUM;
 
@@ -61,7 +63,11 @@ export default class Level {
   }
 
   public init() {
-    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
+    this.addBackground(
+      'back',
+      this.engine.loader.files[BG_URL] as HTMLImageElement,
+      BG_LEVEL_OFFSET_X,
+    );
     this.createSunCount();
     this.createPlantCards();
     this.startLevel();
@@ -97,17 +103,14 @@ export default class Level {
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
-    this.engine
-      .createNode(
-        {
-          type: 'ImageNode',
-          position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
-          layer,
-          img: image,
-          dh: this.engine.size.y,
-        },
-      );
+    this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(0, 0),
+      size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
+      layer,
+      img: image,
+      dh: this.engine.size.y,
+    });
   }
 
   public createPlant(type: PlantType) {
@@ -118,6 +121,12 @@ export default class Level {
         break;
       case 'Peashooter':
         newPlant = new Peashooter({ type }, this.engine);
+        break;
+      case 'WallNut':
+        newPlant = new WallNut({ type }, this.engine);
+        break;
+      case 'Chomper':
+        newPlant = new Chomper({ type }, this.engine);
         break;
       default:
         newPlant = new Plant({ type }, this.engine);
@@ -178,6 +187,8 @@ export default class Level {
   }
 
   public listenGameEvents() {
+    const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
+
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         if (zombie.position && zombie.position.x < X_HOME) {
@@ -185,20 +196,16 @@ export default class Level {
         } else {
           zombie.attack(this.occupiedCells);
         }
-        
+
+        if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
+
         this.plantsArr.forEach((plant) => {
-
-          if (zombie.row === plant.row && zombie.position && !this.isEnd) {
-            plant.switchState('attack', zombie, plant);
-
-            if (zombie.health <= 0) {
-              zombie.remove();
-              plant.switchState('basic');
-              plant.stopShooting();
-            }
+          if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
+            plant.switchState('attack', zombie);
           }
         });
       });
+
       this.zombiesArr = this.deleteZombie();
       this.plantsArr = this.deletePlant();
 
@@ -224,7 +231,7 @@ export default class Level {
     this.sunCounter.draw();
   }
 
-  public updateSunCount(newCount:number) {
+  public updateSunCount(newCount: number) {
     this.sunCount.suns = newCount;
     this.reDrawCardsAndCount();
   }
@@ -247,7 +254,11 @@ export default class Level {
   private createPlantCards() {
     this.plantTypes.forEach((type, index) => {
       const card = new PlantCard(
-        type, index, this.engine, this.sunCount, this.prepareToPlant.bind(this),
+        type,
+        index,
+        this.engine,
+        this.sunCount,
+        this.prepareToPlant.bind(this),
       );
       card.draw();
       this.plantCards.push(card);
@@ -262,7 +273,7 @@ export default class Level {
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             this.plant = this.createPlant(this.preparedToPlant);
             this.plant.putOnField(cell);
-            this.plant.row = cell.position.y;
+            this.plant.cell = cell;
 
             this.occupiedCells.set(cell, this.plant);
 
@@ -277,7 +288,10 @@ export default class Level {
 
   dropSuns() {
     this.sunFall = new FallingSun(
-      this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
+      this.engine,
+      this.sunCount,
+      this.cells,
+      this.updateSunCount.bind(this),
     );
     this.sunFall.init();
   }

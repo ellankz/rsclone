@@ -20,7 +20,7 @@ const Y_AXIS = 5;
 const SPEED = 0.17;
 
 export default class Zombie {
-  private zombiePresets: {[dymanic: string]: ZombiePreset} = zombiePresets;
+  private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
 
   public speed: number;
 
@@ -52,7 +52,11 @@ export default class Zombie {
 
   public opacity: number;
 
-  private states: {[dynamic: string]: ZombiesStatesPreset};
+  private states: { [dynamic: string]: ZombiesStatesPreset };
+
+  private attackedPlant: Plant;
+
+  public isDestroyedFlag: boolean;
 
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
@@ -92,28 +96,34 @@ export default class Zombie {
     const update = () => {
       start += this.zombieSpeed;
       this.node.position = this.engine.vector(
-        X_AXIS - start, (cell.getBottom() - this.height - Y_AXIS),
+        X_AXIS - start,
+        cell.getBottom() - this.height - Y_AXIS,
       );
 
       this.trackPosition();
     };
 
-    this.node = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.engine.vector(X_AXIS, (cell.getBottom() - this.height - Y_AXIS)),
-      size: this.engine.vector(this.width * this.frames, this.height),
-      layer: 'top',
-      img: image,
-      frames: this.frames,
-      startFrame: 0,
-      speed: this.speed,
-      dh: this.height,
-      states: this.states ? generateStates() : undefined,
-    }, update)
+    this.node = this.engine
+      .createNode(
+        {
+          type: 'SpriteNode',
+          position: this.engine.vector(X_AXIS, cell.getBottom() - this.height - Y_AXIS),
+          size: this.engine.vector(this.width * this.frames, this.height),
+          layer: 'top',
+          img: image,
+          frames: this.frames,
+          startFrame: 0,
+          speed: this.speed,
+          dh: this.height,
+          states: this.states ? generateStates() : undefined,
+        },
+        update,
+      )
       .addTo('scene') as ISpriteNode;
   }
 
   public attack(occupiedCells: Map<Cell, Plant>) {
+    if (this.isDestroyedFlag) return;
     occupiedCells.forEach((plant, cell) => {
       if (this.node.position.x - plant.position.x < X_MIN
         && this.node.position.x - plant.position.x > X_MAX
@@ -122,15 +132,28 @@ export default class Zombie {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
         this.makeDamage(plant);
+        this.attackedPlant = plant;
 
         if (plant.health <= 0) {
           this.eatThePlant(plant);
           occupiedCells.delete(cell);
-          this.node.switchState('walking');
-          this.zombieSpeed = SPEED;
+          this.attackedPlant = null;
+          this.walk();
         }
       }
     });
+
+    const isPlantDestroyed = this.attackedPlant && this.attackedPlant.isDestroyedFlag;
+
+    if (isPlantDestroyed && this.node.currentState === 'attack') {
+      this.walk();
+    }
+  }
+
+  public walk() {
+    if (this.isDestroyedFlag) return;
+    this.node.switchState('walking');
+    this.zombieSpeed = SPEED;
   }
 
   private makeDamage(plant: any) {
@@ -142,6 +165,7 @@ export default class Zombie {
   }
 
   public stop() {
+    if (this.isDestroyedFlag) return;
     this.node.switchState('stop');
     this.zombieSpeed = 0;
   }
@@ -150,6 +174,7 @@ export default class Zombie {
     if (this.health >= 0) {
       this.health -= num;
     }
+    if (this.health < 0) this.health = 0;
 
     this.node.opacity = 0.85;
     setTimeout(() => {
@@ -163,19 +188,21 @@ export default class Zombie {
     const image = new Image();
     image.src = '../assets/sprites/zombies/basic/lost_head.png';
 
-    const head = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.engine.vector(this.position.x + 60, this.position.y),
-      size: this.engine.vector(150 * 12, 186),
-      layer: 'top',
-      img: image,
-      frames: 12,
-      width: 150,
-      height: 186,
-      startFrame: 0,
-      speed: 80,
-      dh: 180,
-    }).addTo('scene') as ISpriteNode;
+    const head = this.engine
+      .createNode({
+        type: 'SpriteNode',
+        position: this.engine.vector(this.position.x + 60, this.position.y),
+        size: this.engine.vector(150 * 12, 186),
+        layer: 'top',
+        img: image,
+        frames: 12,
+        width: 150,
+        height: 186,
+        startFrame: 0,
+        speed: 80,
+        dh: 180,
+      })
+      .addTo('scene') as ISpriteNode;
 
     setTimeout(() => {
       head.destroy();
@@ -183,6 +210,8 @@ export default class Zombie {
   }
 
   public remove() {
+    if (this.isDestroyedFlag) return;
+    this.isDestroyedFlag = true;
     this.lostHead();
     setTimeout(() => {
       this.zombieSpeed = 0;

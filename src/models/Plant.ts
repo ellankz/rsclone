@@ -9,7 +9,7 @@ import Zombie from './Zombie';
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
 
 export default class Plant {
-  protected plantPresets: {[dymanic: string]: PlantPreset} = plantPresets;
+  protected plantPresets: { [dymanic: string]: PlantPreset } = plantPresets;
 
   public cost: number;
 
@@ -31,7 +31,7 @@ export default class Plant {
 
   public position: Vector;
 
-  public row: number;
+  public cell: Cell;
 
   protected engine: Engine;
 
@@ -41,7 +41,7 @@ export default class Plant {
 
   protected node: ISpriteNode;
 
-  protected states: {[dynamic: string]: PlantStatesPreset};
+  protected states: { [dynamic: string]: PlantStatesPreset };
 
   public isDestroyedFlag: boolean;
 
@@ -61,11 +61,13 @@ export default class Plant {
     this.frames = this.plantPresets[config.type].frames;
     this.speed = this.plantPresets[config.type].speed;
     this.states = this.plantPresets[config.type].states;
+
     this.engine = engine;
   }
 
   reduceHealth(num: number) {
     this.health -= num;
+    if (this.health < 0) this.health = 0;
   }
 
   putOnField(cell: Cell) {
@@ -93,29 +95,50 @@ export default class Plant {
 
     this.position = this.engine.vector(
       cell.getLeft() + (cell.cellSize.x - this.width) / 2,
-      (cell.getBottom() - this.height) - (cell.cellSize.y - this.height) / 2,
+      cell.getBottom() - this.height - (cell.cellSize.y - this.height) / 2,
     );
 
-    this.node = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.position,
-      size: this.engine.vector(this.width * this.frames, this.height),
-      layer: 'main',
-      img: image,
-      frames: this.frames,
-      startFrame: 0,
-      speed: this.speed,
-      dh: this.height,
-      states: this.states ? generateStates() : undefined,
-    }).addTo('scene') as ISpriteNode;
+    this.node = this.engine
+      .createNode({
+        type: 'SpriteNode',
+        position: this.position,
+        size: this.engine.vector(this.width * this.frames, this.height),
+        layer: 'main',
+        img: image,
+        frames: this.frames,
+        startFrame: 0,
+        speed: this.speed,
+        dh: this.height,
+        states: this.states ? generateStates() : undefined,
+      })
+      .addTo('scene') as ISpriteNode;
   }
 
-  switchState(state: string, zombie?: Zombie, plant?: Plant) {
-    this.node.switchState(state);
+  public switchState(state: string, zombie?: Zombie) {
+    if (state in this.states || state === 'basic') {
+      this.node.switchState(state);
+      if (state === 'attack') this.attack(zombie);
+    }
+  }
+
+  public attack(zombie: Zombie) {
+    zombie.reduceHealth(this.damage);
+
+    if (zombie.health <= 0) {
+      zombie.remove();
+      this.stopAttack();
+    }
+  }
+
+  public stopAttack() {
+    this.stopShooting();
+    this.switchState('basic');
   }
 
   public stopShooting() {
-    this.isShooting = false;
+    if (this.isShooting) {
+      this.isShooting = false;
+    }
   }
 
   public stopCreatingSuns() {
@@ -128,7 +151,12 @@ export default class Plant {
     }
   }
 
-  destroy() {
+  public isZombieInAttackArea(zombie: Zombie) {
+    if (!this.states.attack || !zombie.position || zombie.position.x <= 200) return false;
+    return zombie.row === this.cell.position.y && zombie.position.x > this.position.x;
+  }
+
+  public destroy() {
     this.stopCreatingSuns();
     this.isDestroyed();
     this.node.destroy();

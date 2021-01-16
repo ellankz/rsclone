@@ -14,11 +14,11 @@ export class Peashooter extends Plant {
     this.shotType = this.plantPresets[config.type].shotType;
   }
 
-  startShooting(zombie: Zombie, plant: Plant) {
+  startShooting(zombie: Zombie) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
         const shot = new Shot(this.position, this.engine, this.shotType);
-        shot.draw(zombie, plant);
+        shot.draw(zombie, this);
       };
       setTimeout(() => {
         if (this.shooting === null) {
@@ -37,8 +37,12 @@ export class Peashooter extends Plant {
     }
   }
 
-  switchState(state: string, zombie: Zombie, plant: Plant) {
-    super.switchState(state);
-    this.startShooting(zombie, plant);
+  attack(zombie: Zombie) {
+    this.startShooting(zombie);
+
+    if (zombie.health <= 0) {
+      zombie.remove();
+      this.stopAttack();
+    }
   }
 }

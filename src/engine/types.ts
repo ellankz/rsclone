@@ -122,6 +122,7 @@ export interface ISpriteNode extends INode {
   frames: number;
   startFrame: number;
   speed: number;
+  readonly currentState: string;
 
   draw: () => void;
   innerUpdate: () => void;

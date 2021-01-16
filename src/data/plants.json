@@ -53,5 +53,83 @@
         }
       }
     }
+  },
+  "WallNut": {
+    "cost": 50,
+    "damage": 0,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 1000,
+    "width": 65,
+    "height": 73,
+    "image": "assets/sprites/plants/WallNut/0.png",
+    "name": "WallNut",
+    "frames": 16,
+    "speed": 100,
+    "states": {
+      "cracked1": {
+        "image": "assets/sprites/plants/WallNut/1.png",
+        "frames": 11,
+        "speed": 130,
+        "width": 65,
+        "height": 73,
+        "dh": 73,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "cracked2": {
+        "image": "assets/sprites/plants/WallNut/2.png",
+        "frames": 15,
+        "speed": 100,
+        "width": 65,
+        "height": 73,
+        "dh": 73,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
+  },
+  "Chomper": {
+    "cost": 150,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 100,
+    "width": 130,
+    "height": 114,
+    "image": "assets/sprites/plants/Chomper/0.png",
+    "name": "Chomper",
+    "frames": 13,
+    "speed": 120,
+    "states": {
+      "attack": {
+        "image": "assets/sprites/plants/Chomper/1.png",
+        "frames": 9,
+        "speed": 140,
+        "width": 130,
+        "height": 114,
+        "dh": 114,
+        "positionAdjust": {
+          "x": 17,
+          "y": -20
+        }
+      },
+      "sleep": {
+        "image": "assets/sprites/plants/Chomper/2.png",
+        "frames": 6,
+        "speed": 160,
+        "width": 130,
+        "height": 114,
+        "dh": 114,
+        "positionAdjust": {
+          "x": 17,
+          "y": -20
+        }
+      }
+    }
   }
 }

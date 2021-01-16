@@ -33,7 +33,6 @@ export default class Game {
   setupGame() {
     const { engine } = this;
     engine.createView(['back', 'main', 'top']);
-    engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
       this.update = () => {
         // code
