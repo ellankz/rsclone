@@ -3,6 +3,10 @@ import { IImageNode } from '../engine/types';
 import Cell from '../game/Cell';
 import Zombie from './Zombie';
 
+const SPEED = 18;
+const RIGHT_OFFSET = -10;
+const TOP_OFFSET = 40;
+
 export default class LawnCleaner {
   private cell: Cell;
 
@@ -25,8 +29,8 @@ export default class LawnCleaner {
   draw() {
     this.image = this.engine.loader.files['assets/images/interface/LawnCleaner.png'] as HTMLImageElement;
     const position = this.engine.vector(
-      this.cell.getLeft() - this.image.width - 10,
-      this.cell.getTop(),
+      this.cell.getLeft() - this.image.width + RIGHT_OFFSET,
+      this.cell.getTop() + TOP_OFFSET,
     );
 
     this.node = this.engine.createNode(
@@ -46,13 +50,11 @@ export default class LawnCleaner {
     this.node.addTo('scene');
     this.engine.audioPlayer.playSound('lawncleaner');
     this.node.update = () => {
-      this.node.move(this.engine.vector(25, 0));
+      this.node.move(this.engine.vector(SPEED, 0));
       this.positionX = this.node.position.x + this.image.width / 2;
       zombies.forEach((zombie) => {
-        console.log(this.positionX, zombie.position.x);
         if (zombie.health > 0 && this.positionX >= zombie.position.x) {
-          // eslint-disable-next-line no-param-reassign
-          zombie.health = 0;
+          zombie.reduceHealth(1000000);
           zombie.remove();
           zombie.node.destroy();
           deleteCB();
