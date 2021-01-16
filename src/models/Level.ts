@@ -81,9 +81,7 @@ export default class Level {
     this.createZombies(this.creatingZombies);
     this.listenCellClicks();
     this.listenGameEvents();
-    setTimeout(() => {
-      this.dropSuns();
-    }, 5000);
+    this.dropSuns();
   }
 
   stopSunFall() {

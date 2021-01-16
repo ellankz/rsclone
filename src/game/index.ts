@@ -211,9 +211,22 @@ export default class Game {
   }
 
   createPauseScene() {
-    this.engine.stop();
     this.pause = new Pause(this.engine);
     this.pause.init();
+  }
+
+  stopGame() {
+    this.engine.stop();
+    this.engine.clearAllTimeouts();
+    this.createPauseScene();
+    this.stopCreatingSuns();
+  }
+
+  resumeGame() {
+    this.engine.start('scene');
+    this.currentLevel.resumeSunFall();
+    this.currentLevel.continueCreatingZombies();
+    this.continueCreatingSuns();
   }
 
   addPause() {
@@ -222,37 +235,29 @@ export default class Game {
     document.addEventListener('visibilitychange', () => {
       if (!isOpen) {
         isOpen = true;
-        this.engine.clearAllTimeouts();
-        this.createPauseScene();
-        this.stopCreatingSuns();
+        this.stopGame();
 
         this.pause.resumeGame(() => {
           isOpen = false;
-          this.engine.start('scene');
-          this.currentLevel.resumeSunFall();
-          this.currentLevel.continueCreatingZombies();
-          this.continueCreatingSuns();
+          this.resumeGame();
         });
       }
     });
 
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (!isOpen) {
-          isOpen = true;
-          this.engine.clearAllTimeouts();
-          this.createPauseScene();
-          this.stopCreatingSuns();
+    if (!isOpen) {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (!isOpen) {
+            isOpen = true;
+            this.stopGame();
+
+            this.pause.resumeGame(() => {
+              isOpen = false;
+              this.resumeGame();
+            });
+          }
         }
-
-        this.pause.resumeGame(() => {
-          isOpen = false;
-          this.engine.start('scene');
-          this.currentLevel.resumeSunFall();
-          this.currentLevel.continueCreatingZombies();
-          this.continueCreatingSuns();
-        });
-      }
-    });
+      });
+    }
   }
 }
