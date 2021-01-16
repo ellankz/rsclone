@@ -108,34 +108,30 @@ export class LevelSelectionScreen extends ScreenCreator {
 
     let isButtonFree: boolean = true;
 
+    const moveCards = (direction: boolean): void => {
+      isButtonFree = false;
+      let fieldSize: number = this.engine.size.x;
+      const moveDirection: number = direction ? 10 : -10;
+      const animation: any = setInterval(() => {
+        levelsView.move(this.engine.vector(moveDirection));
+        fieldSize -= 10;
+        if (fieldSize === 0) {
+          clearInterval(animation);
+          isButtonFree = true;
+        }
+      }, 5);
+    };
+
     this.engine.on(buttonRight, 'click', () => {
       if ((levelsView.position.x <= this.engine.size.x * (this.numberOfLevels / 3 - 1))
         && isButtonFree === true) {
-        isButtonFree = false;
-        let fieldSize: number = this.engine.size.x;
-        const animation: any = setInterval(() => {
-          levelsView.move(this.engine.vector(10, 0));
-          fieldSize -= 10;
-          if (fieldSize === 0) {
-            clearInterval(animation);
-            isButtonFree = true;
-          }
-        }, 5);
+        moveCards(true);
       }
     });
 
     this.engine.on(buttonLeft, 'click', () => {
       if ((levelsView.position.x - this.engine.size.x >= 0) && isButtonFree === true) {
-        isButtonFree = false;
-        let fieldSize: number = this.engine.size.x;
-        const animation: any = setInterval(() => {
-          levelsView.move(this.engine.vector(-10, 0));
-          fieldSize -= 10;
-          if (fieldSize === 0) {
-            clearInterval(animation);
-            isButtonFree = true;
-          }
-        }, 5);
+        moveCards(false);
       }
     });
   }
