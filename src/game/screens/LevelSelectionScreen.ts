@@ -1,5 +1,6 @@
 import Engine from '../../engine';
 import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
+import ImageNode from '../../engine/nodes/ImageNode';
 
 const LEVEL_SELECTION_SCREEN_LAYERS: Array<string> = ['levelSelection-screen_background', 'levelSelection-screen_inputs'];
 const LEVEL_SELECTION_SCREEN_SCREEN_NAME: string = 'levelSelectionScreen';
@@ -8,11 +9,18 @@ const LEVEL_SELECTION_SCREEN_SCENE_NAME: string = 'levelSelectionScreen';
 export class LevelSelectionScreen extends ScreenCreator {
   private startLevel: () => void;
 
+  private levelCards: Array<ImageNode> = [];
+
+  private numberOfLevels: number = 9;
+
+  private numberOfActiveLevels: number = 1;
+
   constructor(engine: Engine, func: () => void) {
     super(engine);
     this.startLevel = func;
     this.createLayers(LEVEL_SELECTION_SCREEN_LAYERS);
     this.createNodes();
+    this.createNavigationButtons();
     this.engine.createScreen(LEVEL_SELECTION_SCREEN_SCREEN_NAME, LEVEL_SELECTION_SCREEN_LAYERS);
     this.engine.createScene(LEVEL_SELECTION_SCREEN_SCENE_NAME);
     this.startLevel = func;
@@ -31,7 +39,7 @@ export class LevelSelectionScreen extends ScreenCreator {
     const levelCard: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        (backgroundImg.position.x) + 75 + i * LEVEL_CARD.width,
+        (this.engine.size.x * i) / 3 + 65,
         (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
       ),
       size: this.engine.vector(338, 402),
@@ -55,6 +63,57 @@ export class LevelSelectionScreen extends ScreenCreator {
     return levelCard;
   }
 
+  private createNavigationButtons(): void {
+    const BUTTON_RIGHT = this.engine
+      .loader.files['assets/images/interface/buttonRight.png'] as HTMLImageElement;
+
+    const BUTTON_LEFT = this.engine
+      .loader.files['assets/images/interface/buttonLeft.png'] as HTMLImageElement;
+
+    const buttonLeft: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        150,
+        (this.engine.size.y) - (BUTTON_LEFT.height * 2),
+      ),
+      size: this.engine.vector(50, 41),
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
+      img: BUTTON_LEFT,
+    });
+
+    const buttonRight: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        (this.engine.size.x - 189),
+        (this.engine.size.y) - (BUTTON_RIGHT.height * 2),
+      ),
+      size: this.engine.vector(50, 41),
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
+      img: BUTTON_RIGHT,
+    });
+
+    this.setActive(
+      buttonRight,
+      'assets/images/interface/buttonRight_Active.png',
+      'assets/images/interface/buttonRight.png',
+    );
+
+    this.setActive(
+      buttonLeft,
+      'assets/images/interface/buttonLeft_Active.png',
+      'assets/images/interface/buttonLeft.png',
+    );
+
+    const levelsView = this.engine.createView([LEVEL_SELECTION_SCREEN_LAYERS[1]]);
+    this.engine.on(buttonRight, 'click', () => {
+      levelsView.move(this.engine.vector(this.engine.size.x, 0));
+    });
+
+    this.engine.on(buttonLeft, 'click', () => {
+      levelsView.move(this.engine.vector(-this.engine.size.x, 0));
+    });
+  }
+
   private createNodes(): void {
     const BACKGROUND_IMG = this.engine
       .loader.files['assets/images/interface/settingBackground2L.png'] as HTMLImageElement;
@@ -70,11 +129,9 @@ export class LevelSelectionScreen extends ScreenCreator {
       img: BACKGROUND_IMG,
     });
 
-    const levelCards: Array<any> = [];
-
-    for (let i = 0; i < 3; i += 1) {
-      let card: any;
-      if (i === 0) {
+    for (let i = 0; i < this.numberOfLevels; i += 1) {
+      let card: ImageNode;
+      if (i < this.numberOfActiveLevels) {
         card = this.createLevelCard(backgroundImg, false, i);
         this.setActive(card,
           'assets/images/interface/selectLevelIcon_Active.png',
@@ -88,7 +145,7 @@ export class LevelSelectionScreen extends ScreenCreator {
       } else {
         card = this.createLevelCard(backgroundImg, true, i);
       }
-      levelCards.push(card);
+      this.levelCards.push(card);
     }
 
     const BUTTON_IMG = this.engine
@@ -101,7 +158,7 @@ export class LevelSelectionScreen extends ScreenCreator {
         (this.engine.size.y) - (BUTTON_IMG.width / 2),
       ),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
       img: BUTTON_IMG,
     });
 
@@ -112,7 +169,7 @@ export class LevelSelectionScreen extends ScreenCreator {
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
-      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[0],
       fontSize: 25,
       color: TEXT_BUTTONS_COLOR,
       font: TEXT_BUTTONS_FONT,
