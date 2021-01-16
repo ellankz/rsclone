@@ -23,6 +23,26 @@
     {
       "type": "basic",
       "startDelay": 13
+    },
+    {
+      "type": "basic_2",
+      "startDelay": 7
+    },
+    {
+      "type": "basic",
+      "startDelay": 9
+    },
+    {
+      "type": "cone",
+      "startDelay": 9
+    },
+    {
+      "type": "bucket",
+      "startDelay": 9
+    },
+    {
+      "type": "bucket",
+      "startDelay": 13
     }
     ],
     "plantTypes": [

@@ -456,7 +456,7 @@ export default class Engine {
     this.timeout = new Timeout(callback, delay);
     this.timeout.resume();
     this.timeouts.push(this.timeout);
-    return this.timeouts;
+    return this.timeout;
   }
 
   public pauseTimeout() {

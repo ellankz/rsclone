@@ -1,6 +1,7 @@
 import { setupMaster } from 'cluster';
 import Plant from '../Plant';
 import Engine from '../../engine';
+import Timeout from '../../engine/core/Timeout';
 import { SunCreator } from '../../game/mechanics/SunCreator';
 import Cell from '../../game/Cell';
 
@@ -16,6 +17,8 @@ export class SunFlower extends Plant {
 
   sunCount?: { suns: number };
 
+  start: () => void;
+
   constructor(engine: Engine,
     updateSunFunc?: (sun: number) => void,
     sunCount?: { suns:number }) {
@@ -28,11 +31,9 @@ export class SunFlower extends Plant {
   }
 
   init(cell: Cell) {
-    this.isDestroyedFlag = false;
-
-    const start = () => {
+    this.start = () => {
       if (this.health <= 0) {
-        clearTimeout(this.timer);
+        clearInterval(this.timer);
       } else {
         this.switchState('generate');
         const position = this.engine.vector(
@@ -54,21 +55,14 @@ export class SunFlower extends Plant {
         setTimeout(() => {
           sun.switchState('live');
         }, SUN_APPEARANCE_STATE);
-
-        this.timer = setTimeout(start, SUN_REPRODUCTION);
-      // this.engine.newSetTimeout(this.timer);
       }
     };
-    start();
+    this.timer = window.setInterval(this.start, SUN_REPRODUCTION);
   }
 
   draw(cell: Cell): void {
     super.draw(cell);
-    if (!this.isDestroyedFlag) {
-      setTimeout(() => {
-        this.init(cell);
-      }, SUN_REPRODUCTION);
-    }
+    this.init(cell);
   }
 
   switchState(state: string) {
@@ -77,7 +71,14 @@ export class SunFlower extends Plant {
   }
 
   stop(): void {
+    super.stop();
     this.isDestroyedFlag = true;
-    clearTimeout(this.timer);
+    window.clearInterval(this.timer);
+  }
+
+  continue(): void {
+    super.continue();
+    this.isDestroyedFlag = false;
+    this.timer = window.setInterval(this.start, SUN_REPRODUCTION);
   }
 }

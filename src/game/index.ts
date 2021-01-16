@@ -8,6 +8,7 @@ import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
+import Pause from '../models/scenes/Pause';
 import ModalWindow from './ModalWindow';
 import sounds from '../data/audio.json';
 
@@ -25,6 +26,8 @@ export default class Game {
   private modalWindow: ModalWindow;
 
   public currentLevel: Level;
+
+  public pause: Pause;
 
   private timer: any;
 
@@ -66,11 +69,31 @@ export default class Game {
     this.engine.setScreen('first');
   }
 
+  createCells() {
+    for (let x = 0; x < COLS_NUM; x += 1) {
+      const row: Cell[] = [];
+      for (let y = 0; y < ROWS_NUM; y += 1) {
+        const cell = new Cell({ x, y }, this.engine);
+        cell.draw();
+        row.push(cell);
+      }
+      this.cells.push(row);
+    }
+  }
+
+  createLevel(levelIndex: number) {
+    this.isEnd = false;
+    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
+    this.currentLevel.init();
+    this.endGame();
+    this.addPause();
+    return this.currentLevel;
+  }
+
   endGame() {
     const trackPosition = () => {
       if (this.currentLevel) {
         this.restZombies = this.currentLevel.getRestZombies();
-        // console.log(this.restZombies);
         if (this.restZombies <= 0) {
           this.endWin();
         }
@@ -84,6 +107,52 @@ export default class Game {
       if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
     };
     trackPosition();
+  }
+
+  endWin() {
+    this.isEnd = true;
+    this.reducePlantsHealth();
+    this.currentLevel.stopLevel();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
+    this.engine.clearAllTimeouts();
+
+    setTimeout(() => {
+      this.createWinScene();
+      this.currentLevel.updateSunCount(500);
+    }, 5000);
+    setTimeout(() => {
+      this.clearLevel();
+    }, 8000);
+    setTimeout(() => {
+      this.createLevel(0);
+    }, 12000);
+
+    clearTimeout(this.timer);
+  }
+
+  endLoose() {
+    this.isEnd = true;
+    this.currentLevel.stopLevel();
+    this.destroySun();
+    this.reducePlantsHealth();
+    this.destroyPlants();
+    this.engine.clearAllTimeouts();
+    this.createLooseScene();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
+    clearTimeout(this.timer);
+  }
+
+  clearLevel() {
+    let allNodes = this.engine.getSceneNodes('scene');
+    allNodes = allNodes.filter((el) => el.type === 'SpriteNode');
+
+    allNodes.forEach((node) => {
+      node.destroy();
+    });
+
+    this.engine.clearAllTimeouts();
   }
 
   destroySun() {
@@ -104,76 +173,25 @@ export default class Game {
   stopCreatingSuns() {
     const plants = this.currentLevel.getPlants();
     plants.forEach((plant) => {
-      plant.reduceAllHealth();
+      plant.stop();
     });
   }
 
-  endWin() {
-    this.isEnd = true;
-    this.stopCreatingSuns();
-    this.currentLevel.stopLevel();
-    this.currentLevel.clearZombieArray();
-    this.currentLevel.clearPlantsArray();
-    this.engine.clearAllTimeouts();
-
-    setTimeout(() => {
-      this.createWinScene();
-      this.currentLevel.updateSunCount(500);
-    }, 5000)
-    setTimeout(() => {
-      this.clearLevel();
-    }, 8000);
-    setTimeout(() => {
-      this.createLevel(0);
-    }, 12000);
-
-    clearTimeout(this.timer);
-  }
-
-  endLoose() {
-    // this.stop();
-    this.isEnd = true;
-    this.currentLevel.stopLevel();
-    this.destroySun();
-    this.destroyPlants();
-    this.engine.clearAllTimeouts();
-    this.createLooseScene();
-    this.currentLevel.clearZombieArray();
-    this.currentLevel.clearPlantsArray();
-    clearTimeout(this.timer);
-  }
-
-  createCells() {
-    for (let x = 0; x < COLS_NUM; x += 1) {
-      const row: Cell[] = [];
-      for (let y = 0; y < ROWS_NUM; y += 1) {
-        const cell = new Cell({ x, y }, this.engine);
-        cell.draw();
-        row.push(cell);
-      }
-      this.cells.push(row);
+  continueCreatingSuns() {
+    const plants = this.currentLevel.getPlants();
+    for (let i = 0; i < plants.length; i += 1) {
+      setTimeout(() => {
+        plants[i].continue();
+      }, i * 2000);
     }
   }
 
-  createLevel(levelIndex: number) {
-    this.isEnd = false;
-    this.currentLevel = new Level(levels[levelIndex] as LevelConfig, this.engine, this.cells);
-    this.currentLevel.init();
-    this.endGame();
-    // this.addPause();
-    return this.currentLevel;
-  }
-
-  clearLevel() {
-    let allNodes = this.engine.getSceneNodes('scene');
-    allNodes = allNodes.filter((el) => el.type === 'SpriteNode');
-
-    allNodes.forEach((node) => {
-      node.destroy();
+  reducePlantsHealth() {
+    const plants = this.currentLevel.getPlants();
+    plants.forEach((plant) => {
+      plant.reduceAllHealth();
+      plant.stop();
     });
-
-    this.engine.clearAllTimeouts();
-    this.engine.clearTimeouts();
   }
 
   createWinScene() {
@@ -194,26 +212,45 @@ export default class Game {
 
   createPauseScene() {
     this.engine.stop();
-    this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');
-    this.modalWindow.draw();
+    this.pause = new Pause(this.engine);
+    this.pause.init();
   }
 
   addPause() {
-    let i = 0;
+    let isOpen: boolean = false;
 
     document.addEventListener('visibilitychange', () => {
-      i += 1;
-
-      this.engine.clearAllTimeouts();
-
-      if (i === 1) {
+      if (!isOpen) {
+        isOpen = true;
+        this.engine.clearAllTimeouts();
         this.createPauseScene();
+        this.stopCreatingSuns();
 
-        this.modalWindow.resumeGame(() => {
+        this.pause.resumeGame(() => {
+          isOpen = false;
           this.engine.start('scene');
-          // this.currentLevel.continueCreatingZombies();
-          // this.engine.resumeTimeout();
-          i = 0;
+          this.currentLevel.resumeSunFall();
+          this.currentLevel.continueCreatingZombies();
+          this.continueCreatingSuns();
+        });
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (!isOpen) {
+          isOpen = true;
+          this.engine.clearAllTimeouts();
+          this.createPauseScene();
+          this.stopCreatingSuns();
+        }
+
+        this.pause.resumeGame(() => {
+          isOpen = false;
+          this.engine.start('scene');
+          this.currentLevel.resumeSunFall();
+          this.currentLevel.continueCreatingZombies();
+          this.continueCreatingSuns();
         });
       }
     });

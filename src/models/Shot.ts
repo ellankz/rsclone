@@ -19,6 +19,8 @@ export default class Shot {
 
   type: string;
 
+  shoot: any;
+
   constructor(position: Vector, engine: Engine, type: string) {
     this.position = position;
     this.engine = engine;
@@ -43,7 +45,7 @@ export default class Shot {
     };
 
     image.addEventListener('load', () => {
-      this.engine.createNode({
+      this.shoot = this.engine.createNode({
         type: 'ImageNode',
         position: this.engine.vector(
           this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
@@ -55,5 +57,9 @@ export default class Shot {
       }, update)
         .addTo('scene');
     });
+  }
+
+  destroy() {
+    this.shoot.destroy();
   }
 }

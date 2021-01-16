@@ -151,14 +151,6 @@ export default class ModalWindow {
     });
   }
 
-  public resumeGame(resume: () => void) {
-    this.engine.on(this.buttonNode, 'click', () => {
-      if (this.textOnTheButton === 'resume game') {
-        resume();
-      }
-    });
-  }
-
   private removeModalWindow() {
     this.textNode.destroy();
     this.textNodeButton.destroy();

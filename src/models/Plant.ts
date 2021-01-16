@@ -128,6 +128,14 @@ export default class Plant {
     return this.isDestroyedFlag;
   }
 
+  public stop() {
+    this.isDestroyedFlag = true;
+  }
+
+  public continue() {
+    this.isDestroyedFlag = false;
+  }
+
   destroy() {
     this.isDestroyed();
     this.stopShooting();

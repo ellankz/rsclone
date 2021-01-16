@@ -87,7 +87,11 @@ export default class Level {
   }
 
   stopSunFall() {
-    this.sunFall.stop();
+    if (this.sunFall) this.sunFall.stop();
+  }
+
+  resumeSunFall() {
+    this.dropSuns();
   }
 
   stopLevel() {
@@ -236,7 +240,8 @@ export default class Level {
         }
 
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0) {
+          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0
+            && zombie.position.x < 950) {
             plant.switchState('attack', zombie, plant);
 
             if (zombie.health <= 0) {

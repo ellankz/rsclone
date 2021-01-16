@@ -55,7 +55,6 @@ export class FallingSun {
 
       this.sunFallingTimer = setTimeout(start, this.delay);
       this.engine.newSetTimeout(this.sunFallingTimer);
-      return this.sunFallingTimer;
     };
     start();
   }
