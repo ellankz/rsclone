@@ -630,7 +630,6 @@ interface SpriteStatesConfig {
 ---
 
 ## Loader
-
 Загрузчик загружает все mp3, png, jpg файлы из папки src/assets и создает Image и Audio элементы для каждого.
 Получить доступ к элементу можно таким образом:
 
@@ -671,6 +670,7 @@ engine.fullscreen = true;
    ```
 
 ---
+
 
 ## Examples
 

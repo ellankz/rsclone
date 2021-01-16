@@ -19,6 +19,8 @@ export default class Shot {
 
   type: string;
 
+  shoot: any;
+
   constructor(position: Vector, engine: Engine, type: string) {
     this.position = position;
     this.engine = engine;
@@ -34,14 +36,16 @@ export default class Shot {
       if (node.position.x >= this.engine.size.x + (LEFT_CAMERA_OFFSET_COEF * this.engine.size.x)) {
         node.destroy();
       }
-      if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)) {
+      if (zombie && zombie.position && zombie.position.x - node.position.x < -(SHOOT_LENGTH)
+      && zombie.position.x - node.position.x > -100 && plant.health > 0) {
         node.destroy();
         zombie.reduceHealth(plant.damage);
+        this.engine.audioPlayer.playSound('shot');
       }
     };
 
     image.addEventListener('load', () => {
-      this.engine.createNode({
+      this.shoot = this.engine.createNode({
         type: 'ImageNode',
         position: this.engine.vector(
           this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
@@ -53,5 +57,9 @@ export default class Shot {
       }, update)
         .addTo('scene');
     });
+  }
+
+  destroy() {
+    this.shoot.destroy();
   }
 }

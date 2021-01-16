@@ -58,6 +58,7 @@ export interface INode {
   sceneName: string;
   border?: string;
   opacity?: number;
+  name?: string;
 
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
@@ -123,6 +124,7 @@ export interface ISpriteNode extends INode {
   frames: number;
   startFrame: number;
   speed: number;
+  name?: string;
 
   draw: () => void;
   innerUpdate: () => void;
@@ -183,6 +185,7 @@ export interface NodeConfig {
   layer: ILayer;
   border?: string;
   opacity?: number;
+  name?: string;
 }
 
 export interface RectNodeConfig extends NodeConfig {
@@ -214,6 +217,7 @@ export interface SpriteNodeConfig extends NodeConfig {
   startFrame?: number;
   speed?: number;
   states: SpriteStatesConfig;
+  name? : string;
 }
 
 export interface InputNodeConfig extends NodeConfig {

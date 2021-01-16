@@ -65,7 +65,7 @@ export class Shovel {
       if (this.occupiedCells.has(cell)) {
         const plant: any = this.occupiedCells.get(cell);
         if (plant instanceof SunFlower) {
-          plant.stopCreatingSuns();
+          plant.stop();
         } else if (plant instanceof Peashooter) {
           plant.stopShooting();
         }
