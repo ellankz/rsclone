@@ -5,4 +5,12 @@ body {
 #game {
   width: 1030px;
   height: 600px;
+  font-family: "regular-samdan";
 }
+
+@font-face {
+  font-family: "regular-samdan"; 
+  src: url("../assets/fonts/Samdan.ttf") format("truetype"); 
+  font-style: normal; 
+  font-weight: normal; 
+} 

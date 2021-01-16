@@ -9,6 +9,8 @@ export class Peashooter extends Plant {
 
   public shooting: number | null = null;
 
+  public shot: Shot;
+
   constructor(config: PlantConfig, engine: Engine) {
     super(config, engine);
     this.shotType = this.plantPresets[config.type].shotType;
@@ -17,8 +19,8 @@ export class Peashooter extends Plant {
   startShooting(zombie: Zombie) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
-        const shot = new Shot(this.position, this.engine, this.shotType);
-        shot.draw(zombie, this);
+        this.shot = new Shot(this.position, this.engine, this.shotType);
+        this.shot.draw(zombie, this);
       };
       setTimeout(() => {
         if (this.shooting === null) {
@@ -31,6 +33,7 @@ export class Peashooter extends Plant {
 
   stopShooting() {
     super.stopShooting();
+    if (this.shot) this.shot.destroy();
     if (this.shotType && this.shooting) {
       window.clearInterval(this.shooting);
       this.shooting = null;

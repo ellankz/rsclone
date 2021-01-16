@@ -10,7 +10,7 @@ container.id = 'game';
 document.body.appendChild(container);
 
 const engine = new Engine(container, {
-  first: ['back', 'main', 'top'],
+  first: ['back', 'main', 'top', 'window'],
   loader: ['loader-back', 'loader'],
 });
 

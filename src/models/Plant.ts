@@ -141,15 +141,24 @@ export default class Plant {
     }
   }
 
-  public stopCreatingSuns() {
-    clearTimeout(this.timer);
+  public reduceAllHealth() {
+    this.health = 0;
+    return this.health;
   }
 
-  public isDestroyed(): void {
-    if (this.health <= 0) {
-      this.isDestroyedFlag = true;
-    }
+  public isDestroyed() {
+    this.isDestroyedFlag = true;
+    return this.isDestroyedFlag;
   }
+
+  public stop() {
+    this.isDestroyedFlag = true;
+  }
+
+  public continue() {
+    this.isDestroyedFlag = false;
+  }
+
 
   public isZombieInAttackArea(zombie: Zombie) {
     if (!this.states || !this.states.attack || !zombie.position) return false;
@@ -158,8 +167,8 @@ export default class Plant {
   }
 
   public destroy() {
-    this.stopCreatingSuns();
     this.isDestroyed();
+    this.stopShooting();
     this.node.destroy();
   }
 }
