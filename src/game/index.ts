@@ -10,6 +10,8 @@ import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import Pause from '../models/scenes/Pause';
 import ModalWindow from './ModalWindow';
+import { StartScreen } from './screens/StartScreen';
+
 import sounds from '../data/audio.json';
 
 const X_HOME = 150;
@@ -42,7 +44,8 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
@@ -60,6 +63,11 @@ export default class Game {
       };
     });
     this.engine.start('scene');
+  }
+
+  runFirstScreen(): void {
+    const startGameScreen = new StartScreen(this.engine, this.startGame.bind(this));
+    this.engine.setScreen('startScreen');
   }
 
   startGame() {

@@ -37,6 +37,7 @@ export class SunCreator {
       if (updateSunFunc && sunCount) {
         updateSunFunc(sunCount.suns + SUN_COST);
       }
+      this.engine.audioPlayer.playSound('sun'); // sound ---------
       this.instance.destroy();
       if (this.engine.getSceneNodes('scene').length === 0) {
         this.instance.clearLayer();

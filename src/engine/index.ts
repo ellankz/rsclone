@@ -14,12 +14,14 @@ import {
   NodeConfig,
   NodesType,
   NodesTypeName,
+  InputNodeConfig,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
 import Loader from './core/Loader';
 import AudioPlayer from './core/AudioPlayer';
 import Timeout from './core/Timeout';
+import InputNode from './nodes/InputNode';
 
 export default class Engine {
   size: Vector;
@@ -258,6 +260,9 @@ export default class Engine {
       }
       case 'SpriteNode': {
         return new SpriteNode(params as SpriteNodeConfig, update);
+      }
+      case 'InputNode': {
+        return new InputNode(params as InputNodeConfig, update);
       }
 
       default:
