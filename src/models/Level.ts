@@ -181,6 +181,7 @@ export default class Level {
       }
     });
     lawnCLeaner.run(preparedToDieAgain, () => {
+      this.reduceZombies();
       this.zombiesArr = this.deleteZombie();
     });
   }

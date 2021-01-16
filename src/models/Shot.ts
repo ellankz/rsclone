@@ -43,7 +43,7 @@ export default class Shot {
       }
     };
 
-    this.engine.createNode({
+    this.shoot = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
