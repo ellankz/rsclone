@@ -1,4 +1,3 @@
-import { platform } from 'os';
 import Engine from '../engine';
 import Level from '../models/Level';
 import Cell from './Cell';

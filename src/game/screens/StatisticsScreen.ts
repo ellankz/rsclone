@@ -1,4 +1,4 @@
-import { ScreenCreator } from './ScreenCreator';
+import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
 import Engine from '../../engine';
 import { DataService } from '../../api-service/DataService';
 import { IImageNode, ISpriteNode, ITextNode } from '../../engine/types';
@@ -214,13 +214,14 @@ export class StatisticsScreen extends ScreenCreator {
     this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonClose.position.x + 16,
+        buttonClose.position.x + 36,
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
       layer: STATISTICS_SCREEN_LAYERS[1],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
