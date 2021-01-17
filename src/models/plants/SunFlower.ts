@@ -6,6 +6,7 @@ import Cell from '../../game/Cell';
 const SUN_REPRODUCTION = 18000;
 const SUN_APPEARANCE_STATE = 350;
 const SUN_POSITION_SHIFT = 30;
+const SUN_COST = 25;
 const SUNFLOWER_GENERATE_STATE = 600;
 
 export class SunFlower extends Plant {

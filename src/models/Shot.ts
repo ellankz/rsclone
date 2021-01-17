@@ -27,8 +27,7 @@ export default class Shot {
   }
 
   draw(zombie: Zombie, plant: Plant) {
-    const image = new Image();
-    image.src = `assets/images/shot/${this.type}.png`;
+    const image = this.engine.loader.files[`assets/images/shot/${this.type}.png`] as HTMLImageElement;
 
     const update = (node: any) => {
       node.move(this.engine.vector(SHOT_SPEED, 0));
@@ -43,24 +42,17 @@ export default class Shot {
       }
     };
 
-    image.addEventListener('load', () => {
-      this.shoot = this.engine
-        .createNode(
-          {
-            type: 'ImageNode',
-            position: this.engine.vector(
-              this.position.x + SHOT_OFFSET_X,
-              this.position.y + SHOT_OFFSET_Y,
-            ),
-            size: this.engine.vector(image.width, image.height),
-            layer: `row-${plant.cell.position.y + 1}`,
-            img: image,
-            dh: image.height,
-          },
-          update,
-        )
-        .addTo('scene');
-    });
+    this.shoot = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
+      ),
+      size: this.engine.vector(image.width, image.height),
+      layer: `row-${plant.cell.position.y + 1}`,
+      img: image,
+      dh: image.height,
+    }, update)
+      .addTo('scene');
   }
 
   destroy() {

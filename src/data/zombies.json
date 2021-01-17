@@ -6,7 +6,7 @@
     "width": 166,
     "height": 144,
     "frames": 22,
-    "image": "./assets/sprites/zombies/basic/walk.png",
+    "image": "assets/sprites/zombies/basic/walk.png",
     "name": "basic",
     "states": {
       "walking": {
@@ -103,7 +103,7 @@
     "width": 166,
     "height": 144,
     "frames": 18,
-    "image": "./assets/sprites/zombies/basic_2/walk.png",
+    "image": "assets/sprites/zombies/basic_2/walk.png",
     "name": "basic_2",
     "states": {
       "walking": {

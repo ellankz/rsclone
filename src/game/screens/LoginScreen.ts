@@ -1,10 +1,11 @@
 import Engine from '../../engine';
-import { ScreenCreator } from './ScreenCreator';
+import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
 import { DataService } from '../../api-service/DataService';
 import { User } from '../../types';
 import { ISpriteNode, ITextNode, IInputNode } from '../../engine/types';
 
 const LOGIN_SCREEN_LAYERS: Array<string> = ['login-screen_background', 'login-screen-text', 'login-screen_inputs'];
+
 const LOGIN_SCREEN_SCREEN_NAME: string = 'loginScreen';
 const LOGIN_SCREEN_SCENE_NAME: string = 'loginScreen';
 
@@ -43,8 +44,7 @@ export class LoginScreen extends ScreenCreator {
   }
 
   private createNodes(): void {
-    // BACKGROUND COLOR
-    this.engine.createNode({
+    const backgroundColor = this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -52,7 +52,6 @@ export class LoginScreen extends ScreenCreator {
       color: '#323649',
     });
 
-    // BACKGROUND IMAGE
     const BACKGROUND = this.engine
       .loader.files['assets/images/interface/register.png'] as HTMLImageElement;
 
@@ -70,7 +69,7 @@ export class LoginScreen extends ScreenCreator {
     const BUTTON_CLOSE = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
-    const buttonClose = this.engine.createNode({
+    const buttonClose: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         (background.position.x) + (BACKGROUND.width / 2.7),
@@ -80,16 +79,18 @@ export class LoginScreen extends ScreenCreator {
       layer: LOGIN_SCREEN_LAYERS[2],
       img: BUTTON_CLOSE,
     });
-    const textButtonClose = this.engine.createNode({
+
+    const textButtonClose: any = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonClose.position.x + 20,
+        buttonClose.position.x + 30,
         buttonClose.position.y + 10,
       ),
       text: 'CLOSE',
       layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
@@ -103,11 +104,10 @@ export class LoginScreen extends ScreenCreator {
       this.engine.setScreen('startScreen');
     });
 
-    // BUTTON SIGN IN
     const BUTTON_SUBMIT = this.engine
       .loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
 
-    const buttonSubmit = this.engine.createNode({
+    const buttonSubmit: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
         (background.position.x) + (BACKGROUND.width / 4.6),
@@ -120,13 +120,14 @@ export class LoginScreen extends ScreenCreator {
     this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonSubmit.position.x + 20,
+        buttonSubmit.position.x + 30,
         buttonSubmit.position.y + 10,
       ),
       text: 'Sign in',
       layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(
@@ -151,13 +152,14 @@ export class LoginScreen extends ScreenCreator {
     this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        buttonRegister.position.x + 15,
+        buttonRegister.position.x + 25,
         buttonRegister.position.y + 10,
       ),
       text: 'Sing up',
       layer: LOGIN_SCREEN_LAYERS[2],
       fontSize: 25,
-      color: '#333',
+      color: TEXT_BUTTONS_COLOR,
+      font: TEXT_BUTTONS_FONT,
     });
 
     this.setActive(

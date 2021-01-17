@@ -1,5 +1,5 @@
 import Engine from '../../engine';
-import { ScreenCreator } from './ScreenCreator';
+import { ScreenCreator, TEXT_BUTTONS_FONT } from './ScreenCreator';
 import { LoginScreen } from './LoginScreen';
 import { StatisticsScreen } from './StatisticsScreen';
 import { LevelSelectionScreen } from './LevelSelectionScreen';
@@ -132,12 +132,13 @@ export class StartScreen extends ScreenCreator {
       type: 'TextNode',
       position: this.engine.vector(
         (autorizationBackground.position.x + LOGIN_CARD_IMG.width) / 3,
-        autorizationBackground.position.y + LOGIN_CARD_IMG.height / 2.5,
+        autorizationBackground.position.y + LOGIN_CARD_IMG.height / 2.4,
       ),
       text: this.userName,
       layer: START_SCREEN_LAYERS[0],
-      fontSize: 18,
+      fontSize: 16,
       color: '#fff',
+      font: TEXT_BUTTONS_FONT,
     }) as ITextNode;
 
     const LOGIN_BUTTON_IMG = this.engine
