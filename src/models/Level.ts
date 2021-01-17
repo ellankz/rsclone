@@ -9,6 +9,7 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import LawnCleaner from './LawnCleaner';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 
@@ -51,6 +52,8 @@ export default class Level {
 
   public isEnd: boolean;
 
+  public lawnCleaners: LawnCleaner[];
+
   private timer: any;
 
   public zombiesTimer: any;
@@ -77,6 +80,7 @@ export default class Level {
     this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
     this.plantCards = [];
+    this.lawnCleaners = [];
     this.preparedToPlant = null;
     this.cells = cells;
     this.occupiedCells = new Map();
@@ -129,6 +133,7 @@ export default class Level {
   startLevel() {
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
+    this.placeLawnCleaners();
     this.createZombies(this.creatingZombies);
     this.listenCellClicks();
     this.listenGameEvents();
@@ -139,6 +144,7 @@ export default class Level {
     this.isEnd = true;
     this.occupiedCells.clear();
     this.stopSunFall();
+    this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
     });
@@ -155,6 +161,29 @@ export default class Level {
     this.zombiesKilled = 0;
     this.plantsPlanted = 0;
     clearTimeout(this.timer);
+  }
+
+  handleZombieNearHome(zombie: Zombie) {
+    const lawnCLeaner = this.lawnCleaners[zombie.row];
+    if (lawnCLeaner) {
+      this.lawnCleaners[zombie.row] = undefined;
+      this.runOverWithLawnCleaner(lawnCLeaner, zombie.row);
+      return true;
+    }
+    return false;
+  }
+
+  runOverWithLawnCleaner(lawnCLeaner: LawnCleaner, row: number) {
+    const preparedToDieAgain: Zombie[] = [];
+    this.zombiesArr.forEach((zombie) => {
+      if (row === zombie.row) {
+        preparedToDieAgain.push(zombie);
+      }
+    });
+    lawnCLeaner.run(preparedToDieAgain, () => {
+      this.reduceZombies();
+      this.zombiesArr = this.deleteZombie();
+    });
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
@@ -352,6 +381,21 @@ export default class Level {
         });
       }
     }
+  }
+
+  placeLawnCleaners() {
+    this.cells[0].forEach((cell, index) => {
+      const lawnCleaner = new LawnCleaner(this.engine, cell, index);
+      lawnCleaner.draw();
+      this.lawnCleaners.push(lawnCleaner);
+    });
+  }
+
+  clearLawnCleaners() {
+    this.lawnCleaners.forEach((cleaner) => {
+      if (cleaner && cleaner.node) cleaner.node.destroy();
+    });
+    this.lawnCleaners = [];
   }
 
   dropSuns() {

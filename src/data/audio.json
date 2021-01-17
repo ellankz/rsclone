@@ -9,5 +9,6 @@
   "bleep": "assets/audio/bleep.mp3",
   "tap": "assets/audio/tap(menu).mp3",
   "sun": "assets/audio/points(pickup-sun).mp3",
-  "zombie-comming": "assets/audio/zombie-comming.mp3"
+  "zombie-comming": "assets/audio/zombie-comming.mp3",
+  "lawncleaner": "assets/audio/lawnmower.mp3"
 }
