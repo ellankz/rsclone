@@ -9,6 +9,7 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import { Shovel } from '../game/mechanics/Shovel';
 import LawnCleaner from './LawnCleaner';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
@@ -51,6 +52,8 @@ export default class Level {
   private sunFall: FallingSun;
 
   public isEnd: boolean;
+
+  private Shovel: Shovel;
 
   public lawnCleaners: LawnCleaner[];
 
@@ -131,6 +134,7 @@ export default class Level {
   }
 
   startLevel() {
+    this.addShovel();
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
     this.placeLawnCleaners();
@@ -403,5 +407,15 @@ export default class Level {
       this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
     );
     this.sunFall.init();
+  }
+
+  addShovel(): void {
+    const shovel: any = new Shovel(
+      this.engine,
+      this.occupiedCells,
+      this.cells,
+      this.deletePlant.bind(this),
+      this.plantsArr,
+    );
   }
 }
