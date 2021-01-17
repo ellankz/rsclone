@@ -111,7 +111,8 @@ export default class Game {
 
         this.currentLevel.zombiesArr.forEach((zombie) => {
           if (zombie.position && zombie.position.x < X_HOME) {
-            this.endLoose();
+            const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
+            if (!lawnCleanerWorked) this.endLoose();
           }
         });
       }
