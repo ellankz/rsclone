@@ -96,6 +96,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
       dh: this.dh,
       border: this.border,
       opacity: this.opacity,
+      filter: this.filter,
     });
   }
 

@@ -199,7 +199,7 @@ export default class Game {
     const plants = this.currentLevel.getPlants();
     for (let i = 0; i < plants.length; i += 1) {
       setTimeout(() => {
-        plants[i].continue();
+        plants[i]?.continue();
       }, i * 2000);
     }
   }

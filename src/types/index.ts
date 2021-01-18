@@ -60,7 +60,13 @@ export interface PlantStatesPreset {
   };
 }
 
-export type PlantType = 'SunFlower' | 'Peashooter' | 'WallNut' | 'Chomper' | 'CherryBomb';
+export type PlantType =
+  | 'SunFlower'
+  | 'Peashooter'
+  | 'WallNut'
+  | 'Chomper'
+  | 'CherryBomb'
+  | 'SnowPea';
 
 export interface PlantConfig {
   type: PlantType;
@@ -72,8 +78,8 @@ export interface LevelConfig {
 }
 
 export interface User {
-  login: string,
-  password: string,
+  login: string;
+  password: string;
 }
 
 export interface Game {

@@ -33,8 +33,6 @@ export class Sun {
 
   states: SpriteStatesConfig;
 
-  removeEventBubbling?: string[];
-
   constructor(
     engine: Engine,
     layerName: string,
@@ -48,7 +46,6 @@ export class Sun {
     this.size = engine.vector(1716, 78);
     this.layer = layerName;
     this.name = 'sun';
-    this.removeEventBubbling = ['click'];
 
     this.img = engine.loader.files[SUN_IMG] as HTMLImageElement;
     const sunOpacity = engine.loader.files[SUN_OPACITY_IMG] as HTMLImageElement;

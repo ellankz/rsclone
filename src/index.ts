@@ -17,6 +17,9 @@ const engine = new Engine(container, {
   loader: ['loader-back', 'loader'],
 });
 
+engine.getLayer('window').removeEventBubbling.push('click');
+engine.getLayer('top').removeEventBubbling.push('click');
+
 const dataService = new DataService();
 // engine.fullscreen = true;
 const game = new Game(engine, dataService);

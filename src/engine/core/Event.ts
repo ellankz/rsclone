@@ -119,6 +119,9 @@ export default class Event {
 
     for (let i = 0; i < nodes.length; i += 1) {
       const node = nodes[i];
+      const layerEventBubbling = !node.layer.removeEventBubbling.includes(event);
+      const nodeEventBubbling = !node.removeEventBubbling.includes(event);
+
       const pos = new Vector(
         node.position.x - node.layer.view.position.x,
         node.position.y - node.layer.view.position.y,
@@ -147,7 +150,7 @@ export default class Event {
             this.hovered = [];
           }
 
-          if (!eventBubbling || node.removeEventBubbling.includes(event)) return;
+          if (!eventBubbling || !layerEventBubbling || !nodeEventBubbling) return;
         } else if (this.hovered.includes(node)) {
           this.hovered.splice(this.hovered.indexOf(node), 1);
 
@@ -160,7 +163,7 @@ export default class Event {
           this.events[event].get(node).forEach((cb) => cb(e));
         }
 
-        if (!eventBubbling || node.removeEventBubbling.includes(event)) return;
+        if (!eventBubbling || !layerEventBubbling || !nodeEventBubbling) return;
       }
     }
   }

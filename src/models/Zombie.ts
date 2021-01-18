@@ -6,6 +6,7 @@ import Cell from '../game/Cell';
 import Plant from './Plant';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
+import Timeout from '../engine/core/Timeout';
 
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
@@ -55,6 +56,10 @@ export default class Zombie {
   private states: { [dynamic: string]: ZombiesStatesPreset };
 
   private attackedPlant: Plant;
+
+  private isSlow: boolean;
+
+  private slowTimeout: number;
 
   public isDestroyedFlag: boolean;
 
@@ -200,6 +205,7 @@ export default class Zombie {
         startFrame: 0,
         speed: 80,
         dh: 180,
+        filter: this.isSlow ? 'hue-rotate(145deg) saturate(1.5)' : '',
       })
       .addTo('scene') as ISpriteNode;
 
@@ -233,6 +239,26 @@ export default class Zombie {
     setTimeout(() => {
       this.node.destroy();
     }, 2200);
+  }
+
+  public slow() {
+    if (this.isDestroyedFlag) return;
+
+    if (!this.isSlow) {
+      this.node.filter = 'hue-rotate(145deg) saturate(1.5)';
+      this.zombieSpeed -= 0.07;
+      this.isSlow = true;
+      this.node.speed += 40;
+    }
+
+    if (this.slowTimeout) clearTimeout(this.slowTimeout);
+
+    this.slowTimeout = window.setTimeout(() => {
+      this.zombieSpeed = SPEED;
+      this.node.filter = '';
+      this.isSlow = false;
+      this.node.speed = this.speed;
+    }, 5000);
   }
 
   private trackPosition() {

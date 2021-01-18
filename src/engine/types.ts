@@ -58,6 +58,7 @@ export interface INode {
   sceneName: string;
   border?: string;
   opacity?: number;
+  filter?: string;
   name?: string;
 
   removeEventBubbling: string[];
@@ -159,6 +160,7 @@ export interface ILayer {
   view: IView;
   nodes: NodesType[];
   screen: string;
+  removeEventBubbling: string[];
 
   toTop: (n?: number) => void;
   toBack: (n?: number) => void;
@@ -188,6 +190,7 @@ export interface NodeConfig {
   layer: ILayer;
   border?: string;
   opacity?: number;
+  filter?: string;
   name?: string;
   removeEventBubbling?: string[];
 }
@@ -236,6 +239,7 @@ export interface RectConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface CircleConfig {
@@ -245,6 +249,7 @@ export interface CircleConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface TextConfig {
@@ -256,6 +261,7 @@ export interface TextConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface ImageConfig {
@@ -270,6 +276,7 @@ export interface ImageConfig {
   dw: number;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface SceneConfig {

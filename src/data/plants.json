@@ -160,5 +160,33 @@
         }
       }
     }
+  },
+  "SnowPea": {
+    "cost": 175,
+    "damage": 20,
+    "recharge": 2,
+    "sunProduction": 0,
+    "health": 100,
+    "image": "assets/sprites/plants/SnowPea/0.png",
+    "name": "SnowPea",
+    "frames": 15,
+    "speed": 100,
+    "width": 71,
+    "height": 71,
+    "shotType": "snow",
+    "states": {
+      "attack": {
+        "image": "assets/sprites/plants/SnowPea/1.png",
+        "frames": 8,
+        "speed": 225,
+        "width": 84,
+        "height": 80,
+        "dh": 75,
+        "positionAdjust": {
+          "x": -5,
+          "y": 0
+        }
+      }
+    }
   }
 }

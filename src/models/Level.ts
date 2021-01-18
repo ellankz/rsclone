@@ -12,6 +12,7 @@ import { Peashooter } from './plants/Peashooter';
 import { WallNut } from './plants/WallNut';
 import { Chomper } from './plants/Chomper';
 import { CherryBomb } from './plants/CherryBomb';
+import { SnowPea } from './plants/SnowPea';
 
 import { Shovel } from '../game/mechanics/Shovel';
 import LawnCleaner from './LawnCleaner';
@@ -54,7 +55,7 @@ export default class Level {
 
   private sunCounter: SunCount;
 
-  private sunFall: FallingSun;
+  public sunFall: FallingSun;
 
   public isEnd: boolean;
 
@@ -62,7 +63,7 @@ export default class Level {
 
   public lawnCleaners: LawnCleaner[];
 
-  private timer: any;
+  public timer: any;
 
   public zombiesTimer: any;
 
@@ -228,6 +229,9 @@ export default class Level {
       case 'CherryBomb':
         newPlant = new CherryBomb({ type }, this.engine, this.zombiesArr, this.occupiedCells);
         break;
+      case 'SnowPea':
+        newPlant = new SnowPea({ type }, this.engine);
+        break;
       default:
         newPlant = new Plant({ type }, this.engine);
         break;
@@ -305,6 +309,8 @@ export default class Level {
   public listenGameEvents() {
     const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
 
+    if (this.timer) clearTimeout(this.timer);
+
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
@@ -326,6 +332,7 @@ export default class Level {
 
       if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
     };
+
     trackPosition();
   }
 

@@ -38,20 +38,27 @@ export default class Shot {
       && zombie.position.x - node.position.x > -100 && plant.health > 0) {
         node.destroy();
         zombie.reduceHealth(plant.damage);
+        if (zombie.health <= 0) zombie.remove();
+        if (this.type === 'snow') zombie.slow();
         this.engine.audioPlayer.playSound('shot');
       }
     };
 
-    this.shoot = this.engine.createNode({
-      type: 'ImageNode',
-      position: this.engine.vector(
-        this.position.x + SHOT_OFFSET_X, this.position.y + SHOT_OFFSET_Y,
-      ),
-      size: this.engine.vector(image.width, image.height),
-      layer: `row-${plant.cell.position.y + 1}`,
-      img: image,
-      dh: image.height,
-    }, update)
+    this.shoot = this.engine
+      .createNode(
+        {
+          type: 'ImageNode',
+          position: this.engine.vector(
+            this.position.x + SHOT_OFFSET_X,
+            this.position.y + SHOT_OFFSET_Y,
+          ),
+          size: this.engine.vector(image.width, image.height),
+          layer: `row-${plant.cell.position.y + 1}`,
+          img: image,
+          dh: image.height,
+        },
+        update,
+      )
       .addTo('scene');
   }
 

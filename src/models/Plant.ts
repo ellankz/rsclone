@@ -136,9 +136,7 @@ export default class Plant {
   }
 
   public stopShooting() {
-    if (this.isShooting) {
-      this.isShooting = false;
-    }
+    this.isShooting = false;
   }
 
   public reduceAllHealth() {
@@ -167,7 +165,7 @@ export default class Plant {
 
   public destroy() {
     this.isDestroyed();
-    this.stopShooting();
+    this.stopAttack();
     this.node.destroy();
   }
 }

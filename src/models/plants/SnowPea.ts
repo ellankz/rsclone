@@ -4,7 +4,7 @@ import Plant from '../Plant';
 import Shot from '../Shot';
 import Zombie from '../Zombie';
 
-export class Peashooter extends Plant {
+export class SnowPea extends Plant {
   public shot: Shot;
 
   public shotType?: string;
@@ -19,7 +19,11 @@ export class Peashooter extends Plant {
   startShooting(zombie: Zombie) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
-        this.shot = new Shot(this.position, this.engine, this.shotType);
+        this.shot = new Shot(
+          this.engine.vector(this.position.x, this.position.y - 6),
+          this.engine,
+          this.shotType,
+        );
         this.shot.draw(zombie, this);
       };
       setTimeout(() => {
