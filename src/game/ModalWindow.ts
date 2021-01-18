@@ -21,6 +21,10 @@ export default class ModalWindow {
 
   textOnTheButton: string;
 
+  exitButtonNode: ImageNode;
+
+  exitButtonTextNode: TextNode;
+
   constructor(engine: Engine, modalWindowText: string, textOnTheButton: string) {
     this.engine = engine;
     this.bgImage = this.engine.loader.files['assets/images/interface/window.png'] as HTMLImageElement;
@@ -34,6 +38,7 @@ export default class ModalWindow {
     this.drawButton();
     this.drawText();
     this.drawTextButton();
+    this.drawExitButton();
     this.addEventListenerToButton();
   }
 
@@ -43,7 +48,7 @@ export default class ModalWindow {
         type: 'TextNode',
         position: this.engine.vector(
           (this.engine.size.x / 2) - 90,
-          (this.engine.size.y / 2) - 40,
+          (this.engine.size.y / 2) - 70,
         ),
         text: this.modalWindowText,
         layer: 'window',
@@ -90,7 +95,7 @@ export default class ModalWindow {
       {
         type: 'ImageNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 55,
+          (this.engine.size.x / 2) - 135,
           (this.engine.size.y / 2) + 95,
         ),
         size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -106,7 +111,7 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 40,
+          (this.engine.size.x / 2) - 118,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
@@ -121,7 +126,7 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 28,
+          (this.engine.size.x / 2) - 110,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
@@ -131,6 +136,35 @@ export default class ModalWindow {
         color: '#0daf1b',
       }) as TextNode;
     }
+  }
+
+  private drawExitButton() {
+    this.exitButtonNode = this.engine.createNode(
+      {
+        type: 'ImageNode',
+        position: this.engine.vector(
+          (this.engine.size.x / 2) + 30,
+          (this.engine.size.y / 2) + 95,
+        ),
+        size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+        layer: 'window',
+        img: this.button,
+        dh: 800,
+      },
+    ) as ImageNode;
+
+    this.exitButtonTextNode = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) + 55,
+        (this.engine.size.y / 2) + 110,
+      ),
+      text: 'main menu',
+      layer: 'window',
+      font: 'regular-samdan',
+      fontSize: 26,
+      color: '#0daf1b',
+    }) as TextNode;
   }
 
   public addEventListenerToButton() {
@@ -149,6 +183,10 @@ export default class ModalWindow {
     this.engine.on(this.buttonNode, 'click', () => {
       this.removeModalWindow();
     });
+
+    this.engine.on(this.exitButtonNode, 'click', () => {
+      this.removeModalWindow();
+    });
   }
 
   private removeModalWindow() {
@@ -156,5 +194,7 @@ export default class ModalWindow {
     this.textNodeButton.destroy();
     this.bgNode.destroy();
     this.buttonNode.destroy();
+    this.exitButtonNode.destroy();
+    this.exitButtonTextNode.destroy();
   }
 }
