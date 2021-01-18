@@ -36,4 +36,10 @@ export class ScreenCreator {
       copyButton.clearLayer();
     });
   }
+
+  protected setLink(node: any, link: string): void {
+    this.engine.on(node, 'click', () => {
+      window.open(link, '_blank');
+    });
+  }
 }

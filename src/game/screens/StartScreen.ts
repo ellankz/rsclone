@@ -9,6 +9,7 @@ import { ITextNode } from '../../engine/types';
 const START_SCREEN_LAYERS: Array<string> = ['start-screen_background', 'start-screen_buttons'];
 const START_SCREEN_SCREEN_NAME: string = 'startScreen';
 const START_SCREEN_SCENE_NAME: string = 'startScreen';
+const FOOTER_FONT_SIZE: number = 13;
 
 export class StartScreen extends ScreenCreator {
   public userName: string = 'Guest';
@@ -31,6 +32,7 @@ export class StartScreen extends ScreenCreator {
     this.dataService = dataService;
     this.createLayers(START_SCREEN_LAYERS);
     this.createNodes();
+    this.createFooter();
     this.engine.createScreen(START_SCREEN_SCREEN_NAME, START_SCREEN_LAYERS);
     this.engine.createScene(START_SCREEN_SCENE_NAME);
     this.loginScreen = new LoginScreen(
@@ -165,5 +167,108 @@ export class StartScreen extends ScreenCreator {
     this.userName = name;
     this.userNameNode.text = name;
     this.userNameNode.clearLayer();
+  }
+
+  createFooter() {
+    const RSS_LOGO = this.engine
+      .loader.files['assets/images/interface/rssLogo.png'] as HTMLImageElement;
+    const GITHUB_LOGO = this.engine
+      .loader.files['assets/images/interface/githubLogo.png'] as HTMLImageElement;
+    const ZOMBIE_LOGO = this.engine
+      .loader.files['assets/images/interface/zombieLogo.png'] as HTMLImageElement;
+
+    const zombieLogo: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        25,
+        this.engine.size.y - 65,
+      ),
+      size: this.engine.vector(406, 709),
+      layer: START_SCREEN_LAYERS[1],
+      img: ZOMBIE_LOGO,
+      dh: 60,
+    });
+
+    const rssLogo: any = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        10,
+        this.engine.size.y - 65,
+      ),
+      size: this.engine.vector(402, 203),
+      layer: START_SCREEN_LAYERS[1],
+      img: RSS_LOGO,
+      dh: 60,
+    });
+
+    const githubLena = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.engine.size.x - 48,
+        zombieLogo.position.y,
+      ),
+      text: 'ellankz',
+      layer: START_SCREEN_LAYERS[1],
+      fontSize: FOOTER_FONT_SIZE,
+      font: TEXT_BUTTONS_FONT,
+      color: '#fff',
+    });
+
+    const githubLiza = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.engine.size.x - 55,
+        githubLena.position.y + 15,
+      ),
+      text: 'Liza-Veis',
+      layer: START_SCREEN_LAYERS[1],
+      fontSize: FOOTER_FONT_SIZE,
+      font: TEXT_BUTTONS_FONT,
+      color: '#fff',
+    });
+
+    const githubUlyana = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.engine.size.x - 60,
+        githubLiza.position.y + 15,
+      ),
+      text: 'ulyana-zh',
+      layer: START_SCREEN_LAYERS[1],
+      fontSize: FOOTER_FONT_SIZE,
+      font: TEXT_BUTTONS_FONT,
+      color: '#fff',
+    });
+
+    const githubVlad = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.engine.size.x - 70,
+        githubUlyana.position.y + 15,
+      ),
+      text: 'VVladislaVLL',
+      layer: START_SCREEN_LAYERS[1],
+      fontSize: FOOTER_FONT_SIZE,
+      font: TEXT_BUTTONS_FONT,
+      color: '#fff',
+    });
+
+    this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        githubVlad.position.x - 60,
+        zombieLogo.position.y,
+      ),
+      size: this.engine.vector(512, 512),
+      layer: START_SCREEN_LAYERS[1],
+      img: GITHUB_LOGO,
+      dh: 58,
+    });
+
+    this.setLink(rssLogo, 'https://rs.school/js/');
+    this.setLink(githubLena, 'https://github.com/ellankz');
+    this.setLink(githubLiza, 'https://github.com/Liza-Veis');
+    this.setLink(githubUlyana, 'https://github.com/ulyana-zh');
+    this.setLink(githubVlad, 'https://github.com/VVladislaVLL');
   }
 }
