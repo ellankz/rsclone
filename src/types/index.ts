@@ -66,7 +66,8 @@ export type PlantType =
   | 'WallNut'
   | 'Chomper'
   | 'CherryBomb'
-  | 'SnowPea';
+  | 'SnowPea'
+  | 'PotatoMine';
 
 export interface PlantConfig {
   type: PlantType;

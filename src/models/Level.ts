@@ -13,6 +13,7 @@ import { WallNut } from './plants/WallNut';
 import { Chomper } from './plants/Chomper';
 import { CherryBomb } from './plants/CherryBomb';
 import { SnowPea } from './plants/SnowPea';
+import { PotatoMine } from './plants/PotatoMine';
 
 import { Shovel } from '../game/mechanics/Shovel';
 import LawnCleaner from './LawnCleaner';
@@ -231,6 +232,9 @@ export default class Level {
         break;
       case 'SnowPea':
         newPlant = new SnowPea({ type }, this.engine);
+        break;
+      case 'PotatoMine':
+        newPlant = new PotatoMine({ type }, this.engine, this.zombiesArr, this.occupiedCells);
         break;
       default:
         newPlant = new Plant({ type }, this.engine);

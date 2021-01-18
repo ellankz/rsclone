@@ -188,5 +188,56 @@
         }
       }
     }
+  },
+  "PotatoMine": {
+    "cost": 25,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 100,
+    "width": 68,
+    "height": 50,
+    "image": "assets/sprites/plants/PotatoMine/0.png",
+    "name": "PotatoMine",
+    "frames": 8,
+    "speed": 200,
+    "states": {
+      "notReady": {
+        "image": "assets/sprites/plants/PotatoMine/1.png",
+        "frames": 1,
+        "speed": 0,
+        "width": 68,
+        "height": 50,
+        "dh": 50,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "grow": {
+        "image": "assets/sprites/plants/PotatoMine/2.png",
+        "frames": 4,
+        "speed": 120,
+        "width": 68,
+        "height": 50,
+        "dh": 50,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "attack": {
+        "image": "assets/sprites/plants/PotatoMine/3.png",
+        "frames": 9,
+        "speed": 100,
+        "width": 263,
+        "height": 125,
+        "dh": 110,
+        "positionAdjust": {
+          "x": -65,
+          "y": -50
+        }
+      }
+    }
   }
 }

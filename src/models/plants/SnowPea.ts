@@ -20,7 +20,7 @@ export class SnowPea extends Plant {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
         this.shot = new Shot(
-          this.engine.vector(this.position.x, this.position.y - 6),
+          this.engine.vector(this.position.x, this.position.y - 5),
           this.engine,
           this.shotType,
         );

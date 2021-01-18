@@ -6,14 +6,11 @@ import Cell from '../game/Cell';
 import Plant from './Plant';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
-import Timeout from '../engine/core/Timeout';
 
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
 const X_MIN = -20;
 const X_MAX = -90;
-const Y_MIN = -5;
-const Y_MAX = -70;
 
 const X_AXIS = 960;
 const Y_AXIS = 5;
@@ -130,8 +127,8 @@ export default class Zombie {
     occupiedCells.forEach((plant, cell) => {
       if (this.node.position.x - plant.position.x < X_MIN
         && this.node.position.x - plant.position.x > X_MAX
-        && this.node.position.y - plant.position.y < Y_MIN
-        && this.node.position.y - plant.position.y > Y_MAX) {
+        && this.row === plant.cell.position.y
+      ) {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
         this.makeDamage(plant);
