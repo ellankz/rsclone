@@ -10,7 +10,7 @@ import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 
-const BG_URL = 'assets/images/interface/background1.jpg';
+const BG_URL = 'assets/images/interface/background1.png';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
 
@@ -142,7 +142,7 @@ export default class Level {
           size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
           layer,
           img: image,
-          dh: this.engine.size.y,
+          dh: this.engine.size.y * 1.4,
         },
       );
   }
@@ -221,7 +221,6 @@ export default class Level {
 
       this.engine.newSetTimeout(this.zombiesTimer);
     }
-
     return this.creatingZombies;
   }
 

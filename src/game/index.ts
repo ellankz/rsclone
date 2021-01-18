@@ -9,7 +9,6 @@ import LoaderScreen from './screens/LoaderScreen';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import Pause from '../models/scenes/Pause';
-import ModalWindow from './ModalWindow';
 import { StartScreen } from './screens/StartScreen';
 
 import sounds from '../data/audio.json';
@@ -24,8 +23,6 @@ export default class Game {
   private win: WinScene;
 
   private loose: LooseScene;
-
-  private modalWindow: ModalWindow;
 
   public currentLevel: Level;
 
@@ -44,7 +41,7 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+    //const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
@@ -74,7 +71,7 @@ export default class Game {
     // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
-    this.currentLevel = this.createLevel(0);
+    this.currentLevel = this.createLevel(1);
     this.engine.setScreen('first');
   }
 
