@@ -33,12 +33,14 @@ export class Sun {
 
   states: SpriteStatesConfig;
 
-  constructor(engine: Engine,
+  constructor(
+    engine: Engine,
     layerName: string,
     posCoordinates?: Array<number>,
     dh?: number,
     speed?: number,
-    name?: string) {
+    name?: string,
+  ) {
     this.type = 'SpriteNode';
     this.position = engine.vector(posCoordinates[0] || 0, posCoordinates[1] || 0);
     this.size = engine.vector(1716, 78);

@@ -20,17 +20,19 @@ export class SunCreator {
 
   public name: string;
 
-  constructor(engine: Engine,
+  constructor(
+    engine: Engine,
     posCoordinates: Array<number>,
     layer: string,
     name?: string,
     updateSunFunc?: (sun: number) => void,
-    sunCount?: { suns:number },
-    update?: () => void) {
+    sunCount?: { suns: number },
+    update?: () => void,
+  ) {
     this.engine = engine;
     this.name = name;
     this.posCoordinates = posCoordinates;
-    this.instance = (update) ? this.createNode(layer, update) : this.createNode(layer);
+    this.instance = update ? this.createNode(layer, update) : this.createNode(layer);
     this.changeAnimation(this.instance.position);
 
     this.engine.on(this.instance, 'click', () => {
@@ -47,9 +49,14 @@ export class SunCreator {
 
   private createNode(layer: string, update?: () => void): any {
     const sunConfig: any = new Sun(
-      this.engine, layer, this.posCoordinates, this.dh, this.speed, this.name,
+      this.engine,
+      layer,
+      this.posCoordinates,
+      this.dh,
+      this.speed,
+      this.name,
     );
-    return (update) ? this.engine.createNode(sunConfig, update) : this.engine.createNode(sunConfig);
+    return update ? this.engine.createNode(sunConfig, update) : this.engine.createNode(sunConfig);
   }
 
   private changeAnimation(position: Vector): void {
