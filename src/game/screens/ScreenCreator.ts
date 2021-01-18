@@ -1,5 +1,8 @@
 import Engine from '../../engine';
 
+export const TEXT_BUTTONS_COLOR: string = '#0daf1b';
+export const TEXT_BUTTONS_FONT: string = 'regular-samdan';
+
 export class ScreenCreator {
   protected engine: Engine;
 

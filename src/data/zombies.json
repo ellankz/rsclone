@@ -6,7 +6,7 @@
     "width": 166,
     "height": 144,
     "frames": 22,
-    "image": "./assets/sprites/zombies/basic/walk.png",
+    "image": "assets/sprites/zombies/basic/walk.png",
     "name": "basic",
     "states": {
       "walking": {
@@ -75,7 +75,7 @@
     "width": 166,
     "height": 144,
     "frames": 18,
-    "image": "./assets/sprites/zombies/basic_2/walk.png",
+    "image": "assets/sprites/zombies/basic_2/walk.png",
     "name": "basic_2",
     "states": {
       "walking": {
@@ -776,69 +776,93 @@
   },
   "pole": {
     "speed": 80,
-    "health": 220,
+    "health": 420,
     "damage": 25,
-    "width": 154,
-    "height": 160,
-    "frames": 11,
-    "image": "assets/sprites/zombies/football/walk.png",
-    "name": "football",
+    "width": 348,
+    "height": 218,
+    "frames": 10,
+    "image": "assets/sprites/zombies/pole/walk.png",
+    "name": "pole",
     "states": {
       "walking": {
-        "image": "assets/sprites/zombies/football/walk.png",
-        "frames": 11,
+        "image": "assets/sprites/zombies/pole/walk.png",
+        "frames": 10,
         "speed": 80,
-        "width": 154,
-        "height": 160,
-        "dh": 160
+        "width": 348,
+        "height": 218,
+        "dh": 218
       },
       "stop": {
-        "image": "assets/sprites/zombies/football/stop.png",
-        "frames": 15,
+        "image": "assets/sprites/zombies/pole/stop.png",
+        "frames": 9,
         "speed": 90,
-        "width": 154,
-        "height": 172,
-        "dh": 172
+        "width": 348,
+        "height": 218,
+        "dh": 218
       },
       "attack": {
-        "image": "assets/sprites/zombies/football/attack.png",
-        "frames": 10,
+        "image": "assets/sprites/zombies/pole/attack.png",
+        "frames": 14,
         "speed": 110,
-        "width": 154,
-        "height": 160,
-        "dh": 160
+        "width": 348,
+        "height": 218,
+        "dh": 218
       }, 
       "death": {
-        "image": "assets/sprites/zombies/football/death.png",
-        "frames": 7,
+        "image": "assets/sprites/zombies/pole/death.png",
+        "frames": 9,
         "speed": 100,
-        "width": 236,
-        "height": 170,
-        "dh": 170
+        "width": 348,
+        "height": 218,
+        "dh": 218
       },
       "lost_head": {
-        "image": "assets/sprites/zombies/football/lost_head.png",
-        "frames": 10,
+        "image": "assets/sprites/zombies/pole/lost_head.png",
+        "frames": 29,
         "speed": 100,
-        "width": 154,
-        "height": 160,
-        "dh": 160
+        "width": 348,
+        "height": 218,
+        "dh": 218
       }, 
       "end": {
-        "image": "assets/sprites/zombies/football/end.png",
+        "image": "assets/sprites/zombies/pole/end.png",
         "frames": 1,
         "speed": 150,
-        "width": 236,
-        "height": 170,
-        "dh": 170
+        "width": 348,
+        "height": 218,
+        "dh": 218
       },
       "boom": {
-        "image": "assets/sprites/zombies/football/boom.png",
+        "image": "assets/sprites/zombies/pole/boom.png",
         "frames": 20,
         "speed": 120,
-        "width": 166,
-        "height": 160,
-        "dh": 160
+        "width": 348,
+        "height": 218,
+        "dh": 218
+      },
+      "jump": {
+        "image": "assets/sprites/zombies/pole/jump.png",
+        "frames": 10,
+        "speed": 80,
+        "width": 348,
+        "height": 218,
+        "dh": 218
+      },
+      "jumpEnd": {
+        "image": "assets/sprites/zombies/pole/jump_end.png",
+        "frames": 7,
+        "speed": 80,
+        "width": 348,
+        "height": 218,
+        "dh": 218
+      },
+      "walkingSlow": {
+        "image": "assets/sprites/zombies/pole/walk_slow.png",
+        "frames": 25,
+        "speed": 100,
+        "width": 348,
+        "height": 218,
+        "dh": 218
       }
     }
   }

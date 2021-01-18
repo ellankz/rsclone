@@ -9,8 +9,12 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import { Shovel } from '../game/mechanics/Shovel';
+import LawnCleaner from './LawnCleaner';
+import levels from '../data/levels.json';
+import { DataService } from '../api-service/DataService';
 
-const BG_URL = 'assets/images/interface/background1.png';
+const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
 
@@ -49,19 +53,37 @@ export default class Level {
 
   public isEnd: boolean;
 
+  private Shovel: Shovel;
+
+  public lawnCleaners: LawnCleaner[];
+
   private timer: any;
 
   public zombiesTimer: any;
 
   public restZombies: number;
 
+  private zombiesKilled: number = 0;
+
+  private plantsPlanted: number = 0;
+
+  levelConfig: LevelConfig;
+
+  levelIndex: number;
+
+  dataService: DataService;
+
   public creatingZombies: number = 0;
 
-  constructor(levelConfig: LevelConfig, engine: Engine, cells: Cell[][]) {
-    this.zombiesConfig = levelConfig.zombies;
-    this.plantTypes = levelConfig.plantTypes;
+  constructor(levelIndex: number, engine: Engine, cells: Cell[][], dataService: DataService) {
+    this.levelIndex = levelIndex;
+    this.dataService = dataService;
+    this.levelConfig = levels[levelIndex] as LevelConfig;
+    this.zombiesConfig = this.levelConfig.zombies;
+    this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
     this.plantCards = [];
+    this.lawnCleaners = [];
     this.preparedToPlant = null;
     this.cells = cells;
     this.occupiedCells = new Map();
@@ -75,35 +97,12 @@ export default class Level {
     return this;
   }
 
-  startLevel() {
-    this.isEnd = false;
-    this.restZombies = this.zombiesConfig.length;
-    this.createZombies(this.creatingZombies);
-    this.listenCellClicks();
-    this.listenGameEvents();
-    this.dropSuns();
-  }
-
   stopSunFall() {
     if (this.sunFall) this.sunFall.stop();
   }
 
   resumeSunFall() {
     this.dropSuns();
-  }
-
-  stopLevel() {
-    this.isEnd = true;
-    this.occupiedCells.clear();
-    this.stopSunFall();
-    this.zombiesArr.forEach((zombie) => {
-      zombie.stop();
-    });
-    this.plantsArr.forEach((plant) => {
-      plant.stopShooting();
-      plant.isDestroyed();
-    });
-    clearTimeout(this.timer);
   }
 
   public getZombies() {
@@ -129,8 +128,66 @@ export default class Level {
   }
 
   private reduceZombies() {
+    this.zombiesKilled += 1;
     this.restZombies -= 1;
     return this.restZombies;
+  }
+
+  startLevel() {
+    this.addShovel();
+    this.isEnd = false;
+    this.restZombies = this.zombiesConfig.length;
+    this.placeLawnCleaners();
+    this.createZombies(this.creatingZombies);
+    this.listenCellClicks();
+    this.listenGameEvents();
+    this.dropSuns();
+  }
+
+  stopLevel(hasWon: boolean) {
+    this.isEnd = true;
+    this.occupiedCells.clear();
+    this.stopSunFall();
+    this.clearLawnCleaners();
+    this.zombiesArr.forEach((zombie) => {
+      zombie.stop();
+    });
+    this.plantsArr.forEach((plant) => {
+      plant.stopShooting();
+      plant.isDestroyed();
+    });
+    this.dataService.saveGame({
+      level: this.levelIndex + 1,
+      win: hasWon,
+      zombiesKilled: this.zombiesKilled,
+      plantsPlanted: this.plantsPlanted,
+    });
+    this.zombiesKilled = 0;
+    this.plantsPlanted = 0;
+    clearTimeout(this.timer);
+  }
+
+  handleZombieNearHome(zombie: Zombie) {
+    const lawnCLeaner = this.lawnCleaners[zombie.row];
+    if (lawnCLeaner) {
+      this.lawnCleaners[zombie.row] = undefined;
+      this.runOverWithLawnCleaner(lawnCLeaner, zombie.row);
+      return true;
+    }
+    return false;
+  }
+
+  runOverWithLawnCleaner(lawnCLeaner: LawnCleaner, row: number) {
+    const preparedToDieAgain: Zombie[] = [];
+    this.zombiesArr.forEach((zombie) => {
+      if (row === zombie.row) {
+        preparedToDieAgain.push(zombie);
+      }
+    });
+    lawnCLeaner.run(preparedToDieAgain, () => {
+      this.reduceZombies();
+      this.zombiesArr = this.deleteZombie();
+    });
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
@@ -142,7 +199,7 @@ export default class Level {
           size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
           layer,
           img: image,
-          dh: this.engine.size.y * 1.4,
+          dh: this.engine.size.y,
         },
       );
   }
@@ -161,6 +218,7 @@ export default class Level {
         break;
     }
     this.plantsArr.push(newPlant);
+    this.plantsPlanted += 1;
     return newPlant;
   }
 
@@ -232,14 +290,20 @@ export default class Level {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
+
         if (zombie.health <= 0) {
           this.reduceZombies();
         }
 
         this.plantsArr.forEach((plant) => {
           if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0
-            && zombie.position.x < 950) {
+            && zombie.position.x < 950 && zombie.position.x - plant.position.x > -150) {
             plant.switchState('attack', zombie, plant);
+
+            if (zombie.name === 'pole' && zombie.isEndJump) {
+              plant.switchState('basic');
+              plant.stopShooting();
+            }
 
             if (zombie.health <= 0) {
               zombie.remove();
@@ -328,10 +392,35 @@ export default class Level {
     }
   }
 
+  placeLawnCleaners() {
+    this.cells[0].forEach((cell, index) => {
+      const lawnCleaner = new LawnCleaner(this.engine, cell, index);
+      lawnCleaner.draw();
+      this.lawnCleaners.push(lawnCleaner);
+    });
+  }
+
+  clearLawnCleaners() {
+    this.lawnCleaners.forEach((cleaner) => {
+      if (cleaner && cleaner.node) cleaner.node.destroy();
+    });
+    this.lawnCleaners = [];
+  }
+
   dropSuns() {
     this.sunFall = new FallingSun(
       this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
     );
     this.sunFall.init();
+  }
+
+  addShovel(): void {
+    const shovel: any = new Shovel(
+      this.engine,
+      this.occupiedCells,
+      this.cells,
+      this.deletePlant.bind(this),
+      this.plantsArr,
+    );
   }
 }

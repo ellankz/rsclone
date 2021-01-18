@@ -88,11 +88,11 @@
         "image": "assets/sprites/zombies/football/head.png"
     },
     "pole": {
-        "speed": 80,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/football/head.png"
+        "speed": 100,
+        "width": 348,
+        "height": 218,
+        "frames": 8,
+        "dh": 218,
+        "image": "assets/sprites/zombies/pole/head.png"
     }
 }    

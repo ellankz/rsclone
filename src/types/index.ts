@@ -79,3 +79,26 @@ export interface LevelConfig {
   zombies: ZombieConfig[];
   plantTypes: PlantType[];
 }
+
+export interface User {
+  login: string,
+  password: string,
+}
+
+export interface Game {
+  id?: string;
+  level: number;
+  win: boolean;
+  zombiesKilled: number;
+  plantsPlanted: number;
+}
+
+export interface Stats {
+  gamesPlayed: number;
+  highestLevel: number;
+  gamesWon: number;
+  gamesLost: number;
+  percentWon: number;
+  killedZombies: number;
+  plantedPlants: number;
+}

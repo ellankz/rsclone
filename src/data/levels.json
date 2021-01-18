@@ -2,33 +2,17 @@
   {
     "zombies": [
       {
-      "type": "basic",
-      "startDelay": 5
+      "type": "pole",
+      "startDelay": 0
       },
       {
-        "type": "basic_2",
-        "startDelay": 5
+        "type": "basic",
+        "startDelay": 0
         },
         {
           "type": "cone",
-          "startDelay": 5
-          },
-          {
-            "type": "bucket",
-            "startDelay": 5
-            },
-            {
-              "type": "flag",
-              "startDelay": 5
-              },
-              {
-                "type": "door",
-                "startDelay": 5
-                },
-                {
-                  "type": "newspaper",
-                  "startDelay": 5
-                  }
+          "startDelay": 0
+          }
     ],
     "plantTypes": [
       "SunFlower",
