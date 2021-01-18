@@ -97,7 +97,9 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levelIndex, this.engine, this.cells, this.dataService);
+    this.currentLevel = new Level(
+      levelIndex, this.engine, this.cells, this.dataService, this.runPause,
+    );
     this.currentLevel.init();
     this.endGame();
     return this.currentLevel;
@@ -265,7 +267,7 @@ export default class Game {
   }
 
   runPause = (event: KeyboardEvent) => {
-    if (event.type === 'visibilitychange' || event.key === 'Escape') {
+    if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
       if (!this.menuOpen) {
         this.menuOpen = true;
         this.stopGame();
