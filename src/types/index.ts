@@ -8,6 +8,7 @@ export interface ZombiePreset {
   name: string;
   frames: number;
   head?: string;
+  shadow?: string;
   states?: {[dynamic: string]: ZombiesStatesPreset}
 }
 
@@ -54,6 +55,7 @@ export interface PlantPreset {
   name: string;
   frames: number;
   speed: number;
+  shadow?: string;
   states?: { [dynamic: string]: PlantStatesPreset };
 }
 

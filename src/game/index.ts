@@ -75,7 +75,7 @@ export default class Game {
   }
 
   startGame() {
-    // this.engine.audioPlayer.playSound('menu');
+    //this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
     this.currentLevel = this.createLevel(0);

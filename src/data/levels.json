@@ -2,8 +2,16 @@
   {
     "zombies": [
       {
+        "type": "football",
+        "startDelay": 0
+      },
+      {
         "type": "pole",
-        "startDelay": 1
+        "startDelay": 0
+      },
+      {
+        "type": "bucket",
+        "startDelay": 0
       }
     ],
     "plantTypes": [

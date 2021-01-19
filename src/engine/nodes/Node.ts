@@ -24,6 +24,8 @@ export default class Node implements INode {
 
   filter?: string;
 
+  shadow?: string;
+
   name?: string;
 
   removeEventBubbling: string[];
@@ -46,6 +48,7 @@ export default class Node implements INode {
     this.border = params.border;
     this.opacity = params.opacity;
     this.filter = params.filter;
+    this.shadow = params.shadow;
     this.name = params.name;
 
     this.addTo = null;

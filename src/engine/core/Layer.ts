@@ -184,6 +184,10 @@ export default class Layer implements ILayer {
       }
     };
 
+    if (params.shadow) {
+      Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
+    }
+
     if (!isLoaded) {
       params.img.addEventListener('load', draw);
     } else draw();
@@ -203,5 +207,31 @@ export default class Layer implements ILayer {
     const color = borderParams[borderParams.length - 1];
     ctx.lineWidth = width || 1;
     ctx.strokeStyle = color || '#000';
+  }
+
+  private static setShadow(shadow: string, posX: number,
+    posY: number, ctx: CanvasRenderingContext2D) {
+    const shadowParams = shadow.split(' ');
+    const cx = posX + parseInt(shadowParams[0], 10);
+    const cy = posY + parseInt(shadowParams[1], 10);
+    const rx = parseInt(shadowParams[2], 10);
+    const ry = parseInt(shadowParams[3], 10);
+
+    ctx.save();
+    ctx.beginPath();
+
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowColor = 'black';
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+
+    ctx.translate(cx - rx, cy - ry);
+    ctx.scale(rx, ry);
+    ctx.arc(1, 1, 1, 0, 2 * Math.PI, false);
+
+    ctx.fill();
+    ctx.restore();
   }
 }

@@ -21,7 +21,7 @@ const X_MIN = {
   dancer: 10,
 };
 
-const X_AXIS = 1000;
+const X_AXIS = 800;
 const Y_AXIS = {
   all: 5,
   pole: -5,
@@ -55,6 +55,8 @@ export default class Zombie {
   public name: string;
 
   private frames: number;
+
+  private shadow: string;
 
   private head: string;
 
@@ -111,6 +113,7 @@ export default class Zombie {
     this.image = this.zombiePresets[config.type].image;
     this.name = this.zombiePresets[config.type].name;
     this.frames = this.zombiePresets[config.type].frames;
+    this.shadow = this.zombiePresets[config.type].shadow;
     this.states = this.zombiePresets[config.type].states;
     this.head = this.zombieHeadPresets[config.type].image;
     this.headWidth = this.zombieHeadPresets[config.type].width;
@@ -175,6 +178,7 @@ export default class Zombie {
       speed: this.speed,
       dh: this.height,
       states: this.states ? generateStates() : undefined,
+      shadow: this.shadow,
     }, update)
       .addTo('scene') as ISpriteNode;
 

@@ -1,3 +1,4 @@
+import { throws } from 'assert';
 import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
 import Engine from '../engine';
 import Vector from '../engine/core/Vector';
@@ -72,6 +73,7 @@ export default class Shot {
           layer: `row-${plant.cell.position.y + 1}`,
           img: image,
           dh: image.height,
+          shadow: '15, 60, 10, 10',
         },
         update,
       )

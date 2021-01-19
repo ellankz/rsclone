@@ -59,6 +59,7 @@ export interface INode {
   border?: string;
   opacity?: number;
   filter?: string;
+  shadow?: string;
   name?: string;
 
   removeEventBubbling: string[];
@@ -191,6 +192,7 @@ export interface NodeConfig {
   border?: string;
   opacity?: number;
   filter?: string;
+  shadow?: string
   name?: string;
   removeEventBubbling?: string[];
 }
@@ -277,6 +279,7 @@ export interface ImageConfig {
   border?: string;
   opacity?: number;
   filter?: string;
+  shadow?: string,
 }
 
 export interface SceneConfig {
