@@ -69,6 +69,7 @@ export default class SunCount {
     if (this.localCount !== this.count.suns) {
       this.localCount = this.count.suns;
       this.textNode.text = this.count.suns.toString();
+      this.textNode.clearLayer();
     }
   }
 }

@@ -22,7 +22,11 @@ export default class Node implements INode {
 
   opacity?: number;
 
+  filter?: string;
+
   name?: string;
+
+  removeEventBubbling: string[];
 
   addTo: (sceneName: string) => NodesType;
 
@@ -41,11 +45,14 @@ export default class Node implements INode {
 
     this.border = params.border;
     this.opacity = params.opacity;
+    this.filter = params.filter;
     this.name = params.name;
 
     this.addTo = null;
     this.destroy = null;
     this.removeAllEvents = null;
+
+    this.removeEventBubbling = params.removeEventBubbling || [];
 
     if (update) {
       this.update = update;

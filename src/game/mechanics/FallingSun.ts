@@ -17,7 +17,7 @@ export class FallingSun {
 
   scene: string;
 
-  sunCount: { suns: number; };
+  sunCount: { suns: number };
 
   cells: Cell[][];
 
@@ -29,7 +29,7 @@ export class FallingSun {
 
   constructor(
     engine: Engine,
-    sunCount: {suns: number},
+    sunCount: { suns: number },
     cells: Cell[][],
     updateSunCountInLevel: (count: number) => void,
   ) {

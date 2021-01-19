@@ -486,6 +486,7 @@ setTimeout(() => {
 - дополнительные
   - `border` - добавляет границу, записывается в формате `'10px #cecece'`
   - `opacity` - число от 0 до 1
+  - `removeEventBubbling` - принимает массив с названиями событий, запрещает передачу события ниже узла, если у engine.events на это событие параметр eventBubbling выставлен на true
 
 #### Типы узлов
 
@@ -630,6 +631,7 @@ interface SpriteStatesConfig {
 ---
 
 ## Loader
+
 Загрузчик загружает все mp3, png, jpg файлы из папки src/assets и создает Image и Audio элементы для каждого.
 Получить доступ к элементу можно таким образом:
 
@@ -670,7 +672,6 @@ engine.fullscreen = true;
    ```
 
 ---
-
 
 ## Examples
 

@@ -55,5 +55,189 @@
         }
       }
     }
+  },
+  "WallNut": {
+    "cost": 50,
+    "damage": 0,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 1000,
+    "width": 65,
+    "height": 73,
+    "image": "assets/sprites/plants/WallNut/0.png",
+    "name": "WallNut",
+    "frames": 16,
+    "speed": 100,
+    "states": {
+      "cracked1": {
+        "image": "assets/sprites/plants/WallNut/1.png",
+        "frames": 11,
+        "speed": 130,
+        "width": 65,
+        "height": 73,
+        "dh": 73,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "cracked2": {
+        "image": "assets/sprites/plants/WallNut/2.png",
+        "frames": 15,
+        "speed": 100,
+        "width": 65,
+        "height": 73,
+        "dh": 73,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
+  },
+  "Chomper": {
+    "cost": 150,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 100,
+    "width": 130,
+    "height": 114,
+    "image": "assets/sprites/plants/Chomper/0.png",
+    "name": "Chomper",
+    "frames": 13,
+    "speed": 120,
+    "states": {
+      "attack": {
+        "image": "assets/sprites/plants/Chomper/1.png",
+        "frames": 9,
+        "speed": 140,
+        "width": 130,
+        "height": 114,
+        "dh": 114,
+        "positionAdjust": {
+          "x": 17,
+          "y": -20
+        }
+      },
+      "sleep": {
+        "image": "assets/sprites/plants/Chomper/2.png",
+        "frames": 6,
+        "speed": 160,
+        "width": 130,
+        "height": 114,
+        "dh": 114,
+        "positionAdjust": {
+          "x": 17,
+          "y": -20
+        }
+      }
+    }
+  },
+  "CherryBomb": {
+    "cost": 150,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 1000,
+    "width": 112,
+    "height": 81,
+    "image": "assets/sprites/plants/CherryBomb/0.png",
+    "name": "CherryBomb",
+    "frames": 7,
+    "speed": 140,
+    "states": {
+      "boom": {
+        "image": "assets/sprites/plants/CherryBomb/1.png",
+        "frames": 11,
+        "speed": 80,
+        "width": 200,
+        "height": 197,
+        "dh": 197,
+        "positionAdjust": {
+          "x": -45,
+          "y": -120
+        }
+      }
+    }
+  },
+  "SnowPea": {
+    "cost": 175,
+    "damage": 20,
+    "recharge": 2,
+    "sunProduction": 0,
+    "health": 100,
+    "image": "assets/sprites/plants/SnowPea/0.png",
+    "name": "SnowPea",
+    "frames": 15,
+    "speed": 100,
+    "width": 71,
+    "height": 71,
+    "shotType": "snow",
+    "states": {
+      "attack": {
+        "image": "assets/sprites/plants/SnowPea/1.png",
+        "frames": 8,
+        "speed": 225,
+        "width": 84,
+        "height": 80,
+        "dh": 75,
+        "positionAdjust": {
+          "x": -5,
+          "y": 0
+        }
+      }
+    }
+  },
+  "PotatoMine": {
+    "cost": 25,
+    "damage": 500,
+    "recharge": 0,
+    "sunProduction": 0,
+    "health": 100,
+    "width": 68,
+    "height": 50,
+    "image": "assets/sprites/plants/PotatoMine/0.png",
+    "name": "PotatoMine",
+    "frames": 8,
+    "speed": 200,
+    "states": {
+      "notReady": {
+        "image": "assets/sprites/plants/PotatoMine/1.png",
+        "frames": 1,
+        "speed": 0,
+        "width": 68,
+        "height": 50,
+        "dh": 50,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "grow": {
+        "image": "assets/sprites/plants/PotatoMine/2.png",
+        "frames": 4,
+        "speed": 120,
+        "width": 68,
+        "height": 50,
+        "dh": 50,
+        "positionAdjust": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "attack": {
+        "image": "assets/sprites/plants/PotatoMine/3.png",
+        "frames": 9,
+        "speed": 100,
+        "width": 263,
+        "height": 125,
+        "dh": 110,
+        "positionAdjust": {
+          "x": -65,
+          "y": -50
+        }
+      }
+    }
   }
 }

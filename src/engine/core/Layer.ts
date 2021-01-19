@@ -27,9 +27,13 @@ export default class Layer implements ILayer {
 
   update: () => void;
 
+<<<<<<< HEAD
   private queue: (() => void)[] = [];
 
   private isLoading: boolean;
+=======
+  removeEventBubbling: string[] = [];
+>>>>>>> develop
 
   constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
     const canvas = document.createElement('canvas');
@@ -75,6 +79,10 @@ export default class Layer implements ILayer {
       this.ctx.globalAlpha = params.opacity;
     }
 
+    if (params.filter) {
+      this.ctx.filter = params.filter;
+    }
+
     if (params.color) {
       this.ctx.fillStyle = params.color;
       this.ctx.fillRect(pos.x, pos.y, params.width, params.height);
@@ -100,6 +108,10 @@ export default class Layer implements ILayer {
 
     if (params.opacity) {
       this.ctx.globalAlpha = params.opacity;
+    }
+
+    if (params.filter) {
+      this.ctx.filter = params.filter;
     }
 
     this.ctx.beginPath();
@@ -139,6 +151,10 @@ export default class Layer implements ILayer {
       this.ctx.globalAlpha = params.opacity;
     }
 
+    if (params.filter) {
+      this.ctx.filter = params.filter;
+    }
+
     this.ctx.font = `${params.size}px ${params.font}`;
     this.ctx.textBaseline = 'top';
 
@@ -174,6 +190,15 @@ export default class Layer implements ILayer {
       this.ctx.globalAlpha = params.opacity;
     }
 
+<<<<<<< HEAD
+=======
+    if (params.filter) {
+      this.ctx.filter = params.filter;
+    }
+
+    const isLoaded = params.img.complete && params.img.naturalHeight !== 0;
+
+>>>>>>> develop
     const draw = () => {
       this.ctx.drawImage(
         params.img,

@@ -3,7 +3,6 @@ import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_WIDTH_COEF, TOP_OFFSET_COEF } from 
 import Cell from '../Cell';
 import Plant from '../../models/Plant';
 import { SunFlower } from '../../models/plants/SunFlower';
-import { Peashooter } from '../../models/plants/Peashooter';
 
 const LAYER_NAME: string = 'main';
 const SCENE_NAME: string = 'scene';
@@ -46,7 +45,6 @@ export class Shovel {
       position: this.engine.vector(
         this.engine.size.x * (PLANT_CARD_WIDTH_COEF + LEFT_CAMERA_OFFSET_COEF) * 1.7 + 150,
         this.engine.size.y * TOP_OFFSET_COEF,
-
       ),
       size: this.engine.vector(77, 55),
       layer: LAYER_NAME,
@@ -66,9 +64,8 @@ export class Shovel {
         const plant: any = this.occupiedCells.get(cell);
         if (plant instanceof SunFlower) {
           plant.stop();
-        } else if (plant instanceof Peashooter) {
-          plant.stopShooting();
         }
+        plant.stopAttack();
         plant.health = 0;
         this.plantsArr = this.deletePlant();
         plant.destroy();
@@ -87,7 +84,6 @@ export class Shovel {
       if (e instanceof MouseEvent || (e instanceof KeyboardEvent && e.code === 'KeyS')) {
         this.engine.audioPlayer.playSound('shovel');
         this.toggleState();
-        this.engine.events.click.eventBubbling = this.isActive;
         if (this.isActive) {
           cellsFlat.forEach((cell: Cell) => {
             const f = (ev: any): void => {

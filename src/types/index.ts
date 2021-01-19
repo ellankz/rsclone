@@ -7,19 +7,20 @@ export interface ZombiePreset {
   image: string;
   name: string;
   frames: number;
-  states?: {[dynamic: string]: ZombiesStatesPreset}
+  states?: { [dynamic: string]: ZombiesStatesPreset };
 }
 
 export interface ZombiesStatesPreset {
-  image: string,
-  frames: number,
+  image: string;
+  frames: number;
   speed: number;
   width: number;
   height: number;
   dh: number;
   positionAdjust: {
-    x: number, y: number
-  }
+    x: number;
+    y: number;
+  };
 }
 
 export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket';
@@ -43,22 +44,30 @@ export interface PlantPreset {
   name: string;
   frames: number;
   speed: number;
-  states?: {[dynamic: string]: PlantStatesPreset}
+  states?: { [dynamic: string]: PlantStatesPreset };
 }
 
 export interface PlantStatesPreset {
-  image: string,
-  frames: number,
+  image: string;
+  frames: number;
   speed: number;
   width: number;
   height: number;
   dh: number;
   positionAdjust: {
-    x: number, y: number
-  }
+    x: number;
+    y: number;
+  };
 }
 
-export type PlantType = 'SunFlower' | 'Peashooter';
+export type PlantType =
+  | 'SunFlower'
+  | 'Peashooter'
+  | 'WallNut'
+  | 'Chomper'
+  | 'CherryBomb'
+  | 'SnowPea'
+  | 'PotatoMine';
 
 export interface PlantConfig {
   type: PlantType;
@@ -70,8 +79,8 @@ export interface LevelConfig {
 }
 
 export interface User {
-  login: string,
-  password: string,
+  login: string;
+  password: string;
 }
 
 export interface Game {
