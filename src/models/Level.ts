@@ -319,14 +319,15 @@ export default class Level {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
 
+        if (zombie.health <= 0) {
+          this.reduceZombies();
+        }
+
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
 
         this.plantsArr.forEach((plant) => {
           if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
             plant.switchState('attack', zombie);
-          }
-          if (zombie.health <= 0) {
-            this.reduceZombies();
           }
         });
       });
@@ -395,21 +396,19 @@ export default class Level {
     for (let x = 0; x < this.cells.length; x += 1) {
       for (let y = 0; y < this.cells[x].length; y += 1) {
         const cell = this.cells[x][y];
-        if (!this.occupiedCells.has(cell)) {
-          this.engine.on(cell.node, 'click', () => {
-            if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
-              this.plant = this.createPlant(this.preparedToPlant);
-              this.plant.putOnField(cell);
-              this.plant.cell = cell;
+        this.engine.on(cell.node, 'click', () => {
+          if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
+            this.plant = this.createPlant(this.preparedToPlant);
+            this.plant.putOnField(cell);
+            this.plant.cell = cell;
 
-              this.occupiedCells.set(cell, this.plant);
+            this.occupiedCells.set(cell, this.plant);
 
-              this.updateSunCount(this.sunCount.suns - this.plant.cost);
+            this.updateSunCount(this.sunCount.suns - this.plant.cost);
 
-              this.preparedToPlant = null;
-            }
-          });
-        }
+            this.preparedToPlant = null;
+          }
+        });
       }
     }
   }
