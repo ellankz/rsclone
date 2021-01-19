@@ -100,10 +100,14 @@ export default class LooseScene {
     this.modalWindow.draw();
   }
 
-  public restartLevel(restart: () => void) {
+  public restartLevel(restart: () => void, exit: () => void) {
     setTimeout(() => {
       this.engine.on(this.modalWindow.buttonNode, 'click', () => {
         restart();
+        this.bg.destroy();
+      });
+      this.engine.on(this.modalWindow.exitButtonNode, 'click', () => {
+        exit();
         this.bg.destroy();
       });
     }, 5200);
