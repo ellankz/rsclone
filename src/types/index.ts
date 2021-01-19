@@ -7,7 +7,8 @@ export interface ZombiePreset {
   image: string;
   name: string;
   frames: number;
-  states?: { [dynamic: string]: ZombiesStatesPreset };
+  head?: string;
+  states?: {[dynamic: string]: ZombiesStatesPreset}
 }
 
 export interface ZombiesStatesPreset {
@@ -17,13 +18,22 @@ export interface ZombiesStatesPreset {
   width: number;
   height: number;
   dh: number;
-  positionAdjust: {
-    x: number;
-    y: number;
-  };
+  positionAdjust?: {
+    x: number, y: number
+  }
 }
 
-export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket';
+export interface ZombieHeadPreset {
+  speed: number;
+  width: number;
+  height: number;
+  image: string;
+  frames: number;
+  dh: number;
+}
+
+export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket' | 'dancer' | 'dancer_2' | 'dancer_3' |
+'flag' | 'newspaper' | 'door' | 'football' | 'pole';
 
 export interface ZombieConfig {
   type: ZombieType;
