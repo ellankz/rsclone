@@ -2,6 +2,7 @@ import {
   CircleConfig,
   ILayer,
   ImageConfig,
+  ITextNode,
   IVector,
   IView,
   NodesType,
@@ -25,6 +26,10 @@ export default class Layer implements ILayer {
   screen: string;
 
   update: () => void;
+
+  private queue: (() => void)[] = [];
+
+  private isLoading: boolean;
 
   removeEventBubbling: string[] = [];
 
@@ -59,6 +64,11 @@ export default class Layer implements ILayer {
   }
 
   public drawRect(params: RectConfig) {
+    if (this.isLoading) {
+      this.queue.push(() => this.drawRect(params));
+      return;
+    }
+
     this.ctx.save();
 
     const pos = this.view.getPosition(new Vector(params.x, params.y));
@@ -85,6 +95,11 @@ export default class Layer implements ILayer {
   }
 
   public drawCircle(params: CircleConfig) {
+    if (this.isLoading) {
+      this.queue.push(() => this.drawCircle(params));
+      return;
+    }
+
     this.ctx.save();
 
     const pos = this.view.getPosition(new Vector(params.x, params.y));
@@ -120,7 +135,12 @@ export default class Layer implements ILayer {
     this.ctx.restore();
   }
 
-  public drawText(params: TextConfig) {
+  public drawText(params: TextConfig, node: ITextNode) {
+    if (this.isLoading) {
+      this.queue.push(() => this.drawText(params, node));
+      return;
+    }
+
     this.ctx.save();
 
     const pos = this.view.getPosition(new Vector(params.x, params.y));
@@ -147,10 +167,19 @@ export default class Layer implements ILayer {
       this.ctx.strokeText(params.text, pos.x, pos.y);
     }
 
+    const metrics = this.ctx.measureText(params.text);
+    const nodeElement = node;
+    nodeElement.size = new Vector(metrics.width, metrics.actualBoundingBoxDescent);
+
     this.ctx.restore();
   }
 
   public drawImage(params: ImageConfig) {
+    if (this.isLoading) {
+      this.queue.push(() => this.drawImage(params));
+      return;
+    }
+
     this.ctx.save();
 
     const pos = this.view.getPosition(new Vector(params.x, params.y));
@@ -188,8 +217,11 @@ export default class Layer implements ILayer {
       Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
     }
 
-    if (!isLoaded) {
-      params.img.addEventListener('load', draw);
+    const isImgLoaded = params.img.complete && params.img.naturalHeight !== 0;
+
+    if (!isImgLoaded) {
+      this.isLoading = true;
+      this.awaitImageLoad(params.img, draw);
     } else draw();
 
     this.ctx.restore();
@@ -207,6 +239,24 @@ export default class Layer implements ILayer {
     const color = borderParams[borderParams.length - 1];
     ctx.lineWidth = width || 1;
     ctx.strokeStyle = color || '#000';
+  }
+
+  protected awaitImageLoad(img: HTMLImageElement, drawFunc: () => void) {
+    new Promise((resolve) => {
+      const res = () => {
+        img.removeEventListener('load', res);
+        img.removeEventListener('error', res);
+        resolve(img);
+      };
+      img.addEventListener('load', res);
+      img.addEventListener('error', res);
+    }).finally(() => {
+      this.isLoading = false;
+      drawFunc();
+      while (!this.isLoading && this.queue.length > 0) {
+        this.queue.shift()();
+      }
+    });
   }
 
   private static setShadow(shadow: string, posX: number,

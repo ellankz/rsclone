@@ -34,6 +34,8 @@ export default class Game {
 
   public restZombies: number;
 
+  private menuOpen: boolean = false;
+
   constructor(engine: Engine, dataService: DataService) {
     this.engine = engine;
     this.cells = [];
@@ -96,7 +98,9 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levelIndex, this.engine, this.cells, this.dataService);
+    this.currentLevel = new Level(
+      levelIndex, this.engine, this.cells, this.dataService, this.runPause,
+    );
     this.currentLevel.init();
     this.endGame();
     return this.currentLevel;
@@ -225,6 +229,9 @@ export default class Game {
       this.clearLevel();
       this.createLevel(0);
       this.currentLevel.updateSunCount(500);
+    }, () => {
+      this.clearLevel();
+      this.exitGame();
     });
   }
 
@@ -247,35 +254,45 @@ export default class Game {
     this.continueCreatingSuns();
   }
 
-  addPause() {
-    let isOpen: boolean = false;
+  exitGame() {
+    this.engine.start('scene');
+    this.isEnd = true;
+    const hasWon = false;
+    this.currentLevel.stopLevel(hasWon);
+    this.destroySun();
+    this.reducePlantsHealth();
+    this.destroyPlants();
+    this.engine.clearAllTimeouts();
+    this.clearLevel();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
+    clearTimeout(this.timer);
+    this.engine.setScreen('startScreen');
+  }
 
-    document.addEventListener('visibilitychange', () => {
-      if (!isOpen) {
-        isOpen = true;
+  runPause = (event: KeyboardEvent) => {
+    if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
+      if (!this.menuOpen) {
+        this.menuOpen = true;
         this.stopGame();
 
         this.pause.resumeGame(() => {
-          isOpen = false;
+          this.menuOpen = false;
           this.resumeGame();
+        }, () => {
+          this.menuOpen = false;
+          this.exitGame();
+          document.removeEventListener('visibilitychange', this.runPause);
         });
       }
-    });
+    }
+  };
 
-    if (!isOpen) {
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          if (!isOpen) {
-            isOpen = true;
-            this.stopGame();
+  addPause() {
+    document.addEventListener('visibilitychange', this.runPause);
 
-            this.pause.resumeGame(() => {
-              isOpen = false;
-              this.resumeGame();
-            });
-          }
-        }
-      });
+    if (!this.menuOpen) {
+      window.addEventListener('keydown', this.runPause);
     }
   }
 }

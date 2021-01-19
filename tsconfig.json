@@ -16,10 +16,6 @@
     "esModuleInterop": true,
     "lib": ["ES2019", "dom"]
   },
-  "include": [
-    "src"
-  ],
-  "files": [
-    "src/index.ts"
-  ]
+  "include": ["src"],
+  "files": ["src/index.ts"]
 }
