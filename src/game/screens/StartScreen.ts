@@ -180,7 +180,7 @@ export class StartScreen extends ScreenCreator {
     const zombieLogo: any = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        25,
+        40,
         this.engine.size.y - 65,
       ),
       size: this.engine.vector(406, 709),
@@ -195,7 +195,7 @@ export class StartScreen extends ScreenCreator {
         10,
         this.engine.size.y - 65,
       ),
-      size: this.engine.vector(402, 203),
+      size: this.engine.vector(553, 219),
       layer: START_SCREEN_LAYERS[1],
       img: RSS_LOGO,
       dh: 60,
