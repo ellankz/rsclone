@@ -1,4 +1,5 @@
 import Engine from '../engine';
+import Vector from '../engine/core/Vector';
 
 const ZOMBIES_COUNT: number = 10;
 
@@ -32,6 +33,8 @@ export class StartLevelView {
 
       let frames: number = 11;
       let speed: number = 1;
+      let size: Vector = this.engine.vector(166 * frames, 144);
+      let dh: number = 130;
 
       switch (type[typeIndex]) {
         case 'basic':
@@ -47,6 +50,40 @@ export class StartLevelView {
           frames = 8;
           speed = 30;
           break;
+        case 'dancer':
+        case 'dancer_2':
+        case 'dancer_3':
+          frames = 10;
+          speed = 10;
+          break;
+        case 'door':
+          frames = 8;
+          speed = 30;
+          size = this.engine.vector(1328, 157);
+          dh *= 1.09;
+          break;
+        case 'flag':
+          frames = 16;
+          speed = 160;
+          break;
+        case 'football':
+          frames = 15;
+          speed = 155;
+          size = this.engine.vector(2310, 172);
+          dh *= 1.195;
+          break;
+        case 'newspaper':
+          frames = 19;
+          speed = 190;
+          size = this.engine.vector(4104, 164);
+          dh *= 1.14;
+          break;
+        case 'pole':
+          frames = 9;
+          speed = 35;
+          size = this.engine.vector(3132, 218);
+          dh *= 1.514;
+          break;
         default:
           break;
       }
@@ -55,11 +92,11 @@ export class StartLevelView {
         .createNode({
           type: 'SpriteNode',
           position: this.engine.vector(
-            1100 - randomInteger(-30, 70),
+            1060 - randomInteger(-30, 70),
             randomInteger(70, 450),
           ),
-          size: this.engine.vector(166 * frames, 144),
-          dh: 130,
+          size,
+          dh,
           frames,
           speed: 130,
           layer: 'top',
@@ -81,7 +118,7 @@ export class StartLevelView {
       const copyNode: any = node;
       copyNode.update = () => {
         if (view.position.x >= 130) {
-          if (view.position.x >= 200) {
+          if (view.position.x >= 230) {
             setTimeout(() => {
               copyNode.update = () => {
                 if (view.position.x >= 130) {
