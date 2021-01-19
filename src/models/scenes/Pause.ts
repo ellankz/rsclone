@@ -40,6 +40,7 @@ export default class LooseScene {
         this.bg.destroy();
       });
       this.engine.on(this.modalWindow.exitButtonNode, 'click', () => {
+        this.engine.audioPlayer.stopSound('menu');
         exit();
         this.bg.destroy();
       });

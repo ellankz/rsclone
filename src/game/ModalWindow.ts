@@ -1,6 +1,7 @@
 import Engine from '../engine';
 import ImageNode from '../engine/nodes/ImageNode';
 import TextNode from '../engine/nodes/TextNode';
+import VolumeSetting from './VolumeSetting';
 
 export default class ModalWindow {
   engine: Engine;
@@ -25,12 +26,15 @@ export default class ModalWindow {
 
   exitButtonTextNode: TextNode;
 
+  volume: VolumeSetting;
+
   constructor(engine: Engine, modalWindowText: string, textOnTheButton: string) {
     this.engine = engine;
     this.bgImage = this.engine.loader.files['assets/images/interface/window.png'] as HTMLImageElement;
     this.button = this.engine.loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
     this.modalWindowText = modalWindowText;
     this.textOnTheButton = textOnTheButton;
+    this.volume = new VolumeSetting(this.engine);
   }
 
   public draw() {
@@ -39,6 +43,7 @@ export default class ModalWindow {
     this.drawText();
     this.drawTextButton();
     this.drawExitButton();
+    this.drawVolume();
     this.addEventListenerToButton();
   }
 
@@ -167,6 +172,10 @@ export default class ModalWindow {
     }) as TextNode;
   }
 
+  private drawVolume() {
+    if (this.modalWindowText === 'game paused') this.volume.init();
+  }
+
   public addEventListenerToButton() {
     const active = this.engine.loader.files['assets/images/interface/ButtonActive.png'] as HTMLImageElement;
 
@@ -196,5 +205,6 @@ export default class ModalWindow {
     this.buttonNode.destroy();
     this.exitButtonNode.destroy();
     this.exitButtonTextNode.destroy();
+    this.volume.destroyNodes();
   }
 }
