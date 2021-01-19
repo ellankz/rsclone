@@ -1,7 +1,15 @@
 import Engine from '../engine';
-import Vector from '../engine/core/Vector';
+import zombiePresets from '../data/zombies.json';
+import { ZombieType } from '../types';
 
 const ZOMBIES_COUNT: number = 10;
+const VIEW_SHIFT: number = 350;
+const SCREEN_SIZE: number = 1030;
+const VIEW_SLOW_MODE_X: number = 150;
+const MIN_ZOMBIE_SHIFT_X: number = 10;
+const MAX_ZOMBIE_SHIFT_X: number = 100;
+const MIN_ZOMBIE_SHIFT_Y: number = 70;
+const MAX_ZOMBIE_SHIFT_Y: number = 400;
 
 export class StartLevelView {
   private engine: Engine;
@@ -10,12 +18,12 @@ export class StartLevelView {
 
   private zombies: Array<any> = [];
 
-  private zombiesTypes: Set<string>;
+  private zombiesTypes: Set<ZombieType>;
 
   constructor(engine: Engine, startLevel: () => void, types: Array<string>) {
     this.engine = engine;
     this.startLevel = startLevel;
-    this.zombiesTypes = new Set<string>(types);
+    this.zombiesTypes = new Set<any>(types);
     this.createNodes();
     this.init();
   }
@@ -24,81 +32,30 @@ export class StartLevelView {
     const randomInteger = (min: number, max: number): number => Math
       .floor(min + Math.random() * (max + 1 - min));
 
-    const type : Array<string> = Array.from(this.zombiesTypes);
+    const type: ZombieType[] = Array.from(this.zombiesTypes);
 
     for (let i: number = 0; i < ZOMBIES_COUNT; i += 1) {
       const typeIndex: number = randomInteger(0, type.length - 1);
       const zombieImg = this.engine
         .loader.files[`assets/sprites/zombies/${type[typeIndex]}/stop.png`] as HTMLImageElement;
 
-      let frames: number = 11;
-      let speed: number = 1;
-      let size: Vector = this.engine.vector(166 * frames, 144);
-      let dh: number = 130;
-
-      switch (type[typeIndex]) {
-        case 'basic':
-        case 'basic_2':
-          frames = 11;
-          speed = 130;
-          break;
-        case 'bucket':
-          frames = 6;
-          speed = 30;
-          break;
-        case 'cone':
-          frames = 8;
-          speed = 30;
-          break;
-        case 'dancer':
-        case 'dancer_2':
-        case 'dancer_3':
-          frames = 10;
-          speed = 10;
-          break;
-        case 'door':
-          frames = 8;
-          speed = 30;
-          size = this.engine.vector(1328, 157);
-          dh *= 1.09;
-          break;
-        case 'flag':
-          frames = 16;
-          speed = 160;
-          break;
-        case 'football':
-          frames = 15;
-          speed = 155;
-          size = this.engine.vector(2310, 172);
-          dh *= 1.195;
-          break;
-        case 'newspaper':
-          frames = 19;
-          speed = 190;
-          size = this.engine.vector(4104, 164);
-          dh *= 1.14;
-          break;
-        case 'pole':
-          frames = 9;
-          speed = 35;
-          size = this.engine.vector(3132, 218);
-          dh *= 1.514;
-          break;
-        default:
-          break;
-      }
+      const zombieType: ZombieType = type[typeIndex];
+      const stateObj: any = zombiePresets[zombieType].states.stop;
 
       const zombieInstance: any = this.engine
         .createNode({
           type: 'SpriteNode',
           position: this.engine.vector(
-            1060 - randomInteger(-30, 70),
-            randomInteger(70, 450),
+            SCREEN_SIZE + randomInteger(MIN_ZOMBIE_SHIFT_X, MAX_ZOMBIE_SHIFT_X),
+            randomInteger(MIN_ZOMBIE_SHIFT_Y, MAX_ZOMBIE_SHIFT_Y),
           ),
-          size,
-          dh,
-          frames,
-          speed: 130,
+          size: this.engine.vector(
+            stateObj.width * stateObj.frames,
+            stateObj.height,
+          ),
+          dh: stateObj.dh,
+          frames: stateObj.frames,
+          speed: stateObj.speed,
           layer: 'top',
           img: zombieImg,
         })
@@ -117,11 +74,11 @@ export class StartLevelView {
 
       const copyNode: any = node;
       copyNode.update = () => {
-        if (view.position.x >= 130) {
-          if (view.position.x >= 230) {
+        if (view.position.x >= VIEW_SLOW_MODE_X) {
+          if (view.position.x >= VIEW_SHIFT) {
             setTimeout(() => {
               copyNode.update = () => {
-                if (view.position.x >= 130) {
+                if (view.position.x >= VIEW_SLOW_MODE_X) {
                   view.move(this.engine.vector(-1.5, 0));
                 } else {
                   if (view.position.x <= 0) {
