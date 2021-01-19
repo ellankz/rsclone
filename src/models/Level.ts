@@ -20,6 +20,7 @@ import LawnCleaner from './LawnCleaner';
 
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
+import MenuToggle from '../game/MenuToggle';
 import { StartLevelView } from './StartLevelView';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
@@ -83,7 +84,17 @@ export default class Level {
 
   public creatingZombies: number = 0;
 
-  constructor(levelIndex: number, engine: Engine, cells: Cell[][], dataService: DataService) {
+  menuButton: MenuToggle;
+
+  runPause: (event: KeyboardEvent) => void;
+
+  constructor(
+    levelIndex: number,
+    engine: Engine,
+    cells: Cell[][],
+    dataService: DataService,
+    runPause: (event: KeyboardEvent) => void,
+  ) {
     this.levelIndex = levelIndex;
     this.dataService = dataService;
     this.levelConfig = levels[levelIndex] as LevelConfig;
@@ -95,6 +106,7 @@ export default class Level {
     this.preparedToPlant = null;
     this.cells = cells;
     this.occupiedCells = new Map();
+    this.runPause = runPause;
   }
 
   public init() {
@@ -105,6 +117,7 @@ export default class Level {
     );
     this.createSunCount();
     this.createPlantCards();
+    this.drawMenuButton();
     this.startAnimation();
     return this;
   }
@@ -351,6 +364,11 @@ export default class Level {
     const index = this.plantsArr.findIndex((el) => el.health <= 0);
     if (index >= 0) this.plantsArr.splice(index, 1);
     return this.plantsArr;
+  }
+
+  private drawMenuButton() {
+    this.menuButton = new MenuToggle(this.engine);
+    this.menuButton.init(this.runPause);
   }
 
   private createSunCount() {
