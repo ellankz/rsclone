@@ -51,7 +51,12 @@ export default class LawnCleaner {
       this.node.move(this.engine.vector(SPEED, 0));
       this.positionX = this.node.position.x + this.image.width / 2;
       zombies.forEach((zombie) => {
-        if (zombie.health > 0 && this.positionX >= zombie.position.x) {
+        if (zombie.health > 0 && zombie.name === 'pole') {
+          zombie.reduceHealth(1000000);
+          zombie.remove();
+          zombie.node.destroy();
+          deleteCB();
+        } else if (zombie.health > 0 && this.positionX >= zombie.position.x && zombie.name !== 'pole') {
           zombie.reduceHealth(1000000);
           zombie.remove();
           zombie.node.destroy();

@@ -1,3 +1,4 @@
+import { cpuUsage } from 'process';
 import Plant from '../Plant';
 import Engine from '../../engine';
 import { SunCreator } from '../../game/mechanics/SunCreator';

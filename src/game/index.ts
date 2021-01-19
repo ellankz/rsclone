@@ -4,13 +4,11 @@ import Cell from './Cell';
 
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
-import { StartScreen } from './screens/StartScreen';
 import { DataService } from '../api-service/DataService';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import Pause from '../models/scenes/Pause';
-import ModalWindow from './ModalWindow';
-
+import { StartScreen } from './screens/StartScreen';
 import sounds from '../data/audio.json';
 
 const X_HOME = 150;
@@ -23,8 +21,6 @@ export default class Game {
   private win: WinScene;
 
   private loose: LooseScene;
-
-  private modalWindow: ModalWindow;
 
   public currentLevel: Level;
 
@@ -48,6 +44,7 @@ export default class Game {
 
   public init() {
     this.setupGame();
+    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
@@ -118,7 +115,10 @@ export default class Game {
         }
 
         this.currentLevel.zombiesArr.forEach((zombie) => {
-          if (zombie.position && zombie.position.x < X_HOME) {
+          if (zombie.position && zombie.name === 'pole' && zombie.position.x < 50) {
+            const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
+            if (!lawnCleanerWorked) this.endLoose();
+          } else if (zombie.position && zombie.name !== 'pole' && zombie.position.x < X_HOME) {
             const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
             if (!lawnCleanerWorked) this.endLoose();
           }
@@ -132,11 +132,11 @@ export default class Game {
   endWin() {
     this.isEnd = true;
     this.reducePlantsHealth();
+    this.engine.clearAllTimeouts();
     const hasWon = true;
     this.currentLevel.stopLevel(hasWon);
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
-    this.engine.clearAllTimeouts();
 
     setTimeout(() => {
       this.createWinScene();

@@ -159,11 +159,11 @@ export default class Level {
 
   startLevel() {
     this.addShovel();
+    this.listenCellClicks();
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
     this.placeLawnCleaners();
     this.createZombies(this.creatingZombies);
-    this.listenCellClicks();
     this.listenGameEvents();
     this.dropSuns();
   }
@@ -171,6 +171,7 @@ export default class Level {
   stopLevel(hasWon: boolean) {
     this.isEnd = true;
     this.occupiedCells.clear();
+    this.stopListenCellClicks();
     this.stopSunFall();
     this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
@@ -315,7 +316,6 @@ export default class Level {
 
       this.engine.newSetTimeout(this.zombiesTimer);
     }
-
     return this.creatingZombies;
   }
 
@@ -331,6 +331,7 @@ export default class Level {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
+
         if (zombie.health <= 0) {
           this.reduceZombies();
         }
@@ -426,6 +427,15 @@ export default class Level {
             this.preparedToPlant = null;
           }
         });
+      }
+    }
+  }
+
+  stopListenCellClicks() {
+    for (let x = 0; x < this.cells.length; x += 1) {
+      for (let y = 0; y < this.cells[x].length; y += 1) {
+        const cell = this.cells[x][y];
+        cell.node.removeAllEvents();
       }
     }
   }
