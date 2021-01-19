@@ -2,49 +2,30 @@
   {
     "zombies": [
       {
-      "type": "pole",
-      "startDelay": 0
+        "type": "flag",
+        "startDelay": 1
       },
       {
         "type": "basic",
-        "startDelay": 0
-        },
-        {
-          "type": "cone",
-          "startDelay": 0
-          }
-    ],
-    "plantTypes": [
-      "SunFlower",
-      "Peashooter"
-    ]
-  },
-  {
-    "zombies": [
-      {
-      "type": "dancer_2",
-      "startDelay": 5
+        "startDelay": 7
       },
       {
-      "type": "dancer_3",
-      "startDelay": 10
+        "type": "football",
+        "startDelay": 20
       },
       {
-      "type": "dancer_2",
-      "startDelay": 5
-      },
-      {
-      "type": "dancer_3",
-      "startDelay": 10
-      },
-      {
-      "type": "dancer_2",
-      "startDelay": 5
+        "type": "pole",
+        "startDelay": 10
       }
     ],
     "plantTypes": [
       "SunFlower",
-      "Peashooter"
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
     ]
   }
 ]

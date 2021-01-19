@@ -57,13 +57,17 @@
         "height": 186,
         "dh": 180 
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
         "height": 144,
-        "dh": 145
+        "dh": 144,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       }
     }
   },
@@ -108,7 +112,11 @@
         "speed": 100,
         "width": 166,
         "height": 186,
-        "dh": 180
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       },
       "lost_head": {
         "image": "assets/sprites/zombies/basic/without_head.png",
@@ -126,13 +134,13 @@
         "height": 186,
         "dh": 180
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
         "height": 144,
-        "dh": 145
+        "dh": 144
       }
     }
   },
@@ -195,13 +203,17 @@
         "height": 186,
         "dh": 180
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
         "height": 144,
-        "dh": 145
+        "dh": 144,
+        "positionAdjust": {
+          "x": 40,
+          "y": 0
+        }
       }
     }
   },
@@ -264,8 +276,8 @@
         "height": 186,
         "dh": 180
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
@@ -332,8 +344,8 @@
         "height": 186,
         "dh": 180
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
@@ -398,10 +410,14 @@
         "speed": 120,
         "width": 167,
         "height": 186,
-        "dh": 180
+        "dh": 180,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       },
-      "boom": {
-        "image": "assets/sprites/zombies/basic/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
@@ -412,8 +428,8 @@
   }, 
   "newspaper": {
     "speed": 140,
-    "health": 320,
-    "damage": 25,
+    "health": 400,
+    "damage": 50,
     "width": 216,
     "height": 164,
     "frames": 19,
@@ -468,8 +484,8 @@
         "height": 164,
         "dh": 164
       },
-      "boom": {
-        "image": "assets/sprites/zombies/newspaper/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/newspaper/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 216,
@@ -544,8 +560,8 @@
         "height": 176,
         "dh": 176
       },
-      "boom": {
-        "image": "assets/sprites/zombies/dancer/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/dancer/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 184,
@@ -620,8 +636,8 @@
         "height": 176,
         "dh": 176
       },
-      "boom": {
-        "image": "assets/sprites/zombies/dancer/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/dancer/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 184,
@@ -696,8 +712,8 @@
         "height": 152,
         "dh": 152
       },
-      "boom": {
-        "image": "assets/sprites/zombies/dancer_3/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/dancer_3/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
@@ -764,8 +780,8 @@
         "height": 170,
         "dh": 170
       },
-      "boom": {
-        "image": "assets/sprites/zombies/football/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/football/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 166,
@@ -777,7 +793,7 @@
   "pole": {
     "speed": 80,
     "health": 420,
-    "damage": 25,
+    "damage": 40,
     "width": 348,
     "height": 218,
     "frames": 10,
@@ -803,7 +819,7 @@
       "attack": {
         "image": "assets/sprites/zombies/pole/attack.png",
         "frames": 14,
-        "speed": 110,
+        "speed": 100,
         "width": 348,
         "height": 218,
         "dh": 218
@@ -832,8 +848,8 @@
         "height": 218,
         "dh": 218
       },
-      "boom": {
-        "image": "assets/sprites/zombies/pole/boom.png",
+      "burn": {
+        "image": "assets/sprites/zombies/pole/burn.png",
         "frames": 20,
         "speed": 120,
         "width": 348,

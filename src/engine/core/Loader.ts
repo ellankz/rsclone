@@ -4,7 +4,7 @@ export default class Loader {
   fileContextPath: string;
 
   files: {
-    [dynamic: string]: HTMLImageElement|HTMLAudioElement
+    [dynamic: string]: HTMLImageElement | HTMLAudioElement;
   };
 
   filesLoadedCount: number;
