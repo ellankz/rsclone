@@ -21,7 +21,7 @@ const X_MIN = {
   dancer: 10,
 };
 
-const X_AXIS = 800;
+const X_AXIS = 970;
 const Y_AXIS = {
   all: 5,
   pole: -5,
