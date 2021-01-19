@@ -79,11 +79,11 @@ export default class Game {
     this.engine.setScreen('startScreen');
   }
 
-  startGame() {
+  startGame(levelNumber: number) {
     // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
-    this.currentLevel = this.createLevel(0);
+    this.currentLevel = this.createLevel(levelNumber);
     this.engine.setScreen('first');
   }
 
@@ -140,13 +140,13 @@ export default class Game {
 
     setTimeout(() => {
       this.createWinScene();
-      this.currentLevel.updateSunCount(500);
+      this.currentLevel.updateSunCount(0);
     }, 5000);
     setTimeout(() => {
       this.clearLevel();
     }, 8000);
     setTimeout(() => {
-      this.createLevel(0);
+      this.createLevel(this.currentLevel.levelNumber + 1);
     }, 12000);
 
     clearTimeout(this.timer);

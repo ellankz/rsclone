@@ -7,15 +7,15 @@ const LEVEL_SELECTION_SCREEN_SCREEN_NAME: string = 'levelSelectionScreen';
 const LEVEL_SELECTION_SCREEN_SCENE_NAME: string = 'levelSelectionScreen';
 
 export class LevelSelectionScreen extends ScreenCreator {
-  private startLevel: () => void;
+  private startLevel: (levelNumber: number) => void;
 
   private levelCards: Array<ImageNode> = [];
 
   private numberOfLevels: number = 10;
 
-  private numberOfActiveLevels: number = 1;
+  private numberOfActiveLevels: number = 10;
 
-  constructor(engine: Engine, func: () => void) {
+  constructor(engine: Engine, func: (levelNumber: number) => void) {
     super(engine);
     this.startLevel = func;
     this.createLayers(LEVEL_SELECTION_SCREEN_LAYERS);
@@ -160,7 +160,7 @@ export class LevelSelectionScreen extends ScreenCreator {
           'assets/images/interface/selectLevelIcon_notActive.png');
         this.setEvent(card, 'click', () => {
           this.engine.audioPlayer.playSound('tap');
-          this.startLevel();
+          this.startLevel(i);
           this.engine.stop();
           this.engine.start('scene');
         });

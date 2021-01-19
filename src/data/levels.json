@@ -48,6 +48,495 @@
     ],
     "plantTypes": [
       "SunFlower",
+      "Peashooter"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 1
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 25
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
       "Peashooter",
       "WallNut",
       "Chomper",

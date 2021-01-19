@@ -77,7 +77,7 @@ export default class Level {
 
   levelConfig: LevelConfig;
 
-  levelIndex: number;
+  levelNumber: number;
 
   dataService: DataService;
 
@@ -88,15 +88,15 @@ export default class Level {
   runPause: (event: KeyboardEvent) => void;
 
   constructor(
-    levelIndex: number,
+    levelNumber: number,
     engine: Engine,
     cells: Cell[][],
     dataService: DataService,
     runPause: (event: KeyboardEvent) => void,
   ) {
-    this.levelIndex = levelIndex;
+    this.levelNumber = levelNumber;
     this.dataService = dataService;
-    this.levelConfig = levels[levelIndex] as LevelConfig;
+    this.levelConfig = levels[levelNumber] as LevelConfig;
     this.zombiesConfig = this.levelConfig.zombies;
     this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
@@ -181,7 +181,7 @@ export default class Level {
       plant.isDestroyed();
     });
     this.dataService.saveGame({
-      level: this.levelIndex + 1,
+      level: this.levelNumber + 1,
       win: hasWon,
       zombiesKilled: this.zombiesKilled,
       plantsPlanted: this.plantsPlanted,
