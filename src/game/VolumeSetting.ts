@@ -32,7 +32,7 @@ export default class VolumeSetting {
       position: this.engine.vector(this.engine.size.x / 2 - 60, this.engine.size.y / 1.78),
       text: 'volume',
       layer: 'window',
-      font: 'regular-samdan',
+      font: 'Samdan',
       fontSize: 20,
       color: '#d9bc6b',
     }) as TextNode;
