@@ -161,7 +161,7 @@ export default class ModalWindow {
       ),
       text: 'main menu',
       layer: 'window',
-      font: 'regular-samdan',
+      font: 'Samdan',
       fontSize: 26,
       color: '#0daf1b',
     }) as TextNode;
@@ -186,6 +186,16 @@ export default class ModalWindow {
 
     this.engine.on(this.buttonNode, 'click', () => {
       this.removeModalWindow();
+    });
+
+    this.engine.on(this.exitButtonNode, 'mousedown', () => {
+      this.exitButtonNode.img = active;
+      this.exitButtonNode.clearLayer();
+    });
+
+    this.engine.on(this.exitButtonNode, 'mouseup', () => {
+      this.exitButtonNode.img = this.button;
+      this.exitButtonNode.clearLayer();
     });
 
     this.engine.on(this.exitButtonNode, 'click', () => {

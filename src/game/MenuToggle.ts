@@ -54,7 +54,7 @@ export default class MenuToggle {
       position: this.engine.vector(this.engine.size.x - 75, 10),
       text: 'menu',
       layer: 'main',
-      font: 'regular-samdan',
+      font: 'Samdan',
       fontSize: 24,
       color: '#0daf1b',
     }) as TextNode;

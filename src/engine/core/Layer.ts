@@ -33,7 +33,6 @@ export default class Layer implements ILayer {
 
   removeEventBubbling: string[] = [];
 
-
   constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position: absolute; left: 0; top: 0';
@@ -189,13 +188,11 @@ export default class Layer implements ILayer {
       this.ctx.globalAlpha = params.opacity;
     }
 
-
     if (params.filter) {
       this.ctx.filter = params.filter;
     }
 
     const isLoaded = params.img.complete && params.img.naturalHeight !== 0;
-
 
     const draw = () => {
       this.ctx.drawImage(
