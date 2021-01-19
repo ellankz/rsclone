@@ -42,7 +42,7 @@ export default class SunCount {
       ),
       text: this.count.suns.toString(),
       layer: 'main',
-      font: 'regular-samdan',
+      font: 'Samdan',
       fontSize: 50,
       color: 'black',
     }) as ITextNode;

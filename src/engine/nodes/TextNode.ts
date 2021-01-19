@@ -20,16 +20,19 @@ export default class TextNode extends Node implements ITextNode {
   }
 
   public draw() {
-    this.layer.drawText({
-      x: this.position.x,
-      y: this.position.y,
-      size: this.fontSize,
-      font: this.font,
-      color: this.color,
-      text: this.text,
-      border: this.border,
-      opacity: this.opacity,
-      filter: this.filter,
-    });
+    this.layer.drawText(
+      {
+        x: this.position.x,
+        y: this.position.y,
+        size: this.fontSize,
+        font: this.font,
+        color: this.color,
+        text: this.text,
+        border: this.border,
+        opacity: this.opacity,
+        filter: this.filter,
+      },
+      this,
+    );
   }
 }
