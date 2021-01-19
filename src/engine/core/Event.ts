@@ -64,7 +64,7 @@ export default class Event {
   addEvent(node: NodesType, event: string, callback: (e: any) => void) {
     if (!node || !callback || !this.eventsNames.includes(event)) return false;
 
-    if (node instanceof TextNode) this.textNodes.push(node);
+    if (node instanceof TextNode && !this.textNodes.includes(node)) this.textNodes.push(node);
 
     const moveEvents = ['mouseenter', 'mouseleave'];
 
@@ -122,7 +122,7 @@ export default class Event {
     }
 
     const nodes: NodesType[] = layers
-      .map((layer) => layer.nodes.filter((node) => checkNode(node)))
+      .map((layer) => layer.nodes.filter((node) => checkNode.bind(this)(node)))
       .flat()
       .reverse();
 

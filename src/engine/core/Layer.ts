@@ -27,13 +27,12 @@ export default class Layer implements ILayer {
 
   update: () => void;
 
-<<<<<<< HEAD
   private queue: (() => void)[] = [];
 
   private isLoading: boolean;
-=======
+
   removeEventBubbling: string[] = [];
->>>>>>> develop
+
 
   constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
     const canvas = document.createElement('canvas');
@@ -190,15 +189,14 @@ export default class Layer implements ILayer {
       this.ctx.globalAlpha = params.opacity;
     }
 
-<<<<<<< HEAD
-=======
+
     if (params.filter) {
       this.ctx.filter = params.filter;
     }
 
     const isLoaded = params.img.complete && params.img.naturalHeight !== 0;
 
->>>>>>> develop
+
     const draw = () => {
       this.ctx.drawImage(
         params.img,
