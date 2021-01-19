@@ -85,14 +85,16 @@ export default class Game {
   }
 
   createCells() {
-    for (let x = 0; x < COLS_NUM; x += 1) {
-      const row: Cell[] = [];
-      for (let y = 0; y < ROWS_NUM; y += 1) {
-        const cell = new Cell({ x, y }, this.engine);
-        cell.draw();
-        row.push(cell);
+    if (this.cells.length < 9) {
+      for (let x = 0; x < COLS_NUM; x += 1) {
+        const row: Cell[] = [];
+        for (let y = 0; y < ROWS_NUM; y += 1) {
+          const cell = new Cell({ x, y }, this.engine);
+          cell.draw();
+          row.push(cell);
+        }
+        this.cells.push(row);
       }
-      this.cells.push(row);
     }
   }
 
@@ -141,13 +143,11 @@ export default class Game {
     setTimeout(() => {
       this.createWinScene();
       this.currentLevel.updateSunCount(0);
-    }, 5000);
+    }, 3000);
     setTimeout(() => {
+      this.exitGame(true);
       this.clearLevel();
-    }, 8000);
-    setTimeout(() => {
-      this.createLevel(this.currentLevel.levelNumber + 1);
-    }, 12000);
+    }, 6000);
 
     clearTimeout(this.timer);
   }
@@ -227,11 +227,11 @@ export default class Game {
 
     this.loose.restartLevel(() => {
       this.clearLevel();
-      this.createLevel(0);
+      this.createLevel(this.currentLevel.levelNumber);
       this.currentLevel.updateSunCount(500);
     }, () => {
       this.clearLevel();
-      this.exitGame();
+      this.exitGame(false);
     });
   }
 
@@ -254,10 +254,8 @@ export default class Game {
     this.continueCreatingSuns();
   }
 
-  exitGame() {
-    this.engine.start('scene');
+  exitGame(hasWon: boolean) {
     this.isEnd = true;
-    const hasWon = false;
     this.currentLevel.stopLevel(hasWon);
     this.destroySun();
     this.reducePlantsHealth();
@@ -267,7 +265,7 @@ export default class Game {
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     clearTimeout(this.timer);
-    this.engine.setScreen('startScreen');
+    this.engine.setScreen('levelSelectionScreen');
   }
 
   runPause = (event: KeyboardEvent) => {
@@ -281,7 +279,7 @@ export default class Game {
           this.resumeGame();
         }, () => {
           this.menuOpen = false;
-          this.exitGame();
+          this.exitGame(false);
           document.removeEventListener('visibilitychange', this.runPause);
         });
       }

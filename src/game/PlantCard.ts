@@ -76,4 +76,8 @@ export default class PlantCard {
     this.node.srcY = srcPos;
     this.node.clearLayer();
   }
+
+  public destroy() {
+    this.node.destroy();
+  }
 }

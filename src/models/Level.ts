@@ -115,7 +115,7 @@ export default class Level {
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-    this.createPlantCards();
+
     this.drawMenuButton();
     this.startLevel();
     return this;
@@ -159,6 +159,7 @@ export default class Level {
 
   startLevel() {
     this.addShovel();
+    this.createPlantCards();
     this.listenCellClicks();
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
@@ -172,6 +173,7 @@ export default class Level {
     this.isEnd = true;
     this.occupiedCells.clear();
     this.stopListenCellClicks();
+    this.removePlantCards();
     this.stopSunFall();
     this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
@@ -408,6 +410,10 @@ export default class Level {
       card.draw();
       this.plantCards.push(card);
     });
+  }
+
+  private removePlantCards() {
+    this.plantCards.forEach((card) => card.destroy());
   }
 
   private listenCellClicks() {
