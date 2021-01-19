@@ -354,16 +354,16 @@ export default class Engine {
       this.fullscreenMode = value;
       this.setContainerPosition(value);
 
-      if (value) {
-        const callback = this.setFullscreen.bind(this);
-        this.resizeCallback = callback;
+      const callback = this.setFullscreen.bind(this);
 
+      if (value) {
+        this.resizeCallback = callback;
         this.setFullscreen();
         window.addEventListener('resize', callback);
       } else {
         this.cancelFullscreen();
         if (this.resizeCallback) {
-          window.removeEventListener('resize', this.setFullscreen.bind(this));
+          window.removeEventListener('resize', callback);
         }
       }
     }

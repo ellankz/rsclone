@@ -47,7 +47,7 @@ export default class ModalWindow {
         ),
         text: this.modalWindowText,
         layer: 'window',
-        font: 'regular-samdan',
+        font: 'Samdan',
         fontSize: 50,
         color: '#d9bc6b',
       }) as TextNode;
@@ -62,7 +62,7 @@ export default class ModalWindow {
         ),
         text: this.modalWindowText,
         layer: 'window',
-        font: 'regular-samdan',
+        font: 'Samdan',
         fontSize: 50,
         color: '#d9bc6b',
       }) as TextNode;
@@ -111,7 +111,7 @@ export default class ModalWindow {
         ),
         text: this.textOnTheButton,
         layer: 'window',
-        font: 'regular-samdan',
+        font: 'Samdan',
         fontSize: 26,
         color: '#0daf1b',
       }) as TextNode;
@@ -126,7 +126,7 @@ export default class ModalWindow {
         ),
         text: this.textOnTheButton,
         layer: 'window',
-        font: 'regular-samdan',
+        font: 'Samdan',
         fontSize: 28,
         color: '#0daf1b',
       }) as TextNode;

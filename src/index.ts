@@ -14,7 +14,7 @@ const engine = new Engine(container, {
   loader: ['loader-back', 'loader'],
 });
 const dataService = new DataService();
-// engine.fullscreen = true;
+engine.fullscreen = true;
 const game = new Game(engine, dataService);
 
 game.init();

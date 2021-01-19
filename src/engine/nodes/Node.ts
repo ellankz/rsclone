@@ -3,9 +3,9 @@ import {
   INode,
   NodesTypeName,
   NodesType,
+  ILayer,
 } from '../types';
 import Vector from '../core/Vector';
-import Layer from '../core/Layer';
 
 export default class Node implements INode {
   position: Vector;
@@ -14,7 +14,7 @@ export default class Node implements INode {
 
   type: NodesTypeName;
 
-  layer: Layer;
+  layer: ILayer;
 
   sceneName: string;
 

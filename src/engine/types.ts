@@ -162,7 +162,7 @@ export interface ILayer {
 
   drawRect: (RectConfig: any) => void;
   drawCircle: (CircleConfig: any) => void;
-  drawText: (TextConfig: any) => void;
+  drawText: (TextConfig: any, node: ITextNode) => void;
   drawImage: (ImageConfig: any) => void;
   clear: () => void;
   update: () => void;
@@ -217,7 +217,7 @@ export interface SpriteNodeConfig extends NodeConfig {
   startFrame?: number;
   speed?: number;
   states: SpriteStatesConfig;
-  name? : string;
+  name?: string;
 }
 
 export interface InputNodeConfig extends NodeConfig {
