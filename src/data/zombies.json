@@ -19,7 +19,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "stop": {
         "image": "assets/sprites/zombies/basic/stop.png",
@@ -31,7 +31,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "attack": {
         "image": "assets/sprites/zombies/basic/attack.png",
@@ -44,7 +44,7 @@
           "x": 0,
           "y": 0
         }
-      }, 
+      },
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
@@ -55,7 +55,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "lost_head": {
         "image": "assets/sprites/zombies/basic/without_head.png",
@@ -67,7 +67,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "end": {
         "image": "assets/sprites/zombies/basic/end.png",
@@ -79,7 +79,19 @@
         "positionAdjust": {
           "x": 10,
           "y": 0
-        } 
+        }
+      },
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
+        "frames": 20,
+        "speed": 120,
+        "width": 166,
+        "height": 144,
+        "dh": 144,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       }
     }
   },
@@ -104,7 +116,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "stop": {
         "image": "assets/sprites/zombies/basic_2/stop.png",
@@ -116,7 +128,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "attack": {
         "image": "assets/sprites/zombies/basic/attack.png",
@@ -129,7 +141,7 @@
           "x": 0,
           "y": 0
         }
-      }, 
+      },
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
@@ -140,7 +152,7 @@
         "positionAdjust": {
           "x": 10,
           "y": 0
-        } 
+        }
       },
       "lost_head": {
         "image": "assets/sprites/zombies/basic/without_head.png",
@@ -152,7 +164,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "end": {
         "image": "assets/sprites/zombies/basic/end.png",
@@ -164,7 +176,19 @@
         "positionAdjust": {
           "x": 10,
           "y": 0
-        } 
+        }
+      },
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
+        "frames": 20,
+        "speed": 120,
+        "width": 166,
+        "height": 144,
+        "dh": 144,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       }
     }
   },
@@ -189,7 +213,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "stop": {
         "image": "assets/sprites/zombies/cone/stop.png",
@@ -201,14 +225,14 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "attack": {
         "image": "assets/sprites/zombies/cone/attack.png",
         "frames": 11,
         "speed": 180,
         "width": 166,
-        "height": 144,  
+        "height": 144,
         "dh": 140,
         "positionAdjust": {
           "x": 0,
@@ -225,7 +249,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "lost_head": {
         "image": "assets/sprites/zombies/basic/without_head.png",
@@ -237,7 +261,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "end": {
         "image": "assets/sprites/zombies/basic/end.png",
@@ -249,7 +273,19 @@
         "positionAdjust": {
           "x": 10,
           "y": 0
-        } 
+        }
+      },
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
+        "frames": 20,
+        "speed": 120,
+        "width": 166,
+        "height": 144,
+        "dh": 144,
+        "positionAdjust": {
+          "x": 40,
+          "y": 0
+        }
       }
     }
   },
@@ -274,7 +310,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "stop": {
         "image": "assets/sprites/zombies/bucket/stop.png",
@@ -286,7 +322,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "attack": {
         "image": "assets/sprites/zombies/bucket/attack.png",
@@ -299,7 +335,7 @@
           "x": 0,
           "y": 0
         }
-      }, 
+      },
       "death": {
         "image": "assets/sprites/zombies/basic/death.png",
         "frames": 10,
@@ -310,7 +346,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "lost_head": {
         "image": "assets/sprites/zombies/basic/without_head.png",
@@ -322,7 +358,7 @@
         "positionAdjust": {
           "x": 0,
           "y": 0
-        } 
+        }
       },
       "end": {
         "image": "assets/sprites/zombies/basic/end.png",
@@ -334,7 +370,19 @@
         "positionAdjust": {
           "x": 10,
           "y": 0
-        } 
+        }
+      },
+      "burn": {
+        "image": "assets/sprites/zombies/basic/burn.png",
+        "frames": 20,
+        "speed": 120,
+        "width": 166,
+        "height": 144,
+        "dh": 144,
+        "positionAdjust": {
+          "x": 10,
+          "y": 0
+        }
       }
     }
   }

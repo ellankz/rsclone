@@ -57,10 +57,12 @@ export default class Game {
   setupGame() {
     const { engine } = this;
     engine.createView(['back', 'main', 'top']);
-    engine.getLayer('main').view.move(engine.vector(0, 0));
     engine.createScene('scene', function Scene() {
-      this.update = () => {
-        // code;
+      this.init = () => {
+        engine.events.click.eventBubbling = true;
+      };
+      this.exit = () => {
+        engine.events.click.eventBubbling = false;
       };
     });
     this.engine.start('scene');
@@ -68,7 +70,9 @@ export default class Game {
 
   runFirstScreen(): void {
     const startGameScreen = new StartScreen(
-      this.engine, this.startGame.bind(this), this.dataService,
+      this.engine,
+      this.startGame.bind(this),
+      this.dataService,
     );
     this.engine.setScreen('startScreen');
   }
@@ -195,7 +199,7 @@ export default class Game {
     const plants = this.currentLevel.getPlants();
     for (let i = 0; i < plants.length; i += 1) {
       setTimeout(() => {
-        plants[i].continue();
+        plants[i]?.continue();
       }, i * 2000);
     }
   }

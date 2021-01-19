@@ -44,6 +44,7 @@ export default class ImageNode extends Node implements IImageNode {
       dh: this.dh,
       border: this.border,
       opacity: this.opacity,
+      filter: this.filter,
     });
   }
 }
