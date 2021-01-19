@@ -9,8 +9,15 @@ import Zombie from './Zombie';
 import { FallingSun } from '../game/mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
+import { WallNut } from './plants/WallNut';
+import { Chomper } from './plants/Chomper';
+import { CherryBomb } from './plants/CherryBomb';
+import { SnowPea } from './plants/SnowPea';
+import { PotatoMine } from './plants/PotatoMine';
+
 import { Shovel } from '../game/mechanics/Shovel';
 import LawnCleaner from './LawnCleaner';
+
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 import MenuToggle from '../game/MenuToggle';
@@ -28,7 +35,7 @@ export default class Level {
 
   private plant: Plant;
 
-  public sunCount: {suns: number} = { suns: 500 };
+  public sunCount: { suns: number } = { suns: 500 };
 
   public width: number = COLS_NUM;
 
@@ -50,7 +57,7 @@ export default class Level {
 
   private sunCounter: SunCount;
 
-  private sunFall: FallingSun;
+  public sunFall: FallingSun;
 
   public isEnd: boolean;
 
@@ -58,7 +65,7 @@ export default class Level {
 
   public lawnCleaners: LawnCleaner[];
 
-  private timer: any;
+  public timer: any;
 
   public zombiesTimer: any;
 
@@ -102,7 +109,11 @@ export default class Level {
   }
 
   public init() {
-    this.addBackground('back', this.engine.loader.files[BG_URL] as HTMLImageElement, BG_LEVEL_OFFSET_X);
+    this.addBackground(
+      'back',
+      this.engine.loader.files[BG_URL] as HTMLImageElement,
+      BG_LEVEL_OFFSET_X,
+    );
     this.createSunCount();
     this.createPlantCards();
     this.drawMenuButton();
@@ -166,7 +177,7 @@ export default class Level {
       zombie.stop();
     });
     this.plantsArr.forEach((plant) => {
-      plant.stopShooting();
+      plant.stopAttack();
       plant.isDestroyed();
     });
     this.dataService.saveGame({
@@ -204,17 +215,14 @@ export default class Level {
   }
 
   addBackground(layer: string, image: HTMLImageElement, xOffset: number) {
-    this.engine
-      .createNode(
-        {
-          type: 'ImageNode',
-          position: this.engine.vector(0, 0),
-          size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
-          layer,
-          img: image,
-          dh: this.engine.size.y,
-        },
-      );
+    this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(0, 0),
+      size: this.engine.vector(this.engine.size.x + xOffset, this.engine.size.y),
+      layer,
+      img: image,
+      dh: this.engine.size.y,
+    });
   }
 
   public createPlant(type: PlantType) {
@@ -225,6 +233,21 @@ export default class Level {
         break;
       case 'Peashooter':
         newPlant = new Peashooter({ type }, this.engine);
+        break;
+      case 'WallNut':
+        newPlant = new WallNut({ type }, this.engine);
+        break;
+      case 'Chomper':
+        newPlant = new Chomper({ type }, this.engine);
+        break;
+      case 'CherryBomb':
+        newPlant = new CherryBomb({ type }, this.engine, this.zombiesArr, this.occupiedCells);
+        break;
+      case 'SnowPea':
+        newPlant = new SnowPea({ type }, this.engine);
+        break;
+      case 'PotatoMine':
+        newPlant = new PotatoMine({ type }, this.engine, this.zombiesArr, this.occupiedCells);
         break;
       default:
         newPlant = new Plant({ type }, this.engine);
@@ -301,6 +324,10 @@ export default class Level {
   }
 
   public listenGameEvents() {
+    const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
+
+    if (this.timer) clearTimeout(this.timer);
+
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
@@ -308,18 +335,11 @@ export default class Level {
           this.reduceZombies();
         }
 
+        if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
+
         this.plantsArr.forEach((plant) => {
-          if (zombie.row === plant.row && zombie.position && !this.isEnd && plant.health > 0
-            && zombie.position.x < 950) {
-            plant.switchState('attack', zombie, plant);
-
-            if (zombie.health <= 0) {
-              zombie.remove();
-              plant.switchState('basic');
-              plant.stopShooting();
-            }
-
-            plant.isDestroyed();
+          if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
+            plant.switchState('attack', zombie);
           }
         });
       });
@@ -329,6 +349,7 @@ export default class Level {
 
       if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
     };
+
     trackPosition();
   }
 
@@ -354,7 +375,7 @@ export default class Level {
     this.sunCounter.draw();
   }
 
-  public updateSunCount(newCount:number) {
+  public updateSunCount(newCount: number) {
     this.sunCount.suns = newCount;
     this.reDrawCardsAndCount();
   }
@@ -377,7 +398,11 @@ export default class Level {
   private createPlantCards() {
     this.plantTypes.forEach((type, index) => {
       const card = new PlantCard(
-        type, index, this.engine, this.sunCount, this.prepareToPlant.bind(this),
+        type,
+        index,
+        this.engine,
+        this.sunCount,
+        this.prepareToPlant.bind(this),
       );
       card.draw();
       this.plantCards.push(card);
@@ -392,7 +417,7 @@ export default class Level {
           if (this.preparedToPlant && !this.occupiedCells.has(cell)) {
             this.plant = this.createPlant(this.preparedToPlant);
             this.plant.putOnField(cell);
-            this.plant.row = cell.position.y;
+            this.plant.cell = cell;
 
             this.occupiedCells.set(cell, this.plant);
 
@@ -422,7 +447,10 @@ export default class Level {
 
   dropSuns() {
     this.sunFall = new FallingSun(
-      this.engine, this.sunCount, this.cells, this.updateSunCount.bind(this),
+      this.engine,
+      this.sunCount,
+      this.cells,
+      this.updateSunCount.bind(this),
     );
     this.sunFall.init();
   }

@@ -19,6 +19,7 @@ export default class RectNode extends Node implements IRectNode {
       color: this.color,
       border: this.border,
       opacity: this.opacity,
+      filter: this.filter,
     });
   }
 }

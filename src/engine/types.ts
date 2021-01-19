@@ -58,7 +58,10 @@ export interface INode {
   sceneName: string;
   border?: string;
   opacity?: number;
+  filter?: string;
   name?: string;
+
+  removeEventBubbling: string[];
 
   move: (IVector: any) => void;
   addTo: (sceneName: string) => NodesType;
@@ -124,7 +127,8 @@ export interface ISpriteNode extends INode {
   frames: number;
   startFrame: number;
   speed: number;
-  name?: string;
+
+  readonly currentState: string;
 
   draw: () => void;
   innerUpdate: () => void;
@@ -156,6 +160,7 @@ export interface ILayer {
   view: IView;
   nodes: NodesType[];
   screen: string;
+  removeEventBubbling: string[];
 
   toTop: (n?: number) => void;
   toBack: (n?: number) => void;
@@ -185,7 +190,9 @@ export interface NodeConfig {
   layer: ILayer;
   border?: string;
   opacity?: number;
+  filter?: string;
   name?: string;
+  removeEventBubbling?: string[];
 }
 
 export interface RectNodeConfig extends NodeConfig {
@@ -217,7 +224,7 @@ export interface SpriteNodeConfig extends NodeConfig {
   startFrame?: number;
   speed?: number;
   states: SpriteStatesConfig;
-  name? : string;
+  name?: string;
 }
 
 export interface InputNodeConfig extends NodeConfig {
@@ -232,6 +239,7 @@ export interface RectConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface CircleConfig {
@@ -241,6 +249,7 @@ export interface CircleConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface TextConfig {
@@ -252,6 +261,7 @@ export interface TextConfig {
   color?: string;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface ImageConfig {
@@ -266,6 +276,7 @@ export interface ImageConfig {
   dw: number;
   border?: string;
   opacity?: number;
+  filter?: string;
 }
 
 export interface SceneConfig {

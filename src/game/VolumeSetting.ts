@@ -74,7 +74,7 @@ export default class VolumeSetting {
   }
 
   public destroyNodes() {
-    this.textNode.destroy();
+    if (this.textNode) this.textNode.destroy();
     this.rectangles.forEach((rect) => rect.destroy());
   }
 }

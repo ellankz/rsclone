@@ -66,10 +66,7 @@ export default class ModalWindow {
     if (this.modalWindowText === 'game over') {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
-        position: this.engine.vector(
-          (this.engine.size.x / 2) - 75,
-          (this.engine.size.y / 2) - 40,
-        ),
+        position: this.engine.vector(this.engine.size.x / 2 - 75, this.engine.size.y / 2 - 40),
         text: this.modalWindowText,
         layer: 'window',
         font: 'regular-samdan',
@@ -80,19 +77,17 @@ export default class ModalWindow {
   }
 
   private drawBG() {
-    this.bgNode = this.engine.createNode(
-      {
-        type: 'ImageNode',
-        position: this.engine.vector(
-          (this.engine.size.x / 2) - (this.bgImage.width / 2) + 70,
-          (this.engine.size.y / 2) - (this.bgImage.height / 2) + 25,
-        ),
-        size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-        layer: 'window',
-        img: this.bgImage,
-        dh: 500,
-      },
-    ) as ImageNode;
+    this.bgNode = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        this.engine.size.x / 2 - this.bgImage.width / 2 + 70,
+        this.engine.size.y / 2 - this.bgImage.height / 2 + 25,
+      ),
+      size: this.engine.vector(this.bgImage.width, this.bgImage.height),
+      layer: 'window',
+      img: this.bgImage,
+      dh: 330,
+    }) as ImageNode;
   }
 
   private drawButton() {
@@ -103,10 +98,10 @@ export default class ModalWindow {
           (this.engine.size.x / 2) - 135,
           (this.engine.size.y / 2) + 95,
         ),
-        size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+        size: this.engine.vector(this.button.width, this.button.height),
         layer: 'window',
         img: this.button,
-        dh: 800,
+        dh: 55,
       },
     ) as ImageNode;
   }

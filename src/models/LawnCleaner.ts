@@ -27,23 +27,21 @@ export default class LawnCleaner {
   }
 
   draw() {
-    this.image = this.engine.loader.files['assets/images/interface/LawnCleaner.png'] as HTMLImageElement;
+    this.image = this.engine.loader.files[
+      'assets/images/interface/LawnCleaner.png'
+    ] as HTMLImageElement;
     const position = this.engine.vector(
       this.cell.getLeft() - this.image.width + RIGHT_OFFSET,
       this.cell.getTop() + TOP_OFFSET,
     );
 
-    this.node = this.engine.createNode(
-      {
-        type: 'ImageNode',
-        position,
-        size: this.engine.vector(
-          this.image.width, this.image.height,
-        ),
-        layer: 'main',
-        img: this.image,
-      },
-    ) as IImageNode;
+    this.node = this.engine.createNode({
+      type: 'ImageNode',
+      position,
+      size: this.engine.vector(this.image.width, this.image.height),
+      layer: `row-${this.row + 1}`,
+      img: this.image,
+    }) as IImageNode;
   }
 
   run(zombies: Zombie[], deleteCB: () => void) {
