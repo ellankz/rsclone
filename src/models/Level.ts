@@ -21,6 +21,7 @@ import LawnCleaner from './LawnCleaner';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 import MenuToggle from '../game/MenuToggle';
+import TextNode from '../engine/nodes/TextNode';
 import { StartLevelView } from './StartLevelView';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
@@ -36,7 +37,7 @@ export default class Level {
 
   private plant: Plant;
 
-  public sunCount: { suns: number } = { suns: 500 };
+  public sunCount: { suns: number } = { suns: 200 };
 
   public width: number = COLS_NUM;
 
@@ -78,7 +79,7 @@ export default class Level {
 
   levelConfig: LevelConfig;
 
-  levelIndex: number;
+  levelNumber: number;
 
   dataService: DataService;
 
@@ -88,16 +89,18 @@ export default class Level {
 
   runPause: (event: KeyboardEvent) => void;
 
+  levelNumberNode: TextNode;
+
   constructor(
-    levelIndex: number,
+    levelNumber: number,
     engine: Engine,
     cells: Cell[][],
     dataService: DataService,
     runPause: (event: KeyboardEvent) => void,
   ) {
-    this.levelIndex = levelIndex;
+    this.levelNumber = levelNumber;
     this.dataService = dataService;
-    this.levelConfig = levels[levelIndex] as LevelConfig;
+    this.levelConfig = levels[levelNumber] as LevelConfig;
     this.zombiesConfig = this.levelConfig.zombies;
     this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
@@ -116,7 +119,7 @@ export default class Level {
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-    this.createPlantCards();
+
     this.drawMenuButton();
     this.startAnimation();
     return this;
@@ -160,6 +163,7 @@ export default class Level {
 
   startLevel() {
     this.addShovel();
+    this.createPlantCards();
     this.listenCellClicks();
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
@@ -167,13 +171,16 @@ export default class Level {
     this.createZombies(this.creatingZombies);
     this.listenGameEvents();
     this.dropSuns();
+    this.drawLevelNumber();
   }
 
   stopLevel(hasWon: boolean) {
     this.isEnd = true;
     this.occupiedCells.clear();
     this.stopListenCellClicks();
+    this.removePlantCards();
     this.stopSunFall();
+    this.deleteLevelNumberNode();
     this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
@@ -183,7 +190,7 @@ export default class Level {
       plant.isDestroyed();
     });
     this.dataService.saveGame({
-      level: this.levelIndex + 1,
+      level: this.levelNumber + 1,
       win: hasWon,
       zombiesKilled: this.zombiesKilled,
       plantsPlanted: this.plantsPlanted,
@@ -225,6 +232,22 @@ export default class Level {
       img: image,
       dh: this.engine.size.y,
     });
+  }
+
+  drawLevelNumber() {
+    this.levelNumberNode = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(this.engine.size.x - 130, this.engine.size.y - 40),
+      layer: 'main',
+      text: `Level ${this.levelNumber + 1}`,
+      font: 'Samdan',
+      fontSize: 40,
+      color: '#111111',
+    }) as TextNode;
+  }
+
+  deleteLevelNumberNode() {
+    if (this.levelNumberNode) this.levelNumberNode.destroy();
   }
 
   public createPlant(type: PlantType) {
@@ -409,6 +432,10 @@ export default class Level {
       card.draw();
       this.plantCards.push(card);
     });
+  }
+
+  private removePlantCards() {
+    this.plantCards.forEach((card) => card.destroy());
   }
 
   private listenCellClicks() {

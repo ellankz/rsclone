@@ -4,18 +4,21 @@ import Engine from '../../engine';
 export default class WinScene {
   private engine: Engine;
 
-  constructor(engine: Engine) {
+  selfDelete: () => void;
+
+  constructor(engine: Engine, selfDelete: () => void) {
     this.engine = engine;
+    this.selfDelete = selfDelete;
   }
 
-  public init() {
+  public init(afterAnimationCallback: () => void) {
     this.engine.audioPlayer.stopSound('menu');
     this.engine.audioPlayer.playSound('win');
-    this.createAnimation();
+    this.createAnimation(afterAnimationCallback);
     return this;
   }
 
-  private createAnimation() {
+  private createAnimation(afterAnimationCallback: () => void) {
     const INTERVAL = 0.005;
     let opacity = 0;
     const timeInterval = INTERVAL;
@@ -33,6 +36,8 @@ export default class WinScene {
 
       if (opacity >= 1.1) {
         bg.destroy();
+        afterAnimationCallback();
+        this.selfDelete();
       }
     }).addTo('scene');
   }
