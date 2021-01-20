@@ -2,8 +2,40 @@
   {
     "zombies": [
       {
-        "type": "pole",
-        "startDelay": 1
+        "type": "basic",
+        "startDelay": 3
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 5
+      },
+      {
+        "type": "basic",
+        "startDelay": 7
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 13
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 13
       }
     ],
     "plantTypes": [
@@ -14,35 +46,15 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 1
+        "startDelay": 3
       },
       {
         "type": "basic_2",
+        "startDelay": 5
+      },
+      {
+        "type": "basic",
         "startDelay": 7
-      },
-      {
-        "type": "basic",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "basic",
-        "startDelay": 13
-      },
-      {
-        "type": "basic_2",
-        "startDelay": 7
-      },
-      {
-        "type": "basic",
-        "startDelay": 9
       },
       {
         "type": "cone",
@@ -53,8 +65,24 @@
         "startDelay": 9
       },
       {
-        "type": "bucket",
+        "type": "basic",
         "startDelay": 13
+      },
+      {
+        "type": "flag",
+        "startDelay": 7
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 10
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
       }
     ],
     "plantTypes": [
@@ -73,11 +101,11 @@
         "startDelay": 7
       },
       {
-        "type": "basic",
+        "type": "cone",
         "startDelay": 9
       },
       {
-        "type": "cone",
+        "type": "basic_2",
         "startDelay": 9
       },
       {
@@ -93,20 +121,28 @@
         "startDelay": 7
       },
       {
-        "type": "basic",
+        "type": "bucket",
         "startDelay": 9
+      },
+      {
+        "type": "flag",
+        "startDelay": 4
       },
       {
         "type": "cone",
-        "startDelay": 9
+        "startDelay": 1
       },
       {
         "type": "bucket",
-        "startDelay": 9
+        "startDelay": 3
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 2
       },
       {
         "type": "bucket",
-        "startDelay": 13
+        "startDelay": 4
       }
     ],
     "plantTypes": [
@@ -119,35 +155,15 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 25
-      },
-      {
-        "type": "basic_2",
-        "startDelay": 7
-      },
-      {
-        "type": "basic",
         "startDelay": 9
       },
       {
         "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
         "type": "basic",
-        "startDelay": 13
-      },
-      {
-        "type": "basic_2",
         "startDelay": 7
-      },
-      {
-        "type": "basic",
-        "startDelay": 9
       },
       {
         "type": "cone",
@@ -158,8 +174,32 @@
         "startDelay": 9
       },
       {
-        "type": "bucket",
+        "type": "cone",
+        "startDelay": 8
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 7
+      },
+      {
+        "type": "flag",
         "startDelay": 13
+      },
+      {
+        "type": "door",
+        "startDelay": 1
+      },
+      {
+        "type": "cone",
+        "startDelay": 3
+      },
+      {
+        "type": "bucket",
+        "startDelay": 5
+      },
+      {
+        "type": "door",
+        "startDelay": 2
       }
     ],
     "plantTypes": [
@@ -172,15 +212,15 @@
   }, {
     "zombies": [
       {
-        "type": "basic",
-        "startDelay": 25
+        "type": "cone",
+        "startDelay": 5
       },
       {
         "type": "basic_2",
         "startDelay": 7
       },
       {
-        "type": "basic",
+        "type": "bucket",
         "startDelay": 9
       },
       {
@@ -188,11 +228,11 @@
         "startDelay": 9
       },
       {
-        "type": "cone",
+        "type": "dancer",
         "startDelay": 9
       },
       {
-        "type": "basic",
+        "type": "door",
         "startDelay": 13
       },
       {
@@ -200,20 +240,24 @@
         "startDelay": 7
       },
       {
-        "type": "basic",
-        "startDelay": 9
+        "type": "flag",
+        "startDelay": 10
       },
       {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 9
+        "type": "dancer",
+        "startDelay": 2
       },
       {
         "type": "bucket",
-        "startDelay": 13
+        "startDelay": 3
+      },
+      {
+        "type": "bucket",
+        "startDelay": 5
+      },
+      {
+        "type": "door",
+        "startDelay": 3
       }
     ],
     "plantTypes": [
@@ -227,11 +271,31 @@
   }, {
     "zombies": [
       {
-        "type": "basic",
-        "startDelay": 25
+        "type": "flag",
+        "startDelay": 7
+      },
+      {
+        "type": "cone",
+        "startDelay": 7
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
       },
       {
         "type": "basic_2",
+        "startDelay": 9
+      },
+      {
+        "type": "dancer",
+        "startDelay": 11
+      },
+      {
+        "type": "cone",
+        "startDelay": 13
+      },
+      {
+        "type": "dancer_2",
         "startDelay": 7
       },
       {
@@ -243,32 +307,28 @@
         "startDelay": 9
       },
       {
-        "type": "cone",
+        "type": "dancer_3",
         "startDelay": 9
       },
       {
-        "type": "basic",
+        "type": "flag",
         "startDelay": 13
       },
       {
-        "type": "basic_2",
-        "startDelay": 7
+        "type": "bucket",
+        "startDelay": 3
+      },
+      {
+        "type": "door",
+        "startDelay": 2
+      },
+      {
+        "type": "door",
+        "startDelay": 3
       },
       {
         "type": "basic",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 13
+        "startDelay": 1
       }
     ],
     "plantTypes": [
@@ -284,10 +344,10 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 25
+        "startDelay": 7
       },
       {
-        "type": "basic_2",
+        "type": "cone",
         "startDelay": 7
       },
       {
@@ -295,36 +355,56 @@
         "startDelay": 9
       },
       {
-        "type": "cone",
+        "type": "bucket",
         "startDelay": 9
       },
       {
-        "type": "cone",
+        "type": "dancer_2",
         "startDelay": 9
       },
       {
-        "type": "basic",
+        "type": "dancer",
         "startDelay": 13
       },
       {
-        "type": "basic_2",
+        "type": "door",
         "startDelay": 7
       },
       {
-        "type": "basic",
+        "type": "dancer_3",
         "startDelay": 9
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 9
+      },
+      {
+        "type": "flag",
+        "startDelay": 13
+      },
+      {
+        "type": "basic",
+        "startDelay": 1
+      },
+      {
+        "type": "bucket",
+        "startDelay": 2
       },
       {
         "type": "cone",
-        "startDelay": 9
+        "startDelay": 3
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 1
+      },
+      {
+        "type": "basic",
+        "startDelay": 2
       },
       {
         "type": "bucket",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 13
+        "startDelay": 1
       }
     ],
     "plantTypes": [
@@ -340,47 +420,71 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 25
-      },
-      {
-        "type": "basic_2",
         "startDelay": 7
       },
       {
-        "type": "basic",
-        "startDelay": 9
-      },
-      {
         "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
         "type": "basic",
-        "startDelay": 13
+        "startDelay": 5
+      },
+      {
+        "type": "bucket",
+        "startDelay": 8
+      },
+      {
+        "type": "pole",
+        "startDelay": 11
+      },
+      {
+        "type": "basic",
+        "startDelay": 4
       },
       {
         "type": "basic_2",
-        "startDelay": 7
+        "startDelay": 5
       },
       {
-        "type": "basic",
-        "startDelay": 9
+        "type": "pole",
+        "startDelay": 11
       },
       {
         "type": "cone",
-        "startDelay": 9
+        "startDelay": 7
+      },
+      {
+        "type": "door",
+        "startDelay": 8
       },
       {
         "type": "bucket",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
-        "type": "bucket",
+        "type": "flag",
         "startDelay": 13
+      },
+      {
+        "type": "bucket",
+        "startDelay": 3
+      },
+      {
+        "type": "door",
+        "startDelay": 2
+      },
+      {
+        "type": "pole",
+        "startDelay": 1
+      },
+      {
+        "type": "basic",
+        "startDelay": 3
+      },
+      {
+        "type": "dancer",
+        "startDelay": 5
       }
     ],
     "plantTypes": [
@@ -395,48 +499,76 @@
   }, {
     "zombies": [
       {
-        "type": "basic",
-        "startDelay": 25
+        "type": "pole",
+        "startDelay": 5
       },
       {
-        "type": "basic_2",
+        "type": "cone",
+        "startDelay": 5
+      },
+      {
+        "type": "door",
         "startDelay": 7
       },
       {
         "type": "basic",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "basic",
-        "startDelay": 13
+        "startDelay": 3
       },
       {
         "type": "basic_2",
-        "startDelay": 7
+        "startDelay": 6
       },
       {
-        "type": "basic",
-        "startDelay": 9
+        "type": "football",
+        "startDelay": 11
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 5
       },
       {
         "type": "cone",
+        "startDelay": 7
+      },
+      {
+        "type": "pole",
         "startDelay": 9
       },
       {
-        "type": "bucket",
-        "startDelay": 9
+        "type": "dancer",
+        "startDelay": 8
       },
       {
-        "type": "bucket",
+        "type": "football",
         "startDelay": 13
+      },
+      {
+        "type": "flag",
+        "startDelay": 9
+      },
+      {
+        "type": "basic",
+        "startDelay": 3
+      },
+      {
+        "type": "bucket",
+        "startDelay": 2
+      },
+      {
+        "type": "door",
+        "startDelay": 3
+      },
+      {
+        "type": "pole",
+        "startDelay": 2
+      },
+      {
+        "type": "cone",
+        "startDelay": 1
+      },
+      {
+        "type": "pole",
+        "startDelay": 4
       }
     ],
     "plantTypes": [
@@ -451,48 +583,88 @@
   }, {
     "zombies": [
       {
-        "type": "basic",
-        "startDelay": 25
+        "type": "newspaper",
+        "startDelay": 9
       },
       {
         "type": "basic_2",
+        "startDelay": 5
+      },
+      {
+        "type": "basic",
+        "startDelay": 4
+      },
+      {
+        "type": "bucket",
+        "startDelay": 6
+      },
+      {
+        "type": "door",
+        "startDelay": 9
+      },
+      {
+        "type": "pole",
         "startDelay": 7
       },
       {
-        "type": "basic",
-        "startDelay": 9
+        "type": "newspaper",
+        "startDelay": 8
       },
       {
-        "type": "cone",
-        "startDelay": 9
+        "type": "dancer",
+        "startDelay": 11
       },
       {
-        "type": "cone",
-        "startDelay": 9
+        "type": "pole",
+        "startDelay": 6
       },
       {
-        "type": "basic",
-        "startDelay": 13
+        "type": "bucket",
+        "startDelay": 4
       },
       {
         "type": "basic_2",
-        "startDelay": 7
+        "startDelay": 5
       },
       {
-        "type": "basic",
-        "startDelay": 9
+        "type": "football",
+        "startDelay": 11
+      },
+      {
+        "type": "pole",
+        "startDelay": 8
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 3
       },
       {
         "type": "cone",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
-        "type": "bucket",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
+        "type": "flag",
         "startDelay": 13
+      },
+      {
+        "type": "newspaper",
+        "startDelay": 5
+      },
+      {
+        "type": "newspaper",
+        "startDelay": 3
+      },
+      {
+        "type": "pole",
+        "startDelay": 4
+      },
+      {
+        "type": "football",
+        "startDelay": 2
+      },
+      {
+        "type": "dancer",
+        "startDelay": 8
       }
     ],
     "plantTypes": [
