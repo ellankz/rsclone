@@ -36,8 +36,6 @@ export class StartLevelView {
 
     const type: ZombieType[] = Array.from(this.zombiesTypes);
 
-    let j = 0;
-
     for (let i: number = 0; i < ZOMBIES_COUNT; i += 1) {
       const typeIndex: number = randomInteger(0, type.length - 1);
       const zombieImg = this.engine
@@ -46,14 +44,9 @@ export class StartLevelView {
       const zombieType: ZombieType = type[typeIndex];
       const stateObj: any = zombiePresets[zombieType].states.stop;
 
-      let row = i;
-      if (j > 4) j = 0;
+      let row = i % 5;
 
-      if (i >= 5) {
-        row = j;
-        j ++;
-      }
-      const X = [100, -40, 60, 190, 14, 25, 160, 140, 24, 97] 
+      const X = [100, -20, 60, 190, 14, 25, 160, 140, 24, 97] 
       const cell = cells[0][row];
 
       const zombieInstance: any = this.engine
