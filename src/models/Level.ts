@@ -239,7 +239,7 @@ export default class Level {
       position: this.engine.vector(this.engine.size.x - 130, this.engine.size.y - 40),
       layer: 'main',
       text: `Level ${this.levelNumber + 1}`,
-      font: 'regular-samdan',
+      font: 'Samdan',
       fontSize: 40,
       color: '#111111',
     }) as TextNode;
