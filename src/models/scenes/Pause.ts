@@ -1,5 +1,6 @@
 import Engine from '../../engine';
 import ModalWindow from '../../game/ModalWindow';
+import RectNode from '../../engine/nodes/RectNode';
 
 export default class LooseScene {
   private engine: Engine;
@@ -25,7 +26,7 @@ export default class LooseScene {
       size: this.engine.vector(this.engine.size.x + 350, this.engine.size.y),
       layer: 'window',
       color: 'rgba(0, 0, 0, 0.5)',
-    }).addTo('scene');
+    }) as RectNode;
   }
 
   private createModalWindow() {
