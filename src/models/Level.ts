@@ -21,6 +21,7 @@ import LawnCleaner from './LawnCleaner';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 import MenuToggle from '../game/MenuToggle';
+import TextNode from '../engine/nodes/TextNode';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -86,6 +87,8 @@ export default class Level {
   menuButton: MenuToggle;
 
   runPause: (event: KeyboardEvent) => void;
+
+  levelNumberNode: TextNode;
 
   constructor(
     levelNumber: number,
@@ -167,6 +170,7 @@ export default class Level {
     this.createZombies(this.creatingZombies);
     this.listenGameEvents();
     this.dropSuns();
+    this.drawLevelNumber();
   }
 
   stopLevel(hasWon: boolean) {
@@ -175,6 +179,7 @@ export default class Level {
     this.stopListenCellClicks();
     this.removePlantCards();
     this.stopSunFall();
+    this.deleteLevelNumberNode();
     this.clearLawnCleaners();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
@@ -226,6 +231,22 @@ export default class Level {
       img: image,
       dh: this.engine.size.y,
     });
+  }
+
+  drawLevelNumber() {
+    this.levelNumberNode = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(this.engine.size.x - 130, this.engine.size.y - 40),
+      layer: 'main',
+      text: `Level ${this.levelNumber + 1}`,
+      font: 'regular-samdan',
+      fontSize: 40,
+      color: '#111111',
+    }) as TextNode;
+  }
+
+  deleteLevelNumberNode() {
+    this.levelNumberNode.destroy();
   }
 
   public createPlant(type: PlantType) {

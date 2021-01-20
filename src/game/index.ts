@@ -82,6 +82,8 @@ export default class Game {
     this.addPause();
     this.currentLevel = this.createLevel(levelNumber);
     this.engine.setScreen('first');
+    this.engine.stop();
+    this.engine.start('scene');
   }
 
   createCells() {
@@ -141,13 +143,19 @@ export default class Game {
     this.currentLevel.clearPlantsArray();
 
     setTimeout(() => {
-      this.createWinScene();
-      this.currentLevel.updateSunCount(0);
+      this.createWinScene(() => {
+        this.currentLevel.updateSunCount(0);
+        this.destroySun();
+        this.destroyPlants();
+        this.engine.clearAllTimeouts();
+        this.clearLevel();
+        // this.engine.setScreen('startScreen');
+        this.engine.setScreen('levelSelectionScreen');
+        this.engine.stop();
+        this.engine.start('levelSelectionScreen');
+        document.removeEventListener('visibilitychange', this.runPause);
+      });
     }, 3000);
-    setTimeout(() => {
-      this.exitGame(true);
-      this.clearLevel();
-    }, 6000);
 
     clearTimeout(this.timer);
   }
@@ -216,9 +224,11 @@ export default class Game {
     });
   }
 
-  createWinScene() {
-    this.win = new WinScene(this.engine);
-    this.win.init();
+  createWinScene(afterAnimationCallback: () => void) {
+    this.win = new WinScene(this.engine, () => {
+      this.win = null;
+    });
+    this.win.init(afterAnimationCallback);
   }
 
   public createLooseScene() {
@@ -231,6 +241,7 @@ export default class Game {
       this.currentLevel.updateSunCount(500);
     }, () => {
       this.clearLevel();
+      document.removeEventListener('visibilitychange', this.runPause);
       this.exitGame(false);
     });
   }
@@ -265,6 +276,8 @@ export default class Game {
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     clearTimeout(this.timer);
+    this.engine.stop();
+    this.engine.start('levelSelectionScreen');
     this.engine.setScreen('levelSelectionScreen');
   }
 
