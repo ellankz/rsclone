@@ -247,7 +247,7 @@ export default class Level {
   }
 
   deleteLevelNumberNode() {
-    this.levelNumberNode.destroy();
+    if (this.levelNumberNode) this.levelNumberNode.destroy();
   }
 
   public createPlant(type: PlantType) {
