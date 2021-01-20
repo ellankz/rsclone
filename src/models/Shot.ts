@@ -20,10 +20,15 @@ export default class Shot {
 
   shoot: any;
 
+  savedTime: number;
+
+  probablePositionX: number;
+
   constructor(position: Vector, engine: Engine, type: string) {
     this.position = position;
     this.engine = engine;
     this.type = type;
+    this.savedTime = new Date().getTime();
   }
 
   draw(zombie: Zombie, plant: Plant) {
@@ -40,19 +45,38 @@ export default class Shot {
     }
 
     const update = (node: any) => {
-      node.move(this.engine.vector(SHOT_SPEED, 0));
+      if (zombie.health <= 0) {
+        node.destroy();
+        return;
+      }
+      const thisTime = new Date().getTime();
+      this.probablePositionX = (thisTime - this.savedTime) / 7;
+      if (thisTime - this.savedTime > 30) {
+        node.move(this.engine.vector((thisTime - this.savedTime) / 7, 0));
+        this.savedTime = thisTime;
+        this.probablePositionX = node.position.x;
+      }
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
       }
-      if (zombie && zombie.position && zombie.position.x - node.position.x < SHOOT_LENGTH
-      && zombie.position.x - node.position.x > -100 && plant.health > 0 && zombie.name !== 'pole') {
+      if (
+        zombie
+        && zombie.position
+        && zombie.position.x - node.position.x < SHOOT_LENGTH
+        && zombie.position.x - node.position.x > -100
+        && plant.health > 0 && zombie.name !== 'pole') {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();
         if (zombie.health <= 0) zombie.remove();
         this.engine.audioPlayer.playSound('shot');
-      } else if (zombie && zombie.position && zombie.position.x - node.position.x < SHOOT_LENGTH
-        && zombie.position.x - node.position.x > -185 && plant.health > 0 && zombie.name === 'pole') {
+      } else if (
+        zombie
+        && zombie.position
+        && zombie.position.x - node.position.x < SHOOT_LENGTH
+        && zombie.position.x - node.position.x > -190
+        && plant.health > 0
+        && zombie.name === 'pole') {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (zombie.health <= 0) zombie.remove();
