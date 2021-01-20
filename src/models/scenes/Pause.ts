@@ -22,7 +22,7 @@ export default class LooseScene {
     this.bg = this.engine.createNode({
       type: 'RectNode',
       position: this.engine.vector(0, 0),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      size: this.engine.vector(this.engine.size.x + 350, this.engine.size.y),
       layer: 'window',
       color: 'rgba(0, 0, 0, 0.5)',
     }).addTo('scene');
