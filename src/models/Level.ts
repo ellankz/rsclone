@@ -36,7 +36,7 @@ export default class Level {
 
   private plant: Plant;
 
-  public sunCount: { suns: number } = { suns: 500 };
+  public sunCount: { suns: number } = { suns: 200 };
 
   public width: number = COLS_NUM;
 

@@ -238,7 +238,7 @@ export default class Game {
     this.loose.restartLevel(() => {
       this.clearLevel();
       this.createLevel(this.currentLevel.levelNumber);
-      this.currentLevel.updateSunCount(500);
+      this.currentLevel.updateSunCount(200);
     }, () => {
       this.clearLevel();
       document.removeEventListener('visibilitychange', this.runPause);

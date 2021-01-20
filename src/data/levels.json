@@ -94,7 +94,7 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 25
+        "startDelay": 6
       },
       {
         "type": "basic_2",
