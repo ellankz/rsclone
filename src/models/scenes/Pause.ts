@@ -27,6 +27,7 @@ export default class LooseScene {
       color: 'rgba(0, 0, 0, 0.5)',
     }).addTo('scene');
   }
+ 
 
   private createModalWindow() {
     this.modalWindow = new ModalWindow(this.engine, 'game paused', 'resume game');

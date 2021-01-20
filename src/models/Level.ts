@@ -37,6 +37,8 @@ export default class Level {
 
   private plant: Plant;
 
+  private background: string;
+
   public sunCount: { suns: number } = { suns: 200 };
 
   public width: number = COLS_NUM;
@@ -101,6 +103,7 @@ export default class Level {
     this.levelNumber = levelNumber;
     this.dataService = dataService;
     this.levelConfig = levels[levelNumber] as LevelConfig;
+    this.background= this.levelConfig.background;
     this.zombiesConfig = this.levelConfig.zombies;
     this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
@@ -115,12 +118,13 @@ export default class Level {
   public init() {
     this.addBackground(
       'back',
-      this.engine.loader.files[BG_URL] as HTMLImageElement,
+      this.engine.loader.files[this.background] as HTMLImageElement,
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
 
     this.drawMenuButton();
+    //this.startLevel();
     this.startAnimation();
     return this;
   }
@@ -505,6 +509,6 @@ export default class Level {
 
   private startAnimation(): void {
     const typesArray: Array<string> = this.zombiesConfig.map((zombie) => zombie.type);
-    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this), typesArray);
+    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this), typesArray, this.cells);
   }
 }
