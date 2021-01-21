@@ -44,9 +44,9 @@ export class StartLevelView {
       const zombieType: ZombieType = type[typeIndex];
       const stateObj: any = zombiePresets[zombieType].states.stop;
 
-      let row = i % 5;
+      const row = i % 5;
 
-      const X = [100, -20, 60, 190, 14, 25, 160, 140, 24, 97] 
+      const X = [100, -20, 60, 190, 14, 25, 160, 140, 24, 97];
       const cell = cells[0][row];
 
       const zombieInstance: any = this.engine

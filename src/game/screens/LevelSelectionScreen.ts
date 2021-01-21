@@ -34,11 +34,17 @@ export class LevelSelectionScreen extends ScreenCreator {
   private createLevelCard(backgroundImg: any, disabled: boolean, i: number) {
     const LEVEL_CARD = this.engine
       .loader.files['assets/images/interface/selectLevelIcon_notActive.png'] as HTMLImageElement;
+
+    const LEVEL_CARD_NIGHT = this.engine
+      .loader.files['assets/images/interface/levelDarkCard_notActive.png'] as HTMLImageElement;
+
     const LEVEL_CARD_DISABLED = this.engine
       .loader.files['assets/images/interface/selectLevelIcon_disabled.png'] as HTMLImageElement;
 
     const LEVEL_CARD_ZOMBIE = this.engine
       .loader.files[`assets/images/levels/${i}.png`] as HTMLImageElement;
+
+    const img = i < 6 ? LEVEL_CARD : LEVEL_CARD_NIGHT;
 
     const levelcardPosition = this.engine.vector(
       (this.engine.size.x * i) / 3 + 65,
@@ -50,7 +56,7 @@ export class LevelSelectionScreen extends ScreenCreator {
       position: levelcardPosition,
       size: this.engine.vector(338, 402),
       layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
-      img: (disabled) ? LEVEL_CARD_DISABLED : LEVEL_CARD,
+      img: (disabled) ? LEVEL_CARD_DISABLED : img,
       dh: 250,
     });
 
@@ -171,9 +177,9 @@ export class LevelSelectionScreen extends ScreenCreator {
       if (i < this.numberOfActiveLevels) {
         const { levelCard, cardZombie } = this.createLevelCard(backgroundImg, false, i);
         card = levelCard as IImageNode;
-        this.setActive(card,
-          'assets/images/interface/selectLevelIcon_Active.png',
-          'assets/images/interface/selectLevelIcon_notActive.png');
+        const img = i < 6 ? 'assets/images/interface/selectLevelIcon_Active.png' : 'assets/images/interface/levelDarkCard_Active.png';
+        const imgDis = i < 6 ? 'assets/images/interface/selectLevelIcon_notActive.png' : 'assets/images/interface/levelDarkCard_notActive.png';
+        this.setActive(card, img, imgDis);
         const clickHandler = () => {
           this.engine.audioPlayer.playSound('tap');
           this.startLevel(i);
