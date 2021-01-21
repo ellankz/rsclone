@@ -22,6 +22,7 @@ import Loader from './core/Loader';
 import AudioPlayer from './core/AudioPlayer';
 import InputNode from './nodes/InputNode';
 import Timeout from './TimeManager/Timeout';
+import Interval from './TimeManager/Interval';
 
 export default class Engine {
   size: Vector;
@@ -434,5 +435,9 @@ export default class Engine {
   // Timers
   timeout(callback: () => void, timeout: number, repeat?: number) {
     return new Timeout(callback, timeout, repeat);
+  }
+
+  interval(callback: () => void, interval: number, repeat?: number) {
+    return new Interval(this.timeout.bind(this), callback, interval, repeat);
   }
 }

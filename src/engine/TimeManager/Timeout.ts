@@ -23,6 +23,8 @@ export default class Timeout {
 
   private restTime: number;
 
+  private startCallback: () => void;
+
   private finishCallback: () => void;
 
   constructor(callback: () => void, timeout: number, repeat?: number) {
@@ -35,10 +37,11 @@ export default class Timeout {
   start() {
     if (this.isDestroyed || this.isStarted) return;
 
+    if (this.startCallback) this.startCallback();
+
     this.startTime = Date.now();
     this.isStarted = true;
 
-    if (this.timerId) clearTimeout(this.timerId);
     this.timerId = window.setTimeout(() => this.callback(), this.timeout);
 
     return this;
@@ -50,6 +53,7 @@ export default class Timeout {
     this.startTime = Date.now();
     this.isPaused = false;
     this.restTime = this.timeout;
+    this.count = 0;
 
     if (this.timerId) clearTimeout(this.timerId);
     this.timerId = window.setTimeout(() => this.callback(), this.timeout);
@@ -79,6 +83,13 @@ export default class Timeout {
     this.isDestroyed = true;
   }
 
+  before(callback: () => void) {
+    if (!this.isStarted && !this.isDestroyed) {
+      this.startCallback = callback;
+    }
+    return this;
+  }
+
   then(callback: () => void) {
     if (!this.isStarted && !this.isDestroyed) {
       this.callbacks.push(callback);
@@ -94,7 +105,6 @@ export default class Timeout {
   }
 
   private callback() {
-    console.log('callback');
     this.callbacks.forEach((callback) => {
       callback();
     });
@@ -102,7 +112,9 @@ export default class Timeout {
     this.count += 1;
 
     if (this.repeat > this.count) {
+      const count = this.count;
       this.restart();
+      this.count = count;
       return;
     }
 
