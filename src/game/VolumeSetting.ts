@@ -29,7 +29,7 @@ export default class VolumeSetting {
   private drawText() {
     this.textNode = this.engine.createNode({
       type: 'TextNode',
-      position: this.engine.vector(this.engine.size.x / 2 - 60, this.engine.size.y / 1.78),
+      position: this.engine.vector(this.engine.size.x / 2 - 60, this.engine.size.y / 1.78 + 15),
       text: 'volume',
       layer: 'window',
       font: 'Samdan',
@@ -44,7 +44,7 @@ export default class VolumeSetting {
       const rect = this.engine.createNode({
         type: 'RectNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) + (i * 15), this.engine.size.y / 1.7 - (i * 10),
+          (this.engine.size.x / 2) + (i * 15), this.engine.size.y / 1.7 - (i * 10) + 15,
         ),
         size: this.engine.vector(10, i * 10),
         layer: 'window',

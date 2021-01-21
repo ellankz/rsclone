@@ -33,7 +33,11 @@ export default class Layer implements ILayer {
 
   removeEventBubbling: string[] = [];
 
-  constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
+  shadows: { enabled: boolean; };
+
+  constructor(
+    index: number, size: IVector, container: HTMLElement, shadows: {enabled: boolean}, view?: IView,
+  ) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position: absolute; left: 0; top: 0';
     canvas.width = size.x;
@@ -49,6 +53,7 @@ export default class Layer implements ILayer {
     this.nodes = [];
     this.update = null;
     this.screen = '';
+    this.shadows = shadows;
   }
 
   public toTop(n?: number) {
@@ -213,7 +218,7 @@ export default class Layer implements ILayer {
       }
     };
 
-    if (params.shadow) {
+    if (params.shadow && this.shadows.enabled) {
       Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
     }
 
