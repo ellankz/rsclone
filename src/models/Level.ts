@@ -459,6 +459,7 @@ export default class Level {
             this.occupiedCells.set(cell, this.plant);
 
             this.plantCards.forEach((card) => card.removeToggle());
+            this.plantCards.forEach((card) => card.destroySelection());
 
             this.updateSunCount(this.sunCount.suns - this.plant.cost);
 

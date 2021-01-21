@@ -78,7 +78,7 @@ export default class PlantCard {
     this.engine.on(this.node as NodesType, 'click', () => {
       if (this.sunCount.suns >= this.plantData.cost) {
         this.prepareToPlant(this.type);
-        if (this.selection) this.removeSelection();
+        this.destroySelection();
 
         if (this.isActive) {
           plantCards.forEach((card) => {
@@ -116,12 +116,13 @@ export default class PlantCard {
 
   public removeSelect() {
     this.node.filter = 'brightness(1)';
-    if (this.selection) this.removeSelection();
+    this.removeSelection();
     return this.isToggle;
   }
 
   public destroy() {
     this.node.destroy();
+    this.removeSelection();
   }
 
   private drawSelection() {
@@ -140,10 +141,17 @@ export default class PlantCard {
       layer: 'main',
       img: image,
       dh: this.engine.size.y * 0.3,
-    }) as IImageNode;
+      name: 'select',
+    }).addTo('scene') as IImageNode;
+  }
+
+  destroySelection() {
+    let selection = this.engine.getSceneNodes('scene');
+    selection = selection.filter((node) => node.name === 'select');
+    selection.forEach((node) => node.destroy());
   }
 
   private removeSelection() {
-    this.selection.destroy();
+    if (this.selection) this.selection.destroy();
   }
 }
