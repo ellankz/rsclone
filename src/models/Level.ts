@@ -122,8 +122,7 @@ export default class Level {
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-    this.startLevel();
-    // this.startAnimation();
+    this.startAnimation();
     return this;
   }
 
@@ -170,7 +169,7 @@ export default class Level {
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
     this.placeLawnCleaners();
-    // this.createZombies(this.creatingZombies);
+    this.createZombies(this.creatingZombies);
     this.listenGameEvents();
     this.dropSuns();
     this.drawLevelNumber();
@@ -400,7 +399,7 @@ export default class Level {
   }
 
   private removeMenuButton() {
-    this.menuButton.destroy();
+    if (this.menuButton) this.menuButton.destroy();
   }
 
   private createSunCount() {

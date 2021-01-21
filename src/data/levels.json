@@ -301,7 +301,7 @@
         "startDelay": 13
       },
       {
-        "type": "dancer_2",
+        "type": "dancer",
         "startDelay": 7
       },
       {
@@ -366,7 +366,7 @@
         "startDelay": 9
       },
       {
-        "type": "dancer_2",
+        "type": "dancer",
         "startDelay": 9
       },
       {
@@ -427,71 +427,71 @@
     "background": "assets/images/interface/background2.png",
     "zombies": [
       {
-        "type": "basic",
-        "startDelay": 7
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
-        "type": "cone",
+        "type": "dancer_3",
         "startDelay": 5
       },
       {
-        "type": "basic",
+        "type": "dancer_2",
         "startDelay": 5
       },
       {
-        "type": "bucket",
-        "startDelay": 8
-      },
-      {
-        "type": "pole",
-        "startDelay": 11
-      },
-      {
-        "type": "basic",
-        "startDelay": 4
-      },
-      {
-        "type": "basic_2",
+        "type": "dancer_3",
         "startDelay": 5
       },
       {
-        "type": "pole",
-        "startDelay": 11
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
-        "type": "cone",
-        "startDelay": 7
-      },
-      {
-        "type": "door",
-        "startDelay": 8
-      },
-      {
-        "type": "bucket",
+        "type": "dancer_3",
         "startDelay": 5
       },
       {
-        "type": "flag",
-        "startDelay": 13
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
-        "type": "bucket",
-        "startDelay": 3
+        "type": "dancer_3",
+        "startDelay": 5
       },
       {
-        "type": "door",
-        "startDelay": 2
+        "type": "dancer_2",
+        "startDelay": 5
       },
       {
-        "type": "pole",
-        "startDelay": 1
+        "type": "dancer_3",
+        "startDelay": 5
       },
       {
-        "type": "basic",
-        "startDelay": 3
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
-        "type": "dancer",
+        "type": "dancer_3",
+        "startDelay": 10
+      },
+      {
+        "type": "dancer_2",
+        "startDelay": 5
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 5
+      },
+      {
+        "type": "dancer_2",
+        "startDelay": 5
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 5
+      },
+      {
+        "type": "dancer_2",
         "startDelay": 5
       }
     ],
