@@ -64,7 +64,7 @@ export class PotatoMine extends Plant {
     if (this.isAttack || !this.isReady) return;
     this.isAttack = true;
     this.zombies.forEach((targetZombie) => {
-      if (this.isZombieInAttackArea(targetZombie, 20)) {
+      if (targetZombie.health > 0 && this.isZombieInAttackArea(targetZombie, 20)) {
         targetZombie.reduceHealth(this.damage);
         if (targetZombie.health <= 0) {
           targetZombie.burn();

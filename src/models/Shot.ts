@@ -45,7 +45,7 @@ export default class Shot {
     }
 
     const update = (node: any) => {
-      if (zombie.health <= 0) {
+      if (zombie.health <= 0 || plant.health <= 0) {
         node.destroy();
         return;
       }
