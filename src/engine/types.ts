@@ -167,7 +167,7 @@ export interface ILayer {
 
   drawRect: (RectConfig: any) => void;
   drawCircle: (CircleConfig: any) => void;
-  drawText: (TextConfig: any) => void;
+  drawText: (TextConfig: any, node: ITextNode) => void;
   drawImage: (ImageConfig: any) => void;
   clear: () => void;
   update: () => void;

@@ -1,3 +1,4 @@
+import TextNode from '../nodes/TextNode';
 import { Engine, NodesType, IVector } from '../types';
 import Vector from './Vector';
 
@@ -13,6 +14,8 @@ export default class Event {
   events: { [event: string]: Map<NodesType, ((e: any) => void)[]> };
 
   scaleRatio: number;
+
+  private textNodes: TextNode[] = [];
 
   constructor(offset: IVector, engine: Engine) {
     this.offset = offset;
@@ -60,6 +63,8 @@ export default class Event {
 
   addEvent(node: NodesType, event: string, callback: (e: any) => void) {
     if (!node || !callback || !this.eventsNames.includes(event)) return false;
+
+    if (node instanceof TextNode && !this.textNodes.includes(node)) this.textNodes.push(node);
 
     const moveEvents = ['mouseenter', 'mouseleave'];
 
@@ -112,8 +117,12 @@ export default class Event {
 
     layers = layers.slice().sort((a, b) => +a.canvas.style.zIndex - +b.canvas.style.zIndex);
 
+    function checkNode(node: NodesType) {
+      return !(node instanceof TextNode) || this.textNodes.includes(node);
+    }
+
     const nodes: NodesType[] = layers
-      .map((layer) => layer.nodes.filter((node) => node.type !== 'TextNode'))
+      .map((layer) => layer.nodes.filter((node) => checkNode.bind(this)(node)))
       .flat()
       .reverse();
 

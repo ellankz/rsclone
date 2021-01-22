@@ -4,13 +4,11 @@ import Cell from './Cell';
 
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
-import { StartScreen } from './screens/StartScreen';
 import { DataService } from '../api-service/DataService';
 import WinScene from '../models/scenes/WinScene';
 import LooseScene from '../models/scenes/LooseScene';
 import Pause from '../models/scenes/Pause';
-import ModalWindow from './ModalWindow';
-
+import { StartScreen } from './screens/StartScreen';
 import sounds from '../data/audio.json';
 
 const X_HOME = 150;
@@ -24,8 +22,6 @@ export default class Game {
 
   private loose: LooseScene;
 
-  private modalWindow: ModalWindow;
-
   public currentLevel: Level;
 
   public pause: Pause;
@@ -38,6 +34,8 @@ export default class Game {
 
   public restZombies: number;
 
+  private menuOpen: boolean = false;
+
   constructor(engine: Engine, dataService: DataService) {
     this.engine = engine;
     this.cells = [];
@@ -46,6 +44,7 @@ export default class Game {
 
   public init() {
     this.setupGame();
+    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
@@ -77,29 +76,35 @@ export default class Game {
     this.engine.setScreen('startScreen');
   }
 
-  startGame() {
+  startGame(levelNumber: number) {
     // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
-    this.currentLevel = this.createLevel(0);
+    this.currentLevel = this.createLevel(levelNumber);
     this.engine.setScreen('first');
+    this.engine.stop();
+    this.engine.start('scene');
   }
 
   createCells() {
-    for (let x = 0; x < COLS_NUM; x += 1) {
-      const row: Cell[] = [];
-      for (let y = 0; y < ROWS_NUM; y += 1) {
-        const cell = new Cell({ x, y }, this.engine);
-        cell.draw();
-        row.push(cell);
+    if (this.cells.length < 9) {
+      for (let x = 0; x < COLS_NUM; x += 1) {
+        const row: Cell[] = [];
+        for (let y = 0; y < ROWS_NUM; y += 1) {
+          const cell = new Cell({ x, y }, this.engine);
+          cell.draw();
+          row.push(cell);
+        }
+        this.cells.push(row);
       }
-      this.cells.push(row);
     }
   }
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
-    this.currentLevel = new Level(levelIndex, this.engine, this.cells, this.dataService);
+    this.currentLevel = new Level(
+      levelIndex, this.engine, this.cells, this.dataService, this.runPause,
+    );
     this.currentLevel.init();
     this.endGame();
     return this.currentLevel;
@@ -114,7 +119,10 @@ export default class Game {
         }
 
         this.currentLevel.zombiesArr.forEach((zombie) => {
-          if (zombie.position && zombie.position.x < X_HOME) {
+          if (zombie.position && zombie.name === 'pole' && zombie.position.x < 50) {
+            const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
+            if (!lawnCleanerWorked) this.endLoose();
+          } else if (zombie.position && zombie.name !== 'pole' && zombie.position.x < X_HOME) {
             const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
             if (!lawnCleanerWorked) this.endLoose();
           }
@@ -128,22 +136,26 @@ export default class Game {
   endWin() {
     this.isEnd = true;
     this.reducePlantsHealth();
+    this.engine.clearAllTimeouts();
     const hasWon = true;
     this.currentLevel.stopLevel(hasWon);
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
-    this.engine.clearAllTimeouts();
 
     setTimeout(() => {
-      this.createWinScene();
-      this.currentLevel.updateSunCount(500);
-    }, 5000);
-    setTimeout(() => {
-      this.clearLevel();
-    }, 8000);
-    setTimeout(() => {
-      this.createLevel(0);
-    }, 12000);
+      this.createWinScene(() => {
+        this.currentLevel.updateSunCount(0);
+        this.destroySun();
+        this.destroyPlants();
+        this.engine.clearAllTimeouts();
+        this.clearLevel();
+        // this.engine.setScreen('startScreen');
+        this.engine.setScreen('levelSelectionScreen');
+        this.engine.stop();
+        this.engine.start('levelSelectionScreen');
+        document.removeEventListener('visibilitychange', this.runPause);
+      });
+    }, 3000);
 
     clearTimeout(this.timer);
   }
@@ -212,9 +224,11 @@ export default class Game {
     });
   }
 
-  createWinScene() {
-    this.win = new WinScene(this.engine);
-    this.win.init();
+  createWinScene(afterAnimationCallback: () => void) {
+    this.win = new WinScene(this.engine, () => {
+      this.win = null;
+    });
+    this.win.init(afterAnimationCallback);
   }
 
   public createLooseScene() {
@@ -223,8 +237,12 @@ export default class Game {
 
     this.loose.restartLevel(() => {
       this.clearLevel();
-      this.createLevel(0);
-      this.currentLevel.updateSunCount(500);
+      this.createLevel(this.currentLevel.levelNumber);
+      this.currentLevel.updateSunCount(200);
+    }, () => {
+      this.clearLevel();
+      document.removeEventListener('visibilitychange', this.runPause);
+      this.exitGame(false);
     });
   }
 
@@ -247,35 +265,45 @@ export default class Game {
     this.continueCreatingSuns();
   }
 
-  addPause() {
-    let isOpen: boolean = false;
+  exitGame(hasWon: boolean) {
+    this.isEnd = true;
+    this.currentLevel.stopLevel(hasWon);
+    this.destroySun();
+    this.reducePlantsHealth();
+    this.destroyPlants();
+    this.engine.clearAllTimeouts();
+    this.clearLevel();
+    this.currentLevel.clearZombieArray();
+    this.currentLevel.clearPlantsArray();
+    clearTimeout(this.timer);
+    this.engine.stop();
+    this.engine.start('levelSelectionScreen');
+    this.engine.setScreen('levelSelectionScreen');
+  }
 
-    document.addEventListener('visibilitychange', () => {
-      if (!isOpen) {
-        isOpen = true;
+  runPause = (event: KeyboardEvent) => {
+    if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
+      if (!this.menuOpen) {
+        this.menuOpen = true;
         this.stopGame();
 
         this.pause.resumeGame(() => {
-          isOpen = false;
+          this.menuOpen = false;
           this.resumeGame();
+        }, () => {
+          this.menuOpen = false;
+          this.exitGame(false);
+          document.removeEventListener('visibilitychange', this.runPause);
         });
       }
-    });
+    }
+  };
 
-    if (!isOpen) {
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          if (!isOpen) {
-            isOpen = true;
-            this.stopGame();
+  addPause() {
+    document.addEventListener('visibilitychange', this.runPause);
 
-            this.pause.resumeGame(() => {
-              isOpen = false;
-              this.resumeGame();
-            });
-          }
-        }
-      });
+    if (!this.menuOpen) {
+      window.addEventListener('keydown', this.runPause);
     }
   }
 }

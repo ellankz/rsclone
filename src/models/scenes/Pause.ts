@@ -25,7 +25,7 @@ export default class LooseScene {
       size: this.engine.vector(this.engine.size.x, this.engine.size.y),
       layer: 'window',
       color: 'rgba(0, 0, 0, 0.5)',
-    }).addTo('scene');
+    });
   }
 
   private createModalWindow() {
@@ -33,10 +33,15 @@ export default class LooseScene {
     this.modalWindow.draw();
   }
 
-  public resumeGame(resume: () => void) {
+  public resumeGame(resume: () => void, exit: () => void) {
     setTimeout(() => {
       this.engine.on(this.modalWindow.buttonNode, 'click', () => {
         resume();
+        this.bg.destroy();
+      });
+      this.engine.on(this.modalWindow.exitButtonNode, 'click', () => {
+        this.engine.audioPlayer.stopSound('menu');
+        exit();
         this.bg.destroy();
       });
     }, 100);

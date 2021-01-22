@@ -1,4 +1,4 @@
-const context = require.context('../../assets/', true, /\.(png|jpg|mp3)$/);
+const context = require.context('../../assets/', true, /\.(png|jpg|mp3|ttf)$/);
 
 export default class Loader {
   fileContextPath: string;
@@ -16,6 +16,8 @@ export default class Loader {
   filesList: string[];
 
   loadedAllCallback: () => void;
+
+  loadingFinished: boolean = false;
 
   constructor(
     beforeLoadCallback: () => Promise<void>,
@@ -45,45 +47,66 @@ export default class Loader {
       const ext = path.slice(-3);
       if (ext === 'png' || ext === 'jpg') {
         const image = new Image();
-        image.src = path;
         image.addEventListener('load', () => this.fileLoaded());
         image.addEventListener('error', () => this.retryLoadFile(ext, path));
+        image.src = path;
         return [path, image];
       }
       if (ext === 'mp3') {
         const audio = new Audio();
-        audio.src = path;
         audio.addEventListener('canplaythrough', () => this.fileLoaded());
         audio.addEventListener('error', () => this.retryLoadFile(ext, path));
+        audio.src = path;
         return [path, audio];
       }
+      if (ext === 'ttf' || ext === 'woff' || ext === 'woff2') {
+        if (!('fonts' in document)) {
+          this.fileLoaded();
+        } else {
+          const name = path.slice(path.lastIndexOf('/') + 1, -4);
+
+          (document as any).fonts
+            .load(`1em ${name}`)
+            .then(() => this.fileLoaded())
+            .catch(() => this.retryLoadFile(ext, path));
+        }
+      }
+
       return [path, undefined];
     });
+
     this.files = Object.fromEntries(files);
   }
 
   fileLoaded() {
-    this.filesLoadedCount += 1;
-    this.loadedOneCallback(this.filesLoadedCount / this.filesList.length);
-    if (this.filesLoadedCount >= this.filesList.length) {
-      this.loadedAllCallback();
+    if (!this.loadingFinished) {
+      this.filesLoadedCount += 1;
+      this.loadedOneCallback(this.filesLoadedCount / this.filesList.length);
+      if (this.filesLoadedCount >= this.filesList.length) {
+        this.loadedAllCallback();
+        this.loadingFinished = true;
+      }
     }
   }
 
   retryLoadFile(ext: string, path: string) {
     if (ext === 'png' || ext === 'jpg') {
       const image = new Image();
-      image.src = path;
       image.addEventListener('load', () => this.fileLoaded());
       image.addEventListener('error', () => this.fileLoaded());
+      image.src = path;
       this.files[path] = image;
     }
     if (ext === 'mp3') {
       const audio = new Audio();
-      audio.src = path;
       audio.addEventListener('canplaythrough', () => this.fileLoaded());
       audio.addEventListener('error', () => this.fileLoaded());
+      audio.src = path;
       this.files[path] = audio;
+    }
+    if (ext === 'ttf' || ext === 'woff' || ext === 'woff2') {
+      const name = path.slice(path.lastIndexOf('/') + 1, -4);
+      (document as any).fonts.load(`1em ${name}`).finally(() => this.fileLoaded());
     }
   }
 }

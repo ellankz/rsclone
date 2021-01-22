@@ -5,6 +5,7 @@ import Cell from '../game/Cell';
 import { ISpriteNode } from '../engine/types';
 import Vector from '../engine/core/Vector';
 import Zombie from './Zombie';
+import Shot from './Shot';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
 
@@ -48,6 +49,8 @@ export default class Plant {
   public timer: any;
 
   public isShooting: boolean;
+
+  public shotType?: string;
 
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;

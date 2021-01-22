@@ -7,39 +7,44 @@ export default class AudioPlayer {
 
   loader: Loader;
 
-  volume: number = 1;
+  private volumeInner: number;
 
   constructor(list: {[dynamic: string]: string}, loader: Loader) {
     this.sounds = list;
     this.loader = loader;
+    this.volumeInner = 1;
   }
 
-  init() {
+  public init() {
     this.elements = Object.entries(this.sounds).reduce((acc, sound, index) => {
       const [name, path] = sound;
       return { ...acc, [name]: this.loader.files[path] };
     }, {});
   }
 
-  playSound(name: string) {
+  public playSound(name: string) {
     this.elements[name].currentTime = 0;
     this.elements[name].play();
   }
 
-  playContinue(name: string) {
+  public playContinue(name: string) {
     this.elements[name].play();
   }
 
-  stopSound(name: string) {
+  public stopSound(name: string) {
     this.elements[name].pause();
     this.elements[name].currentTime = 0;
   }
 
-  setVolume(volume: number) {
-    this.volume = volume;
+  public setVolume(volume: number) {
+    this.volumeInner = volume;
     Object.values(this.elements).forEach((elem) => {
-      // eslint-disable-next-line no-param-reassign
-      elem.volume = this.volume;
+      const element = elem;
+      element.volume = this.volumeInner;
     });
+  }
+
+  public get volume() {
+    return this.volumeInner;
   }
 }

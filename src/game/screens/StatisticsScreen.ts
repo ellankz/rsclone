@@ -67,7 +67,7 @@ export class StatisticsScreen extends ScreenCreator {
       position: this.engine.vector(posX, 120),
       text: title,
       layer: STATISTICS_SCREEN_LAYERS[2],
-      font: 'serif',
+      font: 'Samdan',
       fontSize: 30,
       color: '#333333',
     }) as ITextNode);
@@ -78,7 +78,7 @@ export class StatisticsScreen extends ScreenCreator {
         position: this.engine.vector(posX, 160),
         text: 'There were no games played yet.',
         layer: STATISTICS_SCREEN_LAYERS[2],
-        font: 'serif',
+        font: 'Samdan',
         fontSize: 20,
         color: '#333333',
       }) as ITextNode);
@@ -115,7 +115,7 @@ export class StatisticsScreen extends ScreenCreator {
           position: this.engine.vector(posX, 160 + index * 35),
           text: `${itemTitle} ${item[1].toString()}`,
           layer: STATISTICS_SCREEN_LAYERS[2],
-          font: 'serif',
+          font: 'Samdan',
           fontSize: 25,
           color: '#333333',
         }) as ITextNode);
