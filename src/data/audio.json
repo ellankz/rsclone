@@ -22,5 +22,12 @@
   "potato-mine_grow": "assets/audio/seedlift.mp3",
   "chomper": "assets/audio/bigchomp.mp3",
   "pause": "assets/audio/pause.mp3",
-  "buzzer": "assets/audio/buzzer.mp3"
+  "buzzer": "assets/audio/buzzer.mp3",
+  "groan1": "assets/audio/groan1.mp3",
+  "groan2": "assets/audio/groan2.mp3",
+  "groan3": "assets/audio/groan3.mp3",
+  "groan4": "assets/audio/groan4.mp3",
+  "groan5": "assets/audio/groan5.mp3",
+  "groan6": "assets/audio/groan6.mp3",
+  "plantcard": "assets/audio/kernelpult2.mp3"
 }
