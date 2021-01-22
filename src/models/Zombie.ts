@@ -373,8 +373,8 @@ export default class Zombie {
       if (this.name === 'newspaper') {
         this.zombieSpeed -= 0;
       } else if (this.name === 'football') {
-        if (this.zombieSpeed - 0.33 > 0) {
-          this.zombieSpeed -= 0.33;
+        if (this.zombieSpeed - 0.34 > 0) {
+          this.zombieSpeed -= 0.34;
         }
       } else if (this.zombieSpeed - 0.14 > 0) {
         this.zombieSpeed -= 0.14;
