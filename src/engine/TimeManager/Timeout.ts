@@ -11,6 +11,8 @@ export default class Timeout {
 
   isPaused: boolean;
 
+  isInTimer: boolean;
+
   private count: number = 0;
 
   private callbacks: (() => void)[] = [];
@@ -23,9 +25,13 @@ export default class Timeout {
 
   private restTime: number;
 
-  private startCallback: () => void;
+  private startCallbacks: (() => void)[] = [];
 
-  private finishCallback: () => void;
+  private finishCallbacks: (() => void)[] = [];
+
+  private isEnd: boolean;
+
+  onEnd: () => void;
 
   constructor(callback: () => void, timeout: number, repeat?: number) {
     this.timeout = timeout || 0;
@@ -35,9 +41,12 @@ export default class Timeout {
   }
 
   start() {
-    if (this.isDestroyed || this.isStarted) return;
+    if (this.isDestroyed) return;
+    if (this.isStarted) this.restart();
 
-    if (this.startCallback) this.startCallback();
+    if (this.startCallbacks.length > 0) {
+      this.startCallbacks.forEach((callback) => callback());
+    }
 
     this.startTime = Date.now();
     this.isStarted = true;
@@ -45,18 +54,6 @@ export default class Timeout {
     this.timerId = window.setTimeout(() => this.callback(), this.timeout);
 
     return this;
-  }
-
-  restart() {
-    if (this.isDestroyed || !this.isStarted) return;
-
-    this.startTime = Date.now();
-    this.isPaused = false;
-    this.restTime = this.timeout;
-    this.count = 0;
-
-    if (this.timerId) clearTimeout(this.timerId);
-    this.timerId = window.setTimeout(() => this.callback(), this.timeout);
   }
 
   pause() {
@@ -79,13 +76,21 @@ export default class Timeout {
   }
 
   destroy() {
+    if (this.isDestroyed) return;
+
     if (this.timerId) clearTimeout(this.timerId);
+
     this.isDestroyed = true;
+
+    if (this.onEnd && !this.isEnd) {
+      this.isEnd = true;
+      this.onEnd();
+    }
   }
 
   before(callback: () => void) {
     if (!this.isStarted && !this.isDestroyed) {
-      this.startCallback = callback;
+      this.startCallbacks.push(callback);
     }
     return this;
   }
@@ -99,9 +104,23 @@ export default class Timeout {
 
   finally(callback: () => void) {
     if (!this.isStarted && !this.isDestroyed) {
-      this.finishCallback = callback;
+      this.finishCallbacks.push(callback);
     }
     return this;
+  }
+
+  private restart() {
+    if (this.isDestroyed || !this.isStarted) return;
+
+    this.startTime = Date.now();
+    this.isPaused = false;
+    this.isFinished = false;
+    this.isEnd = false;
+    this.restTime = this.timeout;
+    this.count = 0;
+
+    if (this.timerId) clearTimeout(this.timerId);
+    this.timerId = window.setTimeout(() => this.callback(), this.timeout);
   }
 
   private callback() {
@@ -118,7 +137,14 @@ export default class Timeout {
       return;
     }
 
+    if (this.onEnd && !this.isEnd) {
+      this.isEnd = true;
+      this.onEnd();
+    }
+
     this.isFinished = true;
-    if (this.finishCallback) this.finishCallback();
+    if (this.finishCallbacks.length > 0) {
+      this.finishCallbacks.forEach((callback) => callback());
+    }
   }
 }

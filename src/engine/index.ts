@@ -23,6 +23,7 @@ import AudioPlayer from './core/AudioPlayer';
 import InputNode from './nodes/InputNode';
 import Timeout from './TimeManager/Timeout';
 import Interval from './TimeManager/Interval';
+import Timer from './TimeManager/Timer';
 
 export default class Engine {
   size: Vector;
@@ -59,6 +60,8 @@ export default class Engine {
 
   private resizeCallback: () => void;
 
+  private timers: { [name: string]: Timer };
+
   vector: (x?: number, y?: number) => Vector;
 
   audioPlayer: any;
@@ -79,6 +82,7 @@ export default class Engine {
     this.screens = {};
     this.layers = {};
     this.scenes = {};
+    this.timers = {};
     this.event = null;
     this.animation = null;
     this.fullscreen = false;
@@ -438,6 +442,16 @@ export default class Engine {
   }
 
   interval(callback: () => void, interval: number, repeat?: number) {
-    return new Interval(this.timeout.bind(this), callback, interval, repeat);
+    return new Interval(callback, interval, repeat);
+  }
+
+  timer(timers: (Timeout | Interval | Timer)[], sequentially?: boolean, name?: string) {
+    const timer = new Timer(timers, sequentially);
+    if (name) this.timers[name] = timer;
+    return timer;
+  }
+
+  getTimer(name: string) {
+    return this.timers[name] || null;
   }
 }
