@@ -204,6 +204,7 @@ export default class Zombie {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
+          this.attackedPlant = plant;
 
           if (plant.health <= 0) {
             this.eatThePlant(plant);
@@ -223,6 +224,7 @@ export default class Zombie {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
+          this.attackedPlant = plant;
 
           if (plant.health <= 0) {
             this.eatThePlant(plant);
@@ -243,7 +245,11 @@ export default class Zombie {
 
   public walk() {
     if (this.isDestroyedFlag) return;
-    this.node.switchState('walking');
+    if (this.name === 'pole') {
+      this.node.switchState('walkingSlow');
+    } else {
+      this.node.switchState('walking');
+    }
     this.zombieSpeed = this.setSpeed();
   }
 

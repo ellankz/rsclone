@@ -72,6 +72,7 @@ export class Shovel {
         }
         plant.stopAttack();
         plant.health = 0;
+        plant.isDestroyedFlag = true;
         this.plantsArr = this.deletePlant();
         plant.destroy();
         this.occupiedCells.delete(cell);
