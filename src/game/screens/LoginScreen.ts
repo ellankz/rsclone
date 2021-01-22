@@ -231,6 +231,8 @@ export class LoginScreen extends ScreenCreator {
         } else {
           onModalFinish(name);
         }
+      } else {
+        this.setErrorMessage('Enter data');
       }
     });
 

@@ -19,8 +19,12 @@ export class Peashooter extends Plant {
   startShooting(zombie: Zombie) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
-        this.shot = new Shot(this.position, this.engine, this.shotType);
-        this.shot.draw(zombie, this);
+        if (zombie.health > 0) {
+          this.shot = new Shot(this.position, this.engine, this.shotType);
+          this.shot.draw(zombie, this);
+        } else {
+          this.stopAttack();
+        }
       };
       setTimeout(() => {
         if (this.shooting === null) {

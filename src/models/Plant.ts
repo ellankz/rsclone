@@ -38,6 +38,8 @@ export default class Plant {
 
   protected frames: number;
 
+  private shadow: string;
+
   protected speed: number;
 
   protected node: ISpriteNode;
@@ -62,6 +64,7 @@ export default class Plant {
     this.height = this.plantPresets[config.type].height;
     this.width = this.plantPresets[config.type].width;
     this.frames = this.plantPresets[config.type].frames;
+    this.shadow = this.plantPresets[config.type].shadow;
     this.speed = this.plantPresets[config.type].speed;
     this.states = this.plantPresets[config.type].states;
 
@@ -113,6 +116,7 @@ export default class Plant {
         speed: this.speed,
         dh: this.height,
         states: this.states ? generateStates() : undefined,
+        shadow: this.shadow,
       })
       .addTo('scene') as ISpriteNode;
   }

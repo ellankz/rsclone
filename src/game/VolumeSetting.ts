@@ -34,7 +34,7 @@ export default class VolumeSetting {
       type: 'TextNode',
       position: this.engine.vector(
         (this.engine.size.x / 2 - 60) + this.shiftX,
-        this.engine.size.y / 1.78,
+        this.engine.size.y / 1.78 + 15,
       ),
       text: 'volume',
       layer: 'window',
@@ -51,7 +51,7 @@ export default class VolumeSetting {
         type: 'RectNode',
         position: this.engine.vector(
           (this.engine.size.x / 2) + (i * 15) + this.shiftX,
-          this.engine.size.y / 1.7 - (i * 10),
+          this.engine.size.y / 1.7 - (i * 10) + 15,
         ),
         size: this.engine.vector(10, i * 10),
         layer: 'window',

@@ -33,7 +33,11 @@ export default class Layer implements ILayer {
 
   removeEventBubbling: string[] = [];
 
-  constructor(index: number, size: IVector, container: HTMLElement, view?: IView) {
+  shadows: { enabled: boolean; };
+
+  constructor(
+    index: number, size: IVector, container: HTMLElement, shadows: {enabled: boolean}, view?: IView,
+  ) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position: absolute; left: 0; top: 0';
     canvas.width = size.x;
@@ -49,6 +53,7 @@ export default class Layer implements ILayer {
     this.nodes = [];
     this.update = null;
     this.screen = '';
+    this.shadows = shadows;
   }
 
   public toTop(n?: number) {
@@ -213,6 +218,10 @@ export default class Layer implements ILayer {
       }
     };
 
+    if (params.shadow && this.shadows.enabled) {
+      Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
+    }
+
     const isImgLoaded = params.img.complete && params.img.naturalHeight !== 0;
 
     if (!isImgLoaded) {
@@ -253,5 +262,31 @@ export default class Layer implements ILayer {
         this.queue.shift()();
       }
     });
+  }
+
+  private static setShadow(shadow: string, posX: number,
+    posY: number, ctx: CanvasRenderingContext2D) {
+    const shadowParams = shadow.split(' ');
+    const cx = posX + parseInt(shadowParams[0], 10);
+    const cy = posY + parseInt(shadowParams[1], 10);
+    const rx = parseInt(shadowParams[2], 10);
+    const ry = parseInt(shadowParams[3], 10);
+
+    ctx.save();
+    ctx.beginPath();
+
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowColor = 'black';
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+
+    ctx.translate(cx - rx, cy - ry);
+    ctx.scale(rx, ry);
+    ctx.arc(1, 1, 1, 0, 2 * Math.PI, false);
+
+    ctx.fill();
+    ctx.restore();
   }
 }
