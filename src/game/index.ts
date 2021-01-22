@@ -257,6 +257,7 @@ export default class Game {
     this.engine.audioPlayer.pauseSound('levelMain');
     this.engine.audioPlayer.pauseSound('level');
 
+    this.currentLevel.zombiesArr.forEach((zombie) => clearInterval(zombie.groanInterval));
     this.engine.stop();
     this.engine.clearAllTimeouts();
     this.createPauseScene();
@@ -266,6 +267,7 @@ export default class Game {
   resumeGame() {
     const mainSound = this.engine.audioPlayer.getSound('levelMain');
     const viewSound = this.engine.audioPlayer.getSound('level');
+    this.currentLevel.zombiesArr.forEach((zombie) => zombie.groan());
 
     if (mainSound.currentTime !== 0) {
       this.engine.audioPlayer.playContinue('levelMain');
@@ -280,6 +282,8 @@ export default class Game {
   }
 
   exitGame(hasWon: boolean) {
+    this.currentLevel.zombiesArr.forEach((zombie) => clearInterval(zombie.groanInterval));
+
     this.engine.audioPlayer.stopSound('levelMain');
     this.engine.audioPlayer.playSound('menuMain');
     this.isEnd = true;

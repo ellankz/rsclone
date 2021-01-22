@@ -33,6 +33,8 @@ const SPEED = {
   superFast: 0.47,
 };
 
+const GROAN_DELAY: number = 15000;
+
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
 
@@ -101,6 +103,8 @@ export default class Zombie {
   private slowTimeout: number;
 
   public isDestroyedFlag: boolean;
+
+  public groanInterval: any;
 
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
@@ -187,6 +191,7 @@ export default class Zombie {
     }
 
     this.updateZombieState();
+    this.groan();
   }
 
   public attack(occupiedCells: Map<Cell, Plant>) {
@@ -257,8 +262,16 @@ export default class Zombie {
     return this;
   }
 
+  public groan(): void {
+    this.groanInterval = setInterval(() => {
+      console.log('groan');
+      this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
+    }, GROAN_DELAY);
+  }
+
   public stop() {
     clearTimeout(this.timer);
+    clearInterval(this.groanInterval);
     if (this.isDestroyedFlag) return;
     this.node.switchState('stop');
     this.zombieSpeed = 0;
@@ -316,6 +329,7 @@ export default class Zombie {
   }
 
   public remove() {
+    clearInterval(this.groanInterval);
     clearTimeout(this.timer);
     if (this.isDestroyedFlag) return;
     this.isDestroyedFlag = true;
