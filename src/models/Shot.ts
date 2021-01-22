@@ -39,6 +39,10 @@ export default class Shot {
     }
 
     const update = (node: any) => {
+      if (zombie.health <= 0 || plant.health <= 0) {
+        node.destroy();
+        return;
+      }
       node.move(this.engine.vector(SHOT_SPEED, 0));
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();

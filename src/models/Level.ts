@@ -359,10 +359,6 @@ export default class Level {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
 
-        if (zombie.health <= 0) {
-          this.reduceZombies();
-        }
-
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
 
         this.plantsArr.forEach((plant) => {
@@ -370,6 +366,10 @@ export default class Level {
             plant.switchState('attack', zombie);
           }
         });
+
+        if (zombie.health <= 0) {
+          this.reduceZombies();
+        }
       });
 
       this.zombiesArr = this.deleteZombie();
@@ -382,9 +382,10 @@ export default class Level {
   }
 
   private deleteZombie() {
-    const index = this.zombiesArr.findIndex((el) => el.health <= 0);
-    if (index >= 0) this.zombiesArr.splice(index, 1);
-    return this.zombiesArr;
+    return this.zombiesArr.filter((el) => el.health > 0);
+    // const index = this.zombiesArr.findIndex((el) => el.health <= 0);
+    // if (index >= 0) this.zombiesArr.splice(index, 1);
+    // return this.zombiesArr;
   }
 
   private deletePlant() {
