@@ -28,12 +28,15 @@ export default class ModalWindow {
 
   volume: VolumeSetting;
 
+  shiftX: number;
+
   constructor(engine: Engine, modalWindowText: string, textOnTheButton: string) {
     this.engine = engine;
     this.bgImage = this.engine.loader.files['assets/images/interface/window.png'] as HTMLImageElement;
     this.button = this.engine.loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
     this.modalWindowText = modalWindowText;
     this.textOnTheButton = textOnTheButton;
+    this.shiftX = this.engine.getLayer('window').view.position.x;
     this.volume = new VolumeSetting(this.engine);
   }
 
@@ -52,7 +55,7 @@ export default class ModalWindow {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 90,
+          ((this.engine.size.x / 2) - 90) + this.shiftX,
           (this.engine.size.y / 2) - 70,
         ),
         text: this.modalWindowText,
@@ -66,7 +69,10 @@ export default class ModalWindow {
     if (this.modalWindowText === 'game over') {
       this.textNode = this.engine.createNode({
         type: 'TextNode',
-        position: this.engine.vector(this.engine.size.x / 2 - 75, this.engine.size.y / 2 - 40),
+        position: this.engine.vector(
+          (this.engine.size.x / 2 - 75) + this.shiftX,
+          this.engine.size.y / 2 - 40,
+        ),
         text: this.modalWindowText,
         layer: 'window',
         font: 'Samdan',
@@ -80,8 +86,8 @@ export default class ModalWindow {
     this.bgNode = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
-        this.engine.size.x / 2 - this.bgImage.width / 2 + 70,
-        this.engine.size.y / 2 - this.bgImage.height / 2 + 25,
+        (this.engine.size.x / 2 - this.bgImage.width / 2 + 70) + this.shiftX,
+        (this.engine.size.y / 2 - this.bgImage.height / 2 + 25),
       ),
       size: this.engine.vector(this.bgImage.width, this.bgImage.height),
       layer: 'window',
@@ -95,7 +101,7 @@ export default class ModalWindow {
       {
         type: 'ImageNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 135,
+          ((this.engine.size.x / 2) - 135) + this.shiftX,
           (this.engine.size.y / 2) + 95,
         ),
         size: this.engine.vector(this.button.width, this.button.height),
@@ -111,7 +117,7 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 118,
+          ((this.engine.size.x / 2) - 118) + this.shiftX,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
@@ -126,7 +132,7 @@ export default class ModalWindow {
       this.textNodeButton = this.engine.createNode({
         type: 'TextNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) - 110,
+          ((this.engine.size.x / 2) - 110) + this.shiftX,
           (this.engine.size.y / 2) + 110,
         ),
         text: this.textOnTheButton,
@@ -143,7 +149,7 @@ export default class ModalWindow {
       {
         type: 'ImageNode',
         position: this.engine.vector(
-          (this.engine.size.x / 2) + 30,
+          ((this.engine.size.x / 2) + 30) + this.shiftX,
           (this.engine.size.y / 2) + 95,
         ),
         size: this.engine.vector(this.engine.size.x, this.engine.size.y),
@@ -156,7 +162,7 @@ export default class ModalWindow {
     this.exitButtonTextNode = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
-        (this.engine.size.x / 2) + 55,
+        ((this.engine.size.x / 2) + 55) + this.shiftX,
         (this.engine.size.y / 2) + 110,
       ),
       text: 'main menu',
