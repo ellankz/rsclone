@@ -12,6 +12,7 @@
     "width": 71,
     "height": 71,
     "shotType": "green",
+    "shadow": "34, 68, 30, 10",
     "states": {
       "attack": {
         "image": "assets/sprites/plants/Peashooter/1.png",
@@ -40,6 +41,7 @@
     "frames": 18,
     "startFrame": 0,
     "speed": 100,
+    "shadow": "36, 70, 30, 10",
     "states": {
       "generate": {
         "image": "assets/sprites/plants/SunFlower/sun-creator.png",
@@ -68,6 +70,7 @@
     "name": "WallNut",
     "frames": 16,
     "speed": 100,
+    "shadow": "36, 70, 30, 10",
     "states": {
       "cracked1": {
         "image": "assets/sprites/plants/WallNut/1.png",
@@ -107,6 +110,7 @@
     "name": "Chomper",
     "frames": 13,
     "speed": 120,
+    "shadow": "42, 107, 40, 16",
     "states": {
       "attack": {
         "image": "assets/sprites/plants/Chomper/1.png",
@@ -146,6 +150,7 @@
     "name": "CherryBomb",
     "frames": 7,
     "speed": 140,
+    "shadow": "",
     "states": {
       "boom": {
         "image": "assets/sprites/plants/CherryBomb/1.png",
@@ -174,6 +179,7 @@
     "width": 71,
     "height": 71,
     "shotType": "snow",
+    "shadow": "32, 68, 30, 10",
     "states": {
       "attack": {
         "image": "assets/sprites/plants/SnowPea/1.png",
@@ -201,6 +207,7 @@
     "name": "PotatoMine",
     "frames": 8,
     "speed": 200,
+    "shadow": "35, 40, 40, 16",
     "states": {
       "notReady": {
         "image": "assets/sprites/plants/PotatoMine/1.png",
