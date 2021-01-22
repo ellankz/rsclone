@@ -44,6 +44,7 @@ export class SunCreator {
       if (this.engine.getSceneNodes('scene').length === 0) {
         this.instance.clearLayer();
       }
+      this.destroySelection();
     });
   }
 
@@ -67,5 +68,11 @@ export class SunCreator {
         setTimeout(() => this.instance.destroy(), DESTROY_DELAY);
       }, FLY_DELAY);
     }, CHANGE_STATE_DELAY);
+  }
+
+  destroySelection() {
+    let selection = this.engine.getSceneNodes('scene');
+    selection = selection.filter((node) => node.name === 'select');
+    selection.forEach((node) => node.destroy());
   }
 }

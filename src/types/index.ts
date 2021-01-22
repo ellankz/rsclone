@@ -86,6 +86,7 @@ export interface PlantConfig {
 }
 
 export interface LevelConfig {
+  background: string;
   zombies: ZombieConfig[];
   plantTypes: PlantType[];
 }

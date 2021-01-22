@@ -185,6 +185,7 @@ export default class ModalWindow {
   }
 
   private drawFullScreenToggle() {
+    if (this.modalWindowText !== 'game paused') return;
     this.fullScreenToggleButton = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -211,6 +212,7 @@ export default class ModalWindow {
   }
 
   private drawShadowToggle() {
+    if (this.modalWindowText !== 'game paused') return;
     this.shadowToggleButton = this.engine.createNode({
       type: 'ImageNode',
       position: this.engine.vector(
@@ -286,7 +288,7 @@ export default class ModalWindow {
     this.exitButtonNode.destroy();
     this.exitButtonTextNode.destroy();
     this.volume.destroyNodes();
-    this.shadowToggleButton.destroy();
-    this.shadowToggleText.destroy();
+    if (this.shadowToggleButton) this.shadowToggleButton.destroy();
+    if (this.shadowToggleText) this.shadowToggleText.destroy();
   }
 }

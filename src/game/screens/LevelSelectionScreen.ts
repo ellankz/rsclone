@@ -1,21 +1,22 @@
 import Engine from '../../engine';
 import { ScreenCreator, TEXT_BUTTONS_COLOR, TEXT_BUTTONS_FONT } from './ScreenCreator';
 import ImageNode from '../../engine/nodes/ImageNode';
+import { IImageNode } from '../../engine/types';
 
 const LEVEL_SELECTION_SCREEN_LAYERS: Array<string> = ['levelSelection-screen_background', 'levelSelection-screen_inputs'];
 const LEVEL_SELECTION_SCREEN_SCREEN_NAME: string = 'levelSelectionScreen';
 const LEVEL_SELECTION_SCREEN_SCENE_NAME: string = 'levelSelectionScreen';
 
 export class LevelSelectionScreen extends ScreenCreator {
-  private startLevel: () => void;
+  private startLevel: (levelNumber: number) => void;
 
   private levelCards: Array<ImageNode> = [];
 
   private numberOfLevels: number = 10;
 
-  private numberOfActiveLevels: number = 1;
+  private numberOfActiveLevels: number = 10;
 
-  constructor(engine: Engine, func: () => void) {
+  constructor(engine: Engine, func: (levelNumber: number) => void) {
     super(engine);
     this.startLevel = func;
     this.createLayers(LEVEL_SELECTION_SCREEN_LAYERS);
@@ -30,22 +31,42 @@ export class LevelSelectionScreen extends ScreenCreator {
     super.openScreen(LEVEL_SELECTION_SCREEN_SCREEN_NAME, LEVEL_SELECTION_SCREEN_SCENE_NAME);
   }
 
-  private createLevelCard(backgroundImg: any, disabled: boolean, i: number): any {
+  private createLevelCard(backgroundImg: any, disabled: boolean, i: number) {
     const LEVEL_CARD = this.engine
       .loader.files['assets/images/interface/selectLevelIcon_notActive.png'] as HTMLImageElement;
+
+    const LEVEL_CARD_NIGHT = this.engine
+      .loader.files['assets/images/interface/levelDarkCard_notActive.png'] as HTMLImageElement;
+
     const LEVEL_CARD_DISABLED = this.engine
       .loader.files['assets/images/interface/selectLevelIcon_disabled.png'] as HTMLImageElement;
 
-    const levelCard: any = this.engine.createNode({
+    const LEVEL_CARD_ZOMBIE = this.engine
+      .loader.files[`assets/images/levels/${i}.png`] as HTMLImageElement;
+
+    const img = i < 6 ? LEVEL_CARD : LEVEL_CARD_NIGHT;
+
+    const levelcardPosition = this.engine.vector(
+      (this.engine.size.x * i) / 3 + 65,
+      (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
+    );
+
+    const levelCard = this.engine.createNode({
       type: 'ImageNode',
-      position: this.engine.vector(
-        (this.engine.size.x * i) / 3 + 65,
-        (backgroundImg.position.y / 2) + 0.4 * (LEVEL_CARD.height),
-      ),
+      position: levelcardPosition,
       size: this.engine.vector(338, 402),
       layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
-      img: (disabled) ? LEVEL_CARD_DISABLED : LEVEL_CARD,
+      img: (disabled) ? LEVEL_CARD_DISABLED : img,
       dh: 250,
+    });
+
+    const cardZombie = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(levelcardPosition.x + 30, levelcardPosition.y + 10),
+      size: this.engine.vector(201, 175),
+      layer: LEVEL_SELECTION_SCREEN_LAYERS[1],
+      img: LEVEL_CARD_ZOMBIE,
+      dh: 125,
     });
 
     const textButtonClose: any = this.engine.createNode({
@@ -60,7 +81,7 @@ export class LevelSelectionScreen extends ScreenCreator {
       font: TEXT_BUTTONS_FONT,
       color: '#fff',
     });
-    return levelCard;
+    return { levelCard, cardZombie };
   }
 
   private createNavigationButtons(): void {
@@ -152,20 +173,24 @@ export class LevelSelectionScreen extends ScreenCreator {
     });
 
     for (let i = 0; i < this.numberOfLevels; i += 1) {
-      let card: ImageNode;
+      let card: IImageNode;
       if (i < this.numberOfActiveLevels) {
-        card = this.createLevelCard(backgroundImg, false, i);
-        this.setActive(card,
-          'assets/images/interface/selectLevelIcon_Active.png',
-          'assets/images/interface/selectLevelIcon_notActive.png');
-        this.setEvent(card, 'click', () => {
+        const { levelCard, cardZombie } = this.createLevelCard(backgroundImg, false, i);
+        card = levelCard as IImageNode;
+        const img = i < 6 ? 'assets/images/interface/selectLevelIcon_Active.png' : 'assets/images/interface/levelDarkCard_Active.png';
+        const imgDis = i < 6 ? 'assets/images/interface/selectLevelIcon_notActive.png' : 'assets/images/interface/levelDarkCard_notActive.png';
+        this.setActive(card, img, imgDis);
+        const clickHandler = () => {
           this.engine.audioPlayer.playSound('tap');
-          this.startLevel();
+          this.startLevel(i);
           this.engine.stop();
           this.engine.start('scene');
-        });
+        };
+        this.setEvent(card, 'click', clickHandler);
+        this.setEvent(cardZombie, 'click', clickHandler);
       } else {
-        card = this.createLevelCard(backgroundImg, true, i);
+        const { levelCard } = this.createLevelCard(backgroundImg, true, i);
+        card = levelCard as IImageNode;
       }
       this.levelCards.push(card);
     }
