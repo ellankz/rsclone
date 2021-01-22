@@ -1,6 +1,8 @@
 import Engine from '../engine';
 import zombiePresets from '../data/zombies.json';
 import { ZombieType } from '../types';
+import Cell from '../game/Cell';
+import { ROWS_NUM } from '../constats';
 
 const ZOMBIES_COUNT: number = 10;
 const VIEW_SHIFT: number = 350;
@@ -22,15 +24,15 @@ export class StartLevelView {
 
   private running: boolean;
 
-  constructor(engine: Engine, startLevel: () => void, types: Array<string>) {
+  constructor(engine: Engine, startLevel: () => void, types: Array<string>, cells: Cell[][]) {
     this.engine = engine;
     this.startLevel = startLevel;
     this.zombiesTypes = new Set<any>(types);
-    this.createNodes();
+    this.createNodes(cells);
     this.init();
   }
 
-  private createNodes(): void {
+  private createNodes(cells: Cell[][]): void {
     const randomInteger = (min: number, max: number): number => Math
       .floor(min + Math.random() * (max + 1 - min));
 
@@ -44,12 +46,17 @@ export class StartLevelView {
       const zombieType: ZombieType = type[typeIndex];
       const stateObj: any = zombiePresets[zombieType].states.stop;
 
+      const row = i % 5;
+
+      const X = [100, -20, 60, 190, 14, 25, 160, 140, 24, 97];
+      const cell = cells[0][row];
+
       const zombieInstance: any = this.engine
         .createNode({
           type: 'SpriteNode',
           position: this.engine.vector(
-            SCREEN_SIZE + randomInteger(MIN_ZOMBIE_SHIFT_X, MAX_ZOMBIE_SHIFT_X),
-            randomInteger(MIN_ZOMBIE_SHIFT_Y, MAX_ZOMBIE_SHIFT_Y),
+            SCREEN_SIZE + X[i],
+            (cell.getBottom() - stateObj.height),
           ),
           size: this.engine.vector(
             stateObj.width * stateObj.frames,
@@ -58,7 +65,7 @@ export class StartLevelView {
           dh: stateObj.dh,
           frames: stateObj.frames,
           speed: stateObj.speed,
-          layer: 'top',
+          layer: `row-${row + 1}`,
           img: zombieImg,
         })
         .addTo('scene');
@@ -100,8 +107,9 @@ export class StartLevelView {
         }
       };
     };
+    const rowsLayers = new Array(ROWS_NUM + 1).fill(0).map((elem, idx) => `row-${idx}`);
 
-    const view = this.engine.createView(['back', 'main', 'top', 'window']);
+    const view = this.engine.createView(['back', 'main', ...rowsLayers, 'top', 'window']);
     view.move(this.engine.vector(0));
     viewAnimation(this.zombies[0]);
 
