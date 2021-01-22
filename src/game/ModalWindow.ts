@@ -191,6 +191,7 @@ export default class ModalWindow {
     });
 
     this.engine.on(this.buttonNode, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep');
       this.removeModalWindow();
     });
 
@@ -205,6 +206,7 @@ export default class ModalWindow {
     });
 
     this.engine.on(this.exitButtonNode, 'click', () => {
+      this.engine.audioPlayer.playSound('bleep');
       this.removeModalWindow();
     });
   }

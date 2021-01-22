@@ -247,7 +247,7 @@ export default class Zombie {
 
   private makeDamage(plant: Plant) {
     plant.reduceHealth(this.damage);
-    this.engine.audioPlayer.playSound('eat');
+    this.engine.audioPlayer.playSoundRand(['eat1', 'eat2', 'eat3']);
   }
 
   private eatThePlant(plant: Plant) {

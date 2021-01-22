@@ -46,7 +46,7 @@ export class CherryBomb extends Plant {
         }
       }
     });
-
+    this.engine.audioPlayer.playSound('cherrybomb');
     setTimeout(() => {
       this.health = 0;
       this.destroy();

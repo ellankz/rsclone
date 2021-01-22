@@ -41,6 +41,7 @@ export class PotatoMine extends Plant {
 
   grow() {
     this.switchState('grow');
+    this.engine.audioPlayer.playSound('potato-mine_grow');
     setTimeout(() => {
       this.switchState('basic');
       this.isReady = true;
@@ -63,6 +64,7 @@ export class PotatoMine extends Plant {
     if (this.isDestroyedFlag) return;
     if (this.isAttack || !this.isReady) return;
     this.isAttack = true;
+    this.engine.audioPlayer.playSound('potato-mine');
     this.zombies.forEach((targetZombie) => {
       if (this.isZombieInAttackArea(targetZombie, 20)) {
         targetZombie.reduceHealth(this.damage);

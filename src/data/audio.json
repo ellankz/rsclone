@@ -4,7 +4,9 @@
   "plant": "assets/audio/plant.mp3",
   "menu": "assets/audio/mountains.mp3",
   "win": "assets/audio/winmusic.mp3",
-  "eat": "assets/audio/chomp(eat).mp3",
+  "eat1": "assets/audio/chomp(eat).mp3",
+  "eat2": "assets/audio/chomp2.mp3",
+  "eat3": "assets/audio/chompsoft(eat).mp3",
   "menuButtonClick": "assets/audio/buttonclick(menu).mp3",
   "bleep": "assets/audio/bleep.mp3",
   "tap": "assets/audio/tap(menu).mp3",
@@ -12,5 +14,13 @@
   "zombie-comming": "assets/audio/zombie-comming.mp3",
   "shovel": "assets/audio/shovel.mp3",
   "dig": "assets/audio/plant2.mp3",
-  "lawncleaner": "assets/audio/lawnmower.mp3"
+  "lawncleaner": "assets/audio/lawnmower.mp3",
+  "cherrybomb": "assets/audio/cherrybomb.mp3",
+  "pea": "assets/audio/throw.mp3",
+  "pea2": "assets/audio/throw2.mp3",
+  "potato-mine": "assets/audio/potato_mine.mp3",
+  "potato-mine_grow": "assets/audio/seedlift.mp3",
+  "chomper": "assets/audio/bigchomp.mp3",
+  "pause": "assets/audio/pause.mp3",
+  "buzzer": "assets/audio/buzzer.mp3"
 }

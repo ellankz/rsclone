@@ -284,6 +284,7 @@ export default class Game {
   runPause = (event: KeyboardEvent) => {
     if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
       if (!this.menuOpen) {
+        this.engine.audioPlayer.playSound('pause');
         this.menuOpen = true;
         this.stopGame();
 
