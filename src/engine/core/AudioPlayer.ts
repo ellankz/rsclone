@@ -22,7 +22,12 @@ export default class AudioPlayer {
     }, {});
   }
 
-  public playSound(name: string) {
+  public getSound(name: string) {
+    return this.elements[name];
+  }
+
+  public playSound(name: string, loop?: boolean) {
+    this.elements[name].loop = loop || false;
     this.elements[name].currentTime = 0;
     this.elements[name].play();
   }
@@ -33,6 +38,10 @@ export default class AudioPlayer {
 
     const index: number = randomInteger();
     this.playSound(names[index]);
+  }
+
+  public pauseSound(name: string) {
+    this.elements[name].pause();
   }
 
   public playContinue(name: string) {

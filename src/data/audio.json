@@ -31,5 +31,8 @@
   "groan6": "assets/audio/groan6.mp3",
   "plantcard": "assets/audio/kernelpult2.mp3",
   "scream": "assets/audio/scream.mp3",
-  "losegame": "assets/audio/losemusic.mp3"
+  "losegame": "assets/audio/losemusic.mp3",
+  "readysetplant": "assets/audio/readysetplant.mp3",
+  "levelMain": "assets/audio/levelMain.mp3",
+  "menuMain": "assets/audio/menuMain.mp3"
 }
