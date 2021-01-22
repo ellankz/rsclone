@@ -17,6 +17,8 @@ export default class LooseScene {
   public init() {
     this.createBg();
     this.createLooseMessage();
+    this.engine.audioPlayer.playSound('losegame');
+    this.engine.audioPlayer.playSound('scream');
     setTimeout(() => {
       this.message.destroy();
       this.createModalWindow();

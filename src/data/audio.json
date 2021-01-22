@@ -29,5 +29,7 @@
   "groan4": "assets/audio/groan4.mp3",
   "groan5": "assets/audio/groan5.mp3",
   "groan6": "assets/audio/groan6.mp3",
-  "plantcard": "assets/audio/kernelpult2.mp3"
+  "plantcard": "assets/audio/kernelpult2.mp3",
+  "scream": "assets/audio/scream.mp3",
+  "losegame": "assets/audio/losemusic.mp3"
 }
