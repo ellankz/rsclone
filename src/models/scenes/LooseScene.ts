@@ -1,4 +1,3 @@
-import { time } from 'console';
 import Engine from '../../engine';
 import ModalWindow from '../../game/ModalWindow';
 

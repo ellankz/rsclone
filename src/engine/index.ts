@@ -427,6 +427,9 @@ export default class Engine {
       layer.clear();
       layer.update();
     });
+
+    this.event.offset = this.containerOffset;
+    this.event.scaleRatio = 1;
   }
 
   private setContainerPosition(isFullscreen: boolean) {

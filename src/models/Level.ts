@@ -21,6 +21,7 @@ import LawnCleaner from './LawnCleaner';
 import levels from '../data/levels.json';
 import { DataService } from '../api-service/DataService';
 import MenuToggle from '../game/MenuToggle';
+import { StartLevelView } from './StartLevelView';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
@@ -117,7 +118,7 @@ export default class Level {
     this.createSunCount();
     this.createPlantCards();
     this.drawMenuButton();
-    this.startLevel();
+    this.startAnimation();
     return this;
   }
 
@@ -473,5 +474,10 @@ export default class Level {
       this.deletePlant.bind(this),
       this.plantsArr,
     );
+  }
+
+  private startAnimation(): void {
+    const typesArray: Array<string> = this.zombiesConfig.map((zombie) => zombie.type);
+    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this), typesArray);
   }
 }
