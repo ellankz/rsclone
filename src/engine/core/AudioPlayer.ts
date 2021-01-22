@@ -27,7 +27,9 @@ export default class AudioPlayer {
   }
 
   public playSound(name: string, loop?: boolean) {
-    this.elements[name].loop = loop || false;
+    if (loop) {
+      this.elements[name].loop = loop;
+    }
     this.elements[name].currentTime = 0;
     this.elements[name].play();
   }

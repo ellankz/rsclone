@@ -123,7 +123,9 @@ export class StartLevelView {
         this.engine.audioPlayer.playSound('readysetplant');
         const zombieComing = this.engine.audioPlayer.getSound('zombie-comming');
         zombieComing.play();
-        zombieComing.addEventListener('ended', () => this.engine.audioPlayer.playSound('levelMain'));
+        zombieComing.addEventListener('ended', () => this
+          .engine.audioPlayer
+          .playSound('levelMain', true));
         this.startLevel();
       }
     };
