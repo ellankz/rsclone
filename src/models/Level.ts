@@ -37,6 +37,8 @@ export default class Level {
 
   private plant: Plant;
 
+  private background: string;
+
   public sunCount: { suns: number } = { suns: 200 };
 
   public width: number = COLS_NUM;
@@ -101,6 +103,7 @@ export default class Level {
     this.levelNumber = levelNumber;
     this.dataService = dataService;
     this.levelConfig = levels[levelNumber] as LevelConfig;
+    this.background = this.levelConfig.background;
     this.zombiesConfig = this.levelConfig.zombies;
     this.plantTypes = this.levelConfig.plantTypes;
     this.engine = engine;
@@ -115,12 +118,10 @@ export default class Level {
   public init() {
     this.addBackground(
       'back',
-      this.engine.loader.files[BG_URL] as HTMLImageElement,
+      this.engine.loader.files[this.background] as HTMLImageElement,
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-
-    this.drawMenuButton();
     this.startAnimation();
     return this;
   }
@@ -162,7 +163,7 @@ export default class Level {
   }
 
   startLevel() {
-    this.addShovel();
+    this.drawMenuButton();
     this.createPlantCards();
     this.listenCellClicks();
     this.isEnd = false;
@@ -172,6 +173,7 @@ export default class Level {
     this.listenGameEvents();
     this.dropSuns();
     this.drawLevelNumber();
+    this.addShovel();
   }
 
   stopLevel(hasWon: boolean) {
@@ -182,6 +184,7 @@ export default class Level {
     this.stopSunFall();
     this.deleteLevelNumberNode();
     this.clearLawnCleaners();
+    this.removeMenuButton();
     this.zombiesArr.forEach((zombie) => {
       zombie.stop();
     });
@@ -395,6 +398,10 @@ export default class Level {
     this.menuButton.init(this.runPause);
   }
 
+  private removeMenuButton() {
+    if (this.menuButton) this.menuButton.destroy();
+  }
+
   private createSunCount() {
     this.sunCounter = new SunCount(this.engine, this.sunCount);
     this.sunCounter.draw();
@@ -432,6 +439,7 @@ export default class Level {
       card.draw();
       this.plantCards.push(card);
     });
+    this.plantCards.forEach((card) => card.addEventListener(this.plantCards));
   }
 
   private removePlantCards() {
@@ -449,6 +457,9 @@ export default class Level {
             this.plant.cell = cell;
 
             this.occupiedCells.set(cell, this.plant);
+
+            this.plantCards.forEach((card) => card.removeToggle());
+            this.plantCards.forEach((card) => card.destroySelection());
 
             this.updateSunCount(this.sunCount.suns - this.plant.cost);
 
@@ -500,11 +511,13 @@ export default class Level {
       this.cells,
       this.deletePlant.bind(this),
       this.plantsArr,
+      this.plantCards,
     );
   }
 
   private startAnimation(): void {
     const typesArray: Array<string> = this.zombiesConfig.map((zombie) => zombie.type);
-    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this), typesArray);
+    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this),
+      typesArray, this.cells);
   }
 }

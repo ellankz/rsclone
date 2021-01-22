@@ -1,5 +1,6 @@
 [
   {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "basic",
@@ -43,6 +44,7 @@
       "Peashooter"
     ]
   }, {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "basic",
@@ -91,6 +93,7 @@
       "WallNut"
     ]
   }, {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "basic",
@@ -152,6 +155,7 @@
       "Chomper"
     ]
   }, {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "basic",
@@ -210,6 +214,7 @@
       "CherryBomb"
     ]
   }, {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "cone",
@@ -269,6 +274,7 @@
       "SnowPea"
     ]
   }, {
+    "background": "assets/images/interface/background1.jpg",
     "zombies": [
       {
         "type": "flag",
@@ -293,197 +299,199 @@
       {
         "type": "cone",
         "startDelay": 13
+      },
+      {
+        "type": "dancer",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "cone",
+        "startDelay": 9
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 9
+      },
+      {
+        "type": "flag",
+        "startDelay": 13
+      },
+      {
+        "type": "bucket",
+        "startDelay": 3
+      },
+      {
+        "type": "door",
+        "startDelay": 2
+      },
+      {
+        "type": "door",
+        "startDelay": 3
+      },
+      {
+        "type": "basic",
+        "startDelay": 1
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "background": "assets/images/interface/background2.png",
+    "zombies": [
+      {
+        "type": "basic",
+        "startDelay": 7
+      },
+      {
+        "type": "cone",
+        "startDelay": 7
+      },
+      {
+        "type": "basic",
+        "startDelay": 9
+      },
+      {
+        "type": "bucket",
+        "startDelay": 9
+      },
+      {
+        "type": "dancer",
+        "startDelay": 9
+      },
+      {
+        "type": "dancer",
+        "startDelay": 13
+      },
+      {
+        "type": "door",
+        "startDelay": 7
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 9
+      },
+      {
+        "type": "basic_2",
+        "startDelay": 9
+      },
+      {
+        "type": "flag",
+        "startDelay": 13
+      },
+      {
+        "type": "basic",
+        "startDelay": 1
+      },
+      {
+        "type": "bucket",
+        "startDelay": 2
+      },
+      {
+        "type": "cone",
+        "startDelay": 3
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 1
+      },
+      {
+        "type": "basic",
+        "startDelay": 2
+      },
+      {
+        "type": "bucket",
+        "startDelay": 1
+      }
+    ],
+    "plantTypes": [
+      "SunFlower",
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
+    ]
+  }, {
+    "background": "assets/images/interface/background2.png",
+    "zombies": [
+      {
+        "type": "dancer_2",
+        "startDelay": 10
+      },
+      {
+        "type": "dancer_3",
+        "startDelay": 5
       },
       {
         "type": "dancer_2",
-        "startDelay": 7
-      },
-      {
-        "type": "basic",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
         "type": "dancer_3",
-        "startDelay": 9
-      },
-      {
-        "type": "flag",
-        "startDelay": 13
-      },
-      {
-        "type": "bucket",
-        "startDelay": 3
-      },
-      {
-        "type": "door",
-        "startDelay": 2
-      },
-      {
-        "type": "door",
-        "startDelay": 3
-      },
-      {
-        "type": "basic",
-        "startDelay": 1
-      }
-    ],
-    "plantTypes": [
-      "SunFlower",
-      "Peashooter",
-      "WallNut",
-      "Chomper",
-      "CherryBomb",
-      "SnowPea",
-      "PotatoMine"
-    ]
-  }, {
-    "zombies": [
-      {
-        "type": "basic",
-        "startDelay": 7
-      },
-      {
-        "type": "cone",
-        "startDelay": 7
-      },
-      {
-        "type": "basic",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
         "type": "dancer_2",
-        "startDelay": 9
-      },
-      {
-        "type": "dancer",
-        "startDelay": 13
-      },
-      {
-        "type": "door",
-        "startDelay": 7
+        "startDelay": 10
       },
       {
         "type": "dancer_3",
-        "startDelay": 9
+        "startDelay": 5
       },
       {
-        "type": "basic_2",
-        "startDelay": 9
-      },
-      {
-        "type": "flag",
-        "startDelay": 13
-      },
-      {
-        "type": "basic",
-        "startDelay": 1
-      },
-      {
-        "type": "bucket",
-        "startDelay": 2
-      },
-      {
-        "type": "cone",
-        "startDelay": 3
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
         "type": "dancer_3",
-        "startDelay": 1
-      },
-      {
-        "type": "basic",
-        "startDelay": 2
-      },
-      {
-        "type": "bucket",
-        "startDelay": 1
-      }
-    ],
-    "plantTypes": [
-      "SunFlower",
-      "Peashooter",
-      "WallNut",
-      "Chomper",
-      "CherryBomb",
-      "SnowPea",
-      "PotatoMine"
-    ]
-  }, {
-    "zombies": [
-      {
-        "type": "basic",
-        "startDelay": 7
-      },
-      {
-        "type": "cone",
         "startDelay": 5
       },
       {
-        "type": "basic",
+        "type": "dancer_2",
         "startDelay": 5
       },
       {
-        "type": "bucket",
-        "startDelay": 8
-      },
-      {
-        "type": "pole",
-        "startDelay": 11
-      },
-      {
-        "type": "basic",
-        "startDelay": 4
-      },
-      {
-        "type": "basic_2",
+        "type": "dancer_3",
         "startDelay": 5
       },
       {
-        "type": "pole",
-        "startDelay": 11
+        "type": "dancer_2",
+        "startDelay": 10
       },
       {
-        "type": "cone",
-        "startDelay": 7
+        "type": "dancer_3",
+        "startDelay": 10
       },
       {
-        "type": "door",
-        "startDelay": 8
-      },
-      {
-        "type": "bucket",
+        "type": "dancer_2",
         "startDelay": 5
       },
       {
-        "type": "flag",
-        "startDelay": 13
+        "type": "dancer_3",
+        "startDelay": 5
       },
       {
-        "type": "bucket",
-        "startDelay": 3
+        "type": "dancer_2",
+        "startDelay": 5
       },
       {
-        "type": "door",
-        "startDelay": 2
+        "type": "dancer_3",
+        "startDelay": 5
       },
       {
-        "type": "pole",
-        "startDelay": 1
-      },
-      {
-        "type": "basic",
-        "startDelay": 3
-      },
-      {
-        "type": "dancer",
+        "type": "dancer_2",
         "startDelay": 5
       }
     ],
@@ -497,6 +505,7 @@
       "PotatoMine"
     ]
   }, {
+    "background": "assets/images/interface/background2.png",
     "zombies": [
       {
         "type": "pole",
@@ -581,6 +590,7 @@
       "PotatoMine"
     ]
   }, {
+    "background": "assets/images/interface/background2.png",
     "zombies": [
       {
         "type": "newspaper",

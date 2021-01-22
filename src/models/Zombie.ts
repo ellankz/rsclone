@@ -29,11 +29,10 @@ const Y_AXIS = {
 
 const SPEED = {
   slow: 0.11,
-  normal: 0.22,
-  fast: 0.33,
-  superFast: 0.55,
+  normal: 0.19,
+  fast: 0.25,
+  superFast: 0.47,
 };
-// const SPEED = 0;
 
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
@@ -361,6 +360,10 @@ export default class Zombie {
     this.node.switchState('burn');
     setTimeout(() => {
       this.node.destroy();
+      if (this.spotlight) {
+        this.spotlight.destroy();
+        this.spotlightShade.destroy();
+      }
     }, 2200);
   }
 
@@ -433,7 +436,7 @@ export default class Zombie {
         this.node.switchState('walking');
       }, timer);
 
-      this.timer = setTimeout(update, 5000);
+      this.timer = setTimeout(update, 10000);
     };
     if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
       update();
