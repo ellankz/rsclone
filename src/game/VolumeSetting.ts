@@ -65,6 +65,7 @@ export default class VolumeSetting {
   private listen() {
     this.rectangles.forEach((rect, index) => {
       this.engine.on(rect, 'click', () => {
+        this.engine.audioPlayer.playSound('buzzer');
         this.volume = index * 0.2;
         this.engine.audioPlayer.setVolume(this.volume);
         this.updateRectangles();

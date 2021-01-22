@@ -20,6 +20,7 @@ export class Peashooter extends Plant {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
         if (zombie.health > 0) {
+          this.engine.audioPlayer.playSoundRand(['pea2', 'pea']);
           this.shot = new Shot(this.position, this.engine, this.shotType);
           this.shot.draw(zombie, this);
         } else {
