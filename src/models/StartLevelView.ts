@@ -22,6 +22,8 @@ export class StartLevelView {
 
   private zombiesTypes: Set<ZombieType>;
 
+  private running: boolean;
+
   constructor(engine: Engine, startLevel: () => void, types: Array<string>, cells: Cell[][]) {
     this.engine = engine;
     this.startLevel = startLevel;
@@ -73,11 +75,11 @@ export class StartLevelView {
 
   private init(): void {
     this.engine.start('scene');
-    let running = false;
+    this.running = false;
 
     const viewAnimation = (node: any) => {
       const { view } = node.layer;
-      running = true;
+      this.running = true;
 
       const copyNode: any = node;
       copyNode.update = () => {
@@ -91,7 +93,7 @@ export class StartLevelView {
                   if (view.position.x <= 0) {
                     delete copyNode.update;
                     view.position.x = 0;
-                    running = false;
+                    this.running = false;
                   }
                   view.move(this.engine.vector(-2.5, 0));
                 }
@@ -112,7 +114,7 @@ export class StartLevelView {
     viewAnimation(this.zombies[0]);
 
     this.zombies[1].update = () => {
-      if (running === false) {
+      if (this.running === false) {
         this.zombies.forEach((zombie) => {
           zombie.destroy();
         });

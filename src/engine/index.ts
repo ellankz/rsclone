@@ -420,6 +420,7 @@ export default class Engine {
     });
 
     this.event.offset = this.containerOffset;
+    this.event.scaleRatio = 1;
   }
 
   private setContainerPosition(isFullscreen: boolean) {
