@@ -12,7 +12,7 @@ export default class WinScene {
   }
 
   public init(afterAnimationCallback: () => void) {
-    this.engine.audioPlayer.stopSound('menu');
+    this.engine.audioPlayer.stopSound('menuMain');
     this.engine.audioPlayer.playSound('win');
     this.createAnimation(afterAnimationCallback);
     return this;
