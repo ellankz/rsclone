@@ -1,5 +1,6 @@
 import Engine from '../engine';
 import ImageNode from '../engine/nodes/ImageNode';
+import RectNode from '../engine/nodes/RectNode';
 import TextNode from '../engine/nodes/TextNode';
 import VolumeSetting from './VolumeSetting';
 
@@ -28,12 +29,23 @@ export default class ModalWindow {
 
   volume: VolumeSetting;
 
+  fullScreenToggleButton: ImageNode;
+
+  fullScreenToggleText: TextNode;
+
+  shadowToggleButton: ImageNode;
+
+  shadowToggleText: TextNode;
+
+  buttonActive: HTMLImageElement;
+
   shiftX: number;
 
   constructor(engine: Engine, modalWindowText: string, textOnTheButton: string) {
     this.engine = engine;
     this.bgImage = this.engine.loader.files['assets/images/interface/window.png'] as HTMLImageElement;
     this.button = this.engine.loader.files['assets/images/interface/Button.png'] as HTMLImageElement;
+    this.buttonActive = this.engine.loader.files['assets/images/interface/ButtonActive.png'] as HTMLImageElement;
     this.modalWindowText = modalWindowText;
     this.textOnTheButton = textOnTheButton;
     this.shiftX = this.engine.getLayer('window').view.position.x;
@@ -47,6 +59,7 @@ export default class ModalWindow {
     this.drawTextButton();
     this.drawExitButton();
     this.drawVolume();
+    this.drawShadowToggle();
     this.addEventListenerToButton();
   }
 
@@ -56,7 +69,7 @@ export default class ModalWindow {
         type: 'TextNode',
         position: this.engine.vector(
           ((this.engine.size.x / 2) - 90) + this.shiftX,
-          (this.engine.size.y / 2) - 70,
+          (this.engine.size.y / 2) - 100,
         ),
         text: this.modalWindowText,
         layer: 'window',
@@ -177,8 +190,62 @@ export default class ModalWindow {
     if (this.modalWindowText === 'game paused') this.volume.init();
   }
 
+  private drawFullScreenToggle() {
+    if (this.modalWindowText !== 'game paused') return;
+    this.fullScreenToggleButton = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) + 45, this.engine.size.y / 2.3,
+      ),
+      size: this.engine.vector(this.button.width, this.button.height),
+      layer: 'window',
+      img: this.engine.fullscreen ? this.buttonActive : this.button,
+      dh: 35,
+    }) as ImageNode;
+
+    this.fullScreenToggleText = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) + 55,
+        (this.engine.size.y / 2.3) + 6,
+      ),
+      text: 'fullscreen',
+      layer: 'window',
+      font: 'Samdan',
+      fontSize: 21,
+      color: '#0daf1b',
+    }) as TextNode;
+  }
+
+  private drawShadowToggle() {
+    if (this.modalWindowText !== 'game paused') return;
+    this.shadowToggleButton = this.engine.createNode({
+      type: 'ImageNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - 25, this.engine.size.y / 2.3,
+      ),
+      size: this.engine.vector(this.button.width, this.button.height),
+      layer: 'window',
+      img: this.engine.shadows.enabled ? this.buttonActive : this.button,
+      dh: 35,
+    }) as ImageNode;
+
+    this.shadowToggleText = this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - 8,
+        (this.engine.size.y / 2.3) + 8,
+      ),
+      text: 'shadows',
+      layer: 'window',
+      font: 'Samdan',
+      fontSize: 21,
+      color: '#0daf1b',
+    }) as TextNode;
+  }
+
   public addEventListenerToButton() {
-    const active = this.engine.loader.files['assets/images/interface/ButtonActive.png'] as HTMLImageElement;
+    const active = this.buttonActive;
 
     this.engine.on(this.buttonNode, 'mousedown', () => {
       this.buttonNode.img = active;
@@ -209,6 +276,16 @@ export default class ModalWindow {
       this.engine.audioPlayer.playSound('bleep');
       this.removeModalWindow();
     });
+
+    this.engine.on(this.fullScreenToggleButton, 'click', () => {
+      this.engine.fullscreen = !this.engine.fullscreen;
+    });
+
+    this.engine.on(this.shadowToggleButton, 'click', () => {
+      this.engine.shadows.enabled = !this.engine.shadows.enabled;
+      this.shadowToggleButton.img = this.engine.shadows.enabled ? active : this.button;
+      this.exitButtonNode.clearLayer();
+    });
   }
 
   private removeModalWindow() {
@@ -219,5 +296,7 @@ export default class ModalWindow {
     this.exitButtonNode.destroy();
     this.exitButtonTextNode.destroy();
     this.volume.destroyNodes();
+    if (this.shadowToggleButton) this.shadowToggleButton.destroy();
+    if (this.shadowToggleText) this.shadowToggleText.destroy();
   }
 }
