@@ -1,4 +1,3 @@
-import { time } from 'console';
 import {
   ZombieConfig, ZombiePreset, ZombiesStatesPreset, ZombieHeadPreset,
 } from '../types';
@@ -374,9 +373,11 @@ export default class Zombie {
       if (this.name === 'newspaper') {
         this.zombieSpeed -= 0;
       } else if (this.name === 'football') {
-        this.zombieSpeed -= 0.33;
-      } else {
-        this.zombieSpeed -= 0.22;
+        if (this.zombieSpeed - 0.33 > 0) {
+          this.zombieSpeed -= 0.33;
+        }
+      } else if (this.zombieSpeed - 0.14 > 0) {
+        this.zombieSpeed -= 0.14;
       }
       this.node.speed += 40;
 
