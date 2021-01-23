@@ -19,6 +19,7 @@ export class SnowPea extends Plant {
   startShooting(zombie: Zombie) {
     if (this.shotType && this.shooting === null) {
       const shoot = () => {
+        this.engine.audioPlayer.playSoundRand(['pea2', 'pea']);
         this.shot = new Shot(
           this.engine.vector(this.position.x, this.position.y - 5),
           this.engine,

@@ -59,4 +59,9 @@ export default class MenuToggle {
       color: '#0daf1b',
     }) as TextNode;
   }
+
+  destroy() {
+    this.buttonNode.destroy();
+    this.textNode.destroy();
+  }
 }

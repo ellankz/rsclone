@@ -6,6 +6,7 @@
     "width": 166,
     "height": 144,
     "frames": 22,
+    "shadow": "116, 137, 30, 12",
     "image": "assets/sprites/zombies/basic/walk.png",
     "name": "basic",
     "states": {
@@ -79,6 +80,7 @@
     "width": 166,
     "height": 144,
     "frames": 18,
+    "shadow": "116, 137, 30, 12",
     "image": "assets/sprites/zombies/basic_2/walk.png",
     "name": "basic_2",
     "states": {
@@ -152,6 +154,7 @@
     "width": 166,
     "height": 144,
     "frames": 21,
+    "shadow": "123, 137, 30, 12",
     "image": "assets/sprites/zombies/cone/walk.png",
     "name": "cone",
     "states": {
@@ -225,6 +228,7 @@
     "width": 166,
     "height": 144,
     "frames": 15,
+    "shadow": "110, 137, 33, 12",
     "image": "assets/sprites/zombies/bucket/walk.png",
     "name": "bucket",
     "states": {
@@ -293,6 +297,7 @@
     "width": 166,
     "height": 144,
     "frames": 12,
+    "shadow": "124, 137, 33, 12",
     "image": "assets/sprites/zombies/flag/walk.png",
     "name": "flag",
     "states": {
@@ -361,6 +366,7 @@
     "width": 166,
     "height": 144,
     "frames": 23,
+    "shadow": "117, 135, 33, 12",
     "image": "assets/sprites/zombies/door/walk.png",
     "name": "door",
     "states": {
@@ -433,6 +439,7 @@
     "width": 216,
     "height": 164,
     "frames": 19,
+    "shadow": "116, 150, 32, 12",
     "image": "assets/sprites/zombies/newspaper/walk.png",
     "name": "newspaper",
     "states": {
@@ -501,6 +508,7 @@
     "width": 184,
     "height": 176,
     "frames": 21,
+    "shadow": "70, 165, 40, 13",
     "image": "assets/sprites/zombies/dancer/walk.png",
     "name": "dancer",
     "states": {
@@ -577,6 +585,7 @@
     "width": 184,
     "height": 176,
     "frames": 21,
+    "shadow": "",
     "image": "assets/sprites/zombies/dancer_2/walk.png",
     "name": "dancer_2",
     "states": {
@@ -653,6 +662,7 @@
     "width": 126,
     "height": 152,
     "frames": 28,
+    "shadow": "70, 145, 35, 13", 
     "image": "assets/sprites/zombies/dancer_3/walk.png",
     "name": "dancer_3",
     "states": {
@@ -729,6 +739,7 @@
     "width": 154,
     "height": 160,
     "frames": 11,
+    "shadow": "105, 150, 40, 14",
     "image": "assets/sprites/zombies/football/walk.png",
     "name": "football",
     "states": {
@@ -797,6 +808,7 @@
     "width": 348,
     "height": 218,
     "frames": 10,
+    "shadow": "240, 200, 35, 15",
     "image": "assets/sprites/zombies/pole/walk.png",
     "name": "pole",
     "states": {

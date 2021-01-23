@@ -3,6 +3,7 @@ import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_WIDTH_COEF, TOP_OFFSET_COEF } from 
 import Cell from '../Cell';
 import Plant from '../../models/Plant';
 import { SunFlower } from '../../models/plants/SunFlower';
+import PlantCard from '../PlantCard';
 
 const LAYER_NAME: string = 'main';
 const SCENE_NAME: string = 'scene';
@@ -22,16 +23,20 @@ export class Shovel {
 
   private plantsArr: Array<any>;
 
+  private plantCards: PlantCard[];
+
   constructor(engine:Engine,
     occupiedCells: Map<Cell, Plant>,
     cells: Cell[][],
     deletePlant: () => Array<any>,
-    plantsArr: Array<any>) {
+    plantsArr: Array<any>,
+    plantCards: PlantCard[]) {
     this.engine = engine;
     this.occupiedCells = occupiedCells;
     this.cells = cells;
     this.deletePlant = deletePlant;
     this.plantsArr = plantsArr;
+    this.plantCards = plantCards;
     this.shovelNode = this.createShovel();
     this.setEvent();
   }
@@ -84,6 +89,7 @@ export class Shovel {
       if (e instanceof MouseEvent || (e instanceof KeyboardEvent && e.code === 'KeyS')) {
         this.engine.audioPlayer.playSound('shovel');
         this.toggleState();
+        this.plantCards.forEach((card) => card.removeSelect());
         if (this.isActive) {
           cellsFlat.forEach((cell: Cell) => {
             const f = (ev: any): void => {

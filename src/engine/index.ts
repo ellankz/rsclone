@@ -64,7 +64,9 @@ export default class Engine {
 
   vector: (x?: number, y?: number) => Vector;
 
-  audioPlayer: any;
+  public audioPlayer: any;
+
+  public shadows: {enabled: boolean};
 
   constructor(
     _box: string | HTMLElement,
@@ -86,6 +88,7 @@ export default class Engine {
     this.event = null;
     this.animation = null;
     this.fullscreen = false;
+    this.shadows = { enabled: true };
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
@@ -198,7 +201,7 @@ export default class Engine {
   public createLayer(name: string, index?: number) {
     if (this.layers[name]) return;
     const idx = index && index !== 0 ? index : Object.keys(this.layers).length;
-    const layer = new Layer(idx as number, this.size, this.container);
+    const layer = new Layer(idx as number, this.size, this.container, this.shadows);
     this.layers[name] = layer;
 
     layer.update = () => {
@@ -345,6 +348,10 @@ export default class Engine {
   }
 
   // fullscreen
+  public get fullscreen() {
+    return this.fullscreenMode;
+  }
+
   public set fullscreen(value: boolean) {
     if (this.fullscreenMode !== value) {
       this.fullscreenMode = value;
@@ -409,6 +416,8 @@ export default class Engine {
     this.container.style.width = `${this.size.x}px`;
     this.container.style.height = `${this.size.y}px`;
 
+    this.event.offset = this.containerOffset;
+
     layers.forEach((layer) => {
       layer.resize(scaleRatio, this.size);
       layer.clear();
@@ -416,6 +425,7 @@ export default class Engine {
     });
 
     this.event.offset = this.containerOffset;
+    this.event.scaleRatio = 1;
   }
 
   private setContainerPosition(isFullscreen: boolean) {

@@ -23,7 +23,6 @@ export default class InputNode extends Node implements IInputNode {
     } = this;
     if (this.input) {
       this.input.render();
-      this.input.focus();
     } else {
       this.input = new CanvasInput({
         canvas: layer.canvas,
@@ -42,7 +41,6 @@ export default class InputNode extends Node implements IInputNode {
         placeHolder: placeholder,
       });
       this.input.render();
-      this.input.focus();
     }
   }
 }

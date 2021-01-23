@@ -76,23 +76,27 @@ export default class Game {
     this.engine.setScreen('startScreen');
   }
 
-  startGame() {
+  startGame(levelNumber: number) {
     // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
-    this.currentLevel = this.createLevel(0);
+    this.currentLevel = this.createLevel(levelNumber);
     this.engine.setScreen('first');
+    this.engine.stop();
+    this.engine.start('scene');
   }
 
   createCells() {
-    for (let x = 0; x < COLS_NUM; x += 1) {
-      const row: Cell[] = [];
-      for (let y = 0; y < ROWS_NUM; y += 1) {
-        const cell = new Cell({ x, y }, this.engine);
-        cell.draw();
-        row.push(cell);
+    if (this.cells.length < 9) {
+      for (let x = 0; x < COLS_NUM; x += 1) {
+        const row: Cell[] = [];
+        for (let y = 0; y < ROWS_NUM; y += 1) {
+          const cell = new Cell({ x, y }, this.engine);
+          cell.draw();
+          row.push(cell);
+        }
+        this.cells.push(row);
       }
-      this.cells.push(row);
     }
   }
 
@@ -139,15 +143,19 @@ export default class Game {
     this.currentLevel.clearPlantsArray();
 
     setTimeout(() => {
-      this.createWinScene();
-      this.currentLevel.updateSunCount(500);
-    }, 5000);
-    setTimeout(() => {
-      this.clearLevel();
-    }, 8000);
-    setTimeout(() => {
-      this.createLevel(0);
-    }, 12000);
+      this.createWinScene(() => {
+        this.currentLevel.updateSunCount(0);
+        this.destroySun();
+        this.destroyPlants();
+        this.engine.clearAllTimeouts();
+        this.clearLevel();
+        // this.engine.setScreen('startScreen');
+        this.engine.setScreen('levelSelectionScreen');
+        this.engine.stop();
+        this.engine.start('levelSelectionScreen');
+        document.removeEventListener('visibilitychange', this.runPause);
+      });
+    }, 3000);
 
     clearTimeout(this.timer);
   }
@@ -216,9 +224,11 @@ export default class Game {
     });
   }
 
-  createWinScene() {
-    this.win = new WinScene(this.engine);
-    this.win.init();
+  createWinScene(afterAnimationCallback: () => void) {
+    this.win = new WinScene(this.engine, () => {
+      this.win = null;
+    });
+    this.win.init(afterAnimationCallback);
   }
 
   public createLooseScene() {
@@ -227,11 +237,12 @@ export default class Game {
 
     this.loose.restartLevel(() => {
       this.clearLevel();
-      this.createLevel(0);
-      this.currentLevel.updateSunCount(500);
+      this.createLevel(this.currentLevel.levelNumber);
+      this.currentLevel.updateSunCount(200);
     }, () => {
       this.clearLevel();
-      this.exitGame();
+      document.removeEventListener('visibilitychange', this.runPause);
+      this.exitGame(false);
     });
   }
 
@@ -254,10 +265,8 @@ export default class Game {
     this.continueCreatingSuns();
   }
 
-  exitGame() {
-    this.engine.start('scene');
+  exitGame(hasWon: boolean) {
     this.isEnd = true;
-    const hasWon = false;
     this.currentLevel.stopLevel(hasWon);
     this.destroySun();
     this.reducePlantsHealth();
@@ -267,12 +276,15 @@ export default class Game {
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     clearTimeout(this.timer);
-    this.engine.setScreen('startScreen');
+    this.engine.stop();
+    this.engine.start('levelSelectionScreen');
+    this.engine.setScreen('levelSelectionScreen');
   }
 
   runPause = (event: KeyboardEvent) => {
     if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
       if (!this.menuOpen) {
+        this.engine.audioPlayer.playSound('pause');
         this.menuOpen = true;
         this.stopGame();
 
@@ -281,7 +293,7 @@ export default class Game {
           this.resumeGame();
         }, () => {
           this.menuOpen = false;
-          this.exitGame();
+          this.exitGame(false);
           document.removeEventListener('visibilitychange', this.runPause);
         });
       }

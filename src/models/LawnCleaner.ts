@@ -41,6 +41,7 @@ export default class LawnCleaner {
       size: this.engine.vector(this.image.width, this.image.height),
       layer: `row-${this.row + 1}`,
       img: this.image,
+      shadow: '45, 55, 30, 10',
     }) as IImageNode;
   }
 

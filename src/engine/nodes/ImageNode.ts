@@ -26,6 +26,7 @@ export default class ImageNode extends Node implements IImageNode {
 
     this.dh = params.dh || this.size.y;
     this.border = params.border;
+    this.shadow = params.shadow;
 
     const ratio = (this.dh * 100) / this.size.y;
     this.dw = Math.ceil((this.size.x * ratio) / 100);
@@ -45,6 +46,7 @@ export default class ImageNode extends Node implements IImageNode {
       border: this.border,
       opacity: this.opacity,
       filter: this.filter,
+      shadow: this.shadow,
     });
   }
 }

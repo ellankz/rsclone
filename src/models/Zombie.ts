@@ -1,4 +1,3 @@
-import { time } from 'console';
 import {
   ZombieConfig, ZombiePreset, ZombiesStatesPreset, ZombieHeadPreset,
 } from '../types';
@@ -21,7 +20,7 @@ const X_MIN = {
   dancer: 10,
 };
 
-const X_AXIS = 1000;
+const X_AXIS = 970;
 const Y_AXIS = {
   all: 5,
   pole: -5,
@@ -29,11 +28,10 @@ const Y_AXIS = {
 
 const SPEED = {
   slow: 0.11,
-  normal: 0.22,
-  fast: 0.33,
-  superFast: 0.55,
+  normal: 0.19,
+  fast: 0.25,
+  superFast: 0.47,
 };
-// const SPEED = 0;
 
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
@@ -55,6 +53,8 @@ export default class Zombie {
   public name: string;
 
   private frames: number;
+
+  private shadow: string;
 
   private head: string;
 
@@ -111,6 +111,7 @@ export default class Zombie {
     this.image = this.zombiePresets[config.type].image;
     this.name = this.zombiePresets[config.type].name;
     this.frames = this.zombiePresets[config.type].frames;
+    this.shadow = this.zombiePresets[config.type].shadow;
     this.states = this.zombiePresets[config.type].states;
     this.head = this.zombieHeadPresets[config.type].image;
     this.headWidth = this.zombieHeadPresets[config.type].width;
@@ -175,6 +176,7 @@ export default class Zombie {
       speed: this.speed,
       dh: this.height,
       states: this.states ? generateStates() : undefined,
+      shadow: this.shadow,
     }, update)
       .addTo('scene') as ISpriteNode;
 
@@ -247,7 +249,7 @@ export default class Zombie {
 
   private makeDamage(plant: Plant) {
     plant.reduceHealth(this.damage);
-    this.engine.audioPlayer.playSound('eat');
+    this.engine.audioPlayer.playSoundRand(['eat1', 'eat2', 'eat3']);
   }
 
   private eatThePlant(plant: Plant) {
@@ -361,6 +363,10 @@ export default class Zombie {
     this.node.switchState('burn');
     setTimeout(() => {
       this.node.destroy();
+      if (this.spotlight) {
+        this.spotlight.destroy();
+        this.spotlightShade.destroy();
+      }
     }, 2200);
   }
 
@@ -371,9 +377,11 @@ export default class Zombie {
       if (this.name === 'newspaper') {
         this.zombieSpeed -= 0;
       } else if (this.name === 'football') {
-        this.zombieSpeed -= 0.33;
-      } else {
-        this.zombieSpeed -= 0.22;
+        if (this.zombieSpeed - 0.34 > 0) {
+          this.zombieSpeed -= 0.34;
+        }
+      } else if (this.zombieSpeed - 0.14 > 0) {
+        this.zombieSpeed -= 0.14;
       }
       this.node.speed += 40;
 
@@ -433,7 +441,7 @@ export default class Zombie {
         this.node.switchState('walking');
       }, timer);
 
-      this.timer = setTimeout(update, 5000);
+      this.timer = setTimeout(update, 10000);
     };
     if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
       update();
