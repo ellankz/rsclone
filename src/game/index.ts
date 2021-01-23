@@ -44,8 +44,8 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
-    const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
+    //const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
+      const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
       (percent: number) => loaderScreen.update(percent),
@@ -64,6 +64,7 @@ export default class Game {
         engine.events.click.eventBubbling = false;
       };
     });
+    console.log('HELLO')
     this.engine.start('scene');
   }
 
@@ -152,7 +153,7 @@ export default class Game {
         // this.engine.setScreen('startScreen');
         this.engine.setScreen('levelSelectionScreen');
         this.engine.stop();
-        this.engine.start('levelSelectionScreen');
+        //this.engine.start('levelSelectionScreen');
         document.removeEventListener('visibilitychange', this.runPause);
       });
     }, 3000);

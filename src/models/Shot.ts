@@ -34,16 +34,6 @@ export default class Shot {
   draw(zombie: Zombie, plant: Plant) {
     const image = this.engine.loader.files[`assets/images/shot/${this.type}.png`] as HTMLImageElement;
 
-    let SHOOT_LENGTH = 0;
-
-    if (zombie.name === 'dancer' || zombie.name === 'dancer_2' || zombie.name === 'dancer_3') {
-      SHOOT_LENGTH = -50;
-    } else if (zombie.name === 'pole') {
-      SHOOT_LENGTH = -180;
-    } else {
-      SHOOT_LENGTH = -80;
-    }
-
     const update = (node: any) => {
       if (zombie.health <= 0 || plant.health <= 0) {
         node.destroy();
@@ -59,28 +49,13 @@ export default class Shot {
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
       }
-      if (
-        zombie
-        && zombie.position
-        && zombie.position.x - node.position.x < SHOOT_LENGTH
-        && zombie.position.x - node.position.x > -100
-        && plant.health > 0 && zombie.name !== 'pole') {
+      
+      if (node.position.x > zombie.shotTarget 
+        && plant.health) {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();
         if (zombie.health <= 0) zombie.remove();
-        this.engine.audioPlayer.playSound('shot');
-      } else if (
-        zombie
-        && zombie.position
-        && zombie.position.x - node.position.x < SHOOT_LENGTH
-        && zombie.position.x - node.position.x > -190
-        && plant.health > 0
-        && zombie.name === 'pole') {
-        node.destroy();
-        zombie.reduceHealth(plant.damage, plant);
-        if (zombie.health <= 0) zombie.remove();
-        if (this.type === 'snow') zombie.slow();
         this.engine.audioPlayer.playSound('shot');
       }
     };

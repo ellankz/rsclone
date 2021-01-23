@@ -185,6 +185,7 @@ export class LevelSelectionScreen extends ScreenCreator {
           this.startLevel(i);
           this.engine.stop();
           this.engine.start('scene');
+          console.log('BYE BYE')
         };
         this.setEvent(card, 'click', clickHandler);
         this.setEvent(cardZombie, 'click', clickHandler);

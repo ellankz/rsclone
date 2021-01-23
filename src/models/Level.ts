@@ -39,7 +39,7 @@ export default class Level {
 
   private background: string;
 
-  public sunCount: { suns: number } = { suns: 200 };
+  public sunCount: { suns: number } = { suns: 2000 };
 
   public width: number = COLS_NUM;
 
@@ -122,7 +122,8 @@ export default class Level {
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-    this.startAnimation();
+    this.startLevel();
+    //this.startAnimation();
     return this;
   }
 
@@ -171,7 +172,7 @@ export default class Level {
     this.placeLawnCleaners();
     this.createZombies(this.creatingZombies);
     this.listenGameEvents();
-    this.dropSuns();
+    //this.dropSuns();
     this.drawLevelNumber();
     this.addShovel();
   }
@@ -334,9 +335,9 @@ export default class Level {
           this.creatingZombies += 1;
           row = random.nextRandom(0, ROWS_NUM - 1);
           this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
-          cell = this.cells[0][row];
-          this.zombie.row = row;
-          this.zombie.draw(cell, this.occupiedCells);
+          cell = this.cells[0][2];
+          this.zombie.row = 2;
+          this.zombie.draw(cell, this.occupiedCells, this.cells);
           this.zombiesArr.push(this.zombie);
         }
       }, timer);
@@ -351,25 +352,27 @@ export default class Level {
   }
 
   public listenGameEvents() {
+    
     const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
-
     if (this.timer) clearTimeout(this.timer);
 
-    const trackPosition = () => {
+    const trackPosition = () => {       
       this.zombiesArr.forEach((zombie) => {
+
+        if (zombie.health <= 0) {
+          this.reduceZombies();
+        }
         zombie.attack(this.occupiedCells);
 
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
 
         this.plantsArr.forEach((plant) => {
+
           if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
             plant.switchState('attack', zombie);
-          }
+          } 
         });
 
-        if (zombie.health <= 0) {
-          this.reduceZombies();
-        }
       });
 
       this.zombiesArr = this.deleteZombie();

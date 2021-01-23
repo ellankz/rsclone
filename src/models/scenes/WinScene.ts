@@ -21,7 +21,6 @@ export default class WinScene {
   private createAnimation(afterAnimationCallback: () => void) {
     const INTERVAL = 0.005;
     let opacity = 0;
-    const timeInterval = INTERVAL;
 
     const bg: any = this.engine.createNode({
       type: 'RectNode',
@@ -31,9 +30,8 @@ export default class WinScene {
 
       color: `rgba(255, 255, 255, ${opacity})`,
     }, () => {
-      opacity += timeInterval;
+      opacity += INTERVAL;
       bg.color = `rgba(255, 255, 255, ${opacity})`;
-
       if (opacity >= 1.1) {
         bg.destroy();
         afterAnimationCallback();

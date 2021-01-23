@@ -4,44 +4,21 @@
     "zombies": [
       {
         "type": "basic",
-        "startDelay": 3
-      },
-      {
-        "type": "basic_2",
-        "startDelay": 5
+        "startDelay": 1
       },
       {
         "type": "basic",
-        "startDelay": 7
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "cone",
-        "startDelay": 9
-      },
-      {
-        "type": "basic",
-        "startDelay": 13
-      },
-      {
-        "type": "basic_2",
-        "startDelay": 7
-      },
-      {
-        "type": "bucket",
-        "startDelay": 9
-      },
-      {
-        "type": "bucket",
-        "startDelay": 13
+        "startDelay": 1
       }
     ],
     "plantTypes": [
       "SunFlower",
-      "Peashooter"
+      "Peashooter",
+      "WallNut",
+      "Chomper",
+      "CherryBomb",
+      "SnowPea",
+      "PotatoMine"
     ]
   }, {
     "background": "assets/images/interface/background1.jpg",
