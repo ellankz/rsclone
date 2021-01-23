@@ -135,6 +135,7 @@ export default class Game {
   }
 
   endWin() {
+    this.engine.audioPlayer.stopSound('levelMain');
     this.isEnd = true;
     this.reducePlantsHealth();
     this.engine.clearAllTimeouts();
@@ -154,7 +155,6 @@ export default class Game {
         this.engine.setScreen('levelSelectionScreen');
         this.engine.stop();
         this.engine.start('levelSelectionScreen');
-        this.engine.audioPlayer.playSound('menuMain');
         document.removeEventListener('visibilitychange', this.runPause);
       });
     }, 3000);
@@ -283,9 +283,6 @@ export default class Game {
 
   exitGame(hasWon: boolean) {
     this.currentLevel.zombiesArr.forEach((zombie) => clearInterval(zombie.groanInterval));
-
-    this.engine.audioPlayer.stopSound('levelMain');
-    this.engine.audioPlayer.playSound('menuMain');
     this.isEnd = true;
     this.currentLevel.stopLevel(hasWon);
     this.destroySun();
@@ -299,6 +296,8 @@ export default class Game {
     this.engine.stop();
     this.engine.start('levelSelectionScreen');
     this.engine.setScreen('levelSelectionScreen');
+    this.engine.audioPlayer.stopSound('levelMain');
+    this.engine.audioPlayer.playSound('menuMain');
   }
 
   runPause = (event: KeyboardEvent) => {

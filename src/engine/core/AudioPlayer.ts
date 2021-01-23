@@ -34,6 +34,13 @@ export default class AudioPlayer {
     this.elements[name].play();
   }
 
+  public stopAll() {
+    Object.values(this.elements).forEach((sound) => {
+      sound.pause();
+      sound.currentTime = 0;
+    });
+  }
+
   public playSoundRand(names: Array<string>) {
     const randomInteger = (min: number = 0, max: number = names.length - 1) => Math
       .floor(min + Math.random() * (max + 1 - min));
