@@ -8,6 +8,7 @@ import {
   PLANT_CARD_WIDTH_COEF,
 } from '../constats';
 import { IImageNode, NodesType } from '../engine/types';
+import { TEXT_BUTTONS_FONT } from './screens/ScreenCreator';
 
 export default class PlantCard {
   public plant: Plant;
@@ -72,6 +73,22 @@ export default class PlantCard {
       dh: this.engine.size.y * PLANT_CARD_HEIGHT_COEF * 1.1,
       srcPosition: this.engine.vector(0, srcPos),
     }) as IImageNode;
+    this.drawCost();
+  }
+
+  public drawCost(): void {
+    this.engine.createNode({
+      type: 'TextNode',
+      position: this.engine.vector(
+        this.node.position.x + this.node.dw - 35,
+        this.node.position.y + this.node.dh - 15,
+      ),
+      text: this.plantData.cost,
+      layer: 'main',
+      fontSize: 15,
+      color: '#000',
+      font: TEXT_BUTTONS_FONT,
+    }).addTo('scene');
   }
 
   public addEventListener(plantCards: PlantCard[]) {
