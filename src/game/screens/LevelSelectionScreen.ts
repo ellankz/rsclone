@@ -146,12 +146,14 @@ export class LevelSelectionScreen extends ScreenCreator {
     this.engine.on(buttonRight, 'click', () => {
       if ((levelsView.position.x <= this.engine.size.x * (this.numberOfLevels / 3 - 1))
         && isButtonFree === true) {
+        this.engine.audioPlayer.playSound('bleep');
         moveCards(true);
       }
     });
 
     this.engine.on(buttonLeft, 'click', () => {
       if ((levelsView.position.x - this.engine.size.x >= 0) && isButtonFree === true) {
+        this.engine.audioPlayer.playSound('bleep');
         moveCards(false);
       }
     });
@@ -185,7 +187,6 @@ export class LevelSelectionScreen extends ScreenCreator {
           this.startLevel(i);
           this.engine.stop();
           this.engine.start('scene');
-          console.log('BYE BYE')
         };
         this.setEvent(card, 'click', clickHandler);
         this.setEvent(cardZombie, 'click', clickHandler);

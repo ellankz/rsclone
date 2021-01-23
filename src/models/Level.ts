@@ -1,3 +1,4 @@
+import { platform } from 'os';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import Engine from '../engine';
 import Cell from '../game/Cell';
@@ -39,7 +40,7 @@ export default class Level {
 
   private background: string;
 
-  public sunCount: { suns: number } = { suns: 2000 };
+  public sunCount: { suns: number } = { suns: 200 };
 
   public width: number = COLS_NUM;
 
@@ -122,8 +123,7 @@ export default class Level {
       BG_LEVEL_OFFSET_X,
     );
     this.createSunCount();
-    this.startLevel();
-    //this.startAnimation();
+    this.startAnimation();
     return this;
   }
 
@@ -172,7 +172,7 @@ export default class Level {
     this.placeLawnCleaners();
     this.createZombies(this.creatingZombies);
     this.listenGameEvents();
-    //this.dropSuns();
+    this.dropSuns();
     this.drawLevelNumber();
     this.addShovel();
   }
@@ -288,42 +288,8 @@ export default class Level {
   }
 
   public createZombies(n: number) {
-    // Generate row without repeating more then (2) times
-    function getRandomNumber(min: number, max: number): number {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const random: any = {
-      prev: null,
-      count: 0,
-      consecutive: 2,
-
-      nextRandom(min: number, max: number) {
-        if (this.prev === null || this.count < this.consecutive) {
-          const res = getRandomNumber(min, max);
-          if (res === this.prev) {
-            this.count += 1;
-          } else {
-            this.prev = res;
-            this.count = 1;
-          }
-          return res;
-        }
-
-        let res = this.prev;
-        while (res === this.prev) {
-          res = getRandomNumber(min, max);
-        }
-
-        this.prev = res;
-        this.count = 1;
-        return res;
-      },
-    };
-
     let timer = 0;
 
-    // Generate zombies
     for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
       let row: number = null;
@@ -333,10 +299,10 @@ export default class Level {
       this.zombiesTimer = setTimeout(() => {
         if (!this.isEnd) {
           this.creatingZombies += 1;
-          row = random.nextRandom(0, ROWS_NUM - 1);
+          row = this.zombiesConfig[i].row;
           this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
-          cell = this.cells[0][2];
-          this.zombie.row = 2;
+          cell = this.cells[0][row];
+          this.zombie.row = row;
           this.zombie.draw(cell, this.occupiedCells, this.cells);
           this.zombiesArr.push(this.zombie);
         }
@@ -352,13 +318,11 @@ export default class Level {
   }
 
   public listenGameEvents() {
-    
     const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
     if (this.timer) clearTimeout(this.timer);
 
-    const trackPosition = () => {       
+    const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-
         if (zombie.health <= 0) {
           this.reduceZombies();
         }
@@ -367,12 +331,10 @@ export default class Level {
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
 
         this.plantsArr.forEach((plant) => {
-
           if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
             plant.switchState('attack', zombie);
-          } 
+          }
         });
-
       });
 
       this.zombiesArr = this.deleteZombie();
@@ -386,15 +348,10 @@ export default class Level {
 
   private deleteZombie() {
     return this.zombiesArr.filter((el) => el.health > 0);
-    // const index = this.zombiesArr.findIndex((el) => el.health <= 0);
-    // if (index >= 0) this.zombiesArr.splice(index, 1);
-    // return this.zombiesArr;
   }
 
   private deletePlant() {
-    const index = this.plantsArr.findIndex((el) => el.health <= 0);
-    if (index >= 0) this.plantsArr.splice(index, 1);
-    return this.plantsArr;
+    return this.plantsArr.filter((el) => el.health > 0);
   }
 
   private drawMenuButton() {

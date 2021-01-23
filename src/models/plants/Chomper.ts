@@ -32,6 +32,7 @@ export class Chomper extends Plant {
   attack(zombie: Zombie) {
     setTimeout(() => {
       if (this.sleeping) return;
+      this.engine.audioPlayer.playSound('chomper');
       super.attack(zombie);
       if (zombie.health <= 0) {
         zombie.node.destroy();

@@ -361,7 +361,7 @@
   }, 
   "door": {
     "speed": 100,
-    "health": 260,
+    "health": 360,
     "damage": 25,
     "width": 166,
     "height": 144,
@@ -734,7 +734,7 @@
   },
   "football": {
     "speed": 80,
-    "health": 260,
+    "health": 400,
     "damage": 25,
     "width": 154,
     "height": 160,

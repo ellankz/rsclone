@@ -169,11 +169,11 @@ export default class Plant {
   public isZombieInAttackArea(zombie: Zombie) {
     if (!this.states || !this.states.attack || !zombie.position) return false;
 
-    if (zombie.row === this.cell.position.y && zombie.column < this.cell.position.x) this.stopAttack();
+    if (zombie.row === this.cell.position.y
+      && zombie.column < this.cell.position.x) this.stopAttack();
 
     return zombie.row === this.cell.position.y && zombie.column >= this.cell.position.x;
   }
-
 
   public destroy() {
     this.isDestroyed();

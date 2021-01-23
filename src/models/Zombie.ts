@@ -1,4 +1,3 @@
-import { time } from 'console';
 import {
   ZombieConfig, ZombiePreset, ZombiesStatesPreset, ZombieHeadPreset,
 } from '../types';
@@ -120,9 +119,7 @@ export default class Zombie {
   }
 
   public draw(cell: Cell, occupiedCells: Map<Cell, Plant>, cells: Cell[][]) {
-    
     this.zombieSpeed = this.setSpeed();
-    console.log(this.zombieSpeed)
     const y = this.setY();
     let start = 0;
 
@@ -148,7 +145,7 @@ export default class Zombie {
         X_AXIS - start, (cell.getBottom() - this.height - y),
       );
       if (this.isJump) this.node.position.x = this.trackPositionAfterJump();
-      this.trackCurrentCell(cells)
+      this.trackCurrentCell(cells);
     };
 
     const updateSpotlight = () => {
@@ -188,8 +185,6 @@ export default class Zombie {
   }
 
   public attack(occupiedCells: Map<Cell, Plant>) {
-    
-
     if (this.isDestroyedFlag) return;
     occupiedCells.forEach((plant, cell) => {
       if (plant.isDestroyedFlag) return;
@@ -198,19 +193,20 @@ export default class Zombie {
 
       // Only for pole guy
       if (this.name === 'pole') {
-        if 
-        (!this.isEndJump 
-          && positionJump 
+        if
+        (!this.isEndJump
+          && positionJump
           && this.row === plant.cell.position.y) {
           this.isEndJump = true;
           this.jump();
-        } else if 
-        (this.isEndJump 
+        } else if
+        (this.isEndJump
           && this.column === plant.cell.position.x
           && this.row === plant.cell.position.y) {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
+          this.attackedPlant = plant;
 
           if (plant.health <= 0) {
             this.eatThePlant(plant);
@@ -220,21 +216,20 @@ export default class Zombie {
           }
         }
       // For all others
-      } else {
-        if (this.column === plant.cell.position.x &&
-            this.row === plant.cell.position.y) {   
-          this.node.switchState('attack');
-          this.zombieSpeed = 0;
-          this.makeDamage(plant);
+      } else if (this.column === plant.cell.position.x
+            && this.row === plant.cell.position.y) {
+        this.node.switchState('attack');
+        this.zombieSpeed = 0;
+        this.makeDamage(plant);
+        this.attackedPlant = plant;
 
-          if (plant.health <= 0) {
-            setTimeout(() => {
-              this.eatThePlant(plant);
-              occupiedCells.delete(cell);
-            }, 200)
-            this.node.switchState('walking');
-            this.zombieSpeed = this.setSpeed();  
-          }
+        if (plant.health <= 0) {
+          setTimeout(() => {
+            this.eatThePlant(plant);
+            occupiedCells.delete(cell);
+          }, 200);
+          this.node.switchState('walking');
+          this.zombieSpeed = this.setSpeed();
         }
       }
     });
@@ -248,13 +243,17 @@ export default class Zombie {
 
   public walk() {
     if (this.isDestroyedFlag) return;
-    this.node.switchState('walking');
+    if (this.name === 'pole') {
+      this.node.switchState('walkingSlow');
+    } else {
+      this.node.switchState('walking');
+    }
     this.zombieSpeed = this.setSpeed();
   }
 
   private makeDamage(plant: Plant) {
     plant.reduceHealth(this.damage);
-    this.engine.audioPlayer.playSound('eat');
+    this.engine.audioPlayer.playSoundRand(['eat1', 'eat2', 'eat3']);
   }
 
   private eatThePlant(plant: Plant) {
@@ -387,9 +386,11 @@ export default class Zombie {
       if (this.name === 'newspaper') {
         this.zombieSpeed -= 0;
       } else if (this.name === 'football') {
-        this.zombieSpeed -= 0.33;
-      } else {
-        this.zombieSpeed -= 0.12;
+        if (this.zombieSpeed - 0.34 > 0) {
+          this.zombieSpeed -= 0.34;
+        }
+      } else if (this.zombieSpeed - 0.14 > 0) {
+        this.zombieSpeed -= 0.14;
       }
       this.node.speed += 40;
 
@@ -414,9 +415,9 @@ export default class Zombie {
   }
 
   private findShotTarget() {
-    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3' ||
-        this.name === 'newspaper') {
-      this.shotTarget = this.position.x + this.width / 2 - 40; 
+    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3'
+        || this.name === 'newspaper') {
+      this.shotTarget = this.position.x + this.width / 2 - 40;
     } else {
       this.shotTarget = this.position.x + this.width / 2;
     }
@@ -424,12 +425,11 @@ export default class Zombie {
   }
 
   public trackCurrentCell(cells : Cell[][]) {
-
     let xOffset: number = 0;
-    if 
-      (this.name === 'dancer' 
-    || this.name === 'dancer_2' 
-    || this.name === 'dancer_3' 
+    if
+    (this.name === 'dancer'
+    || this.name === 'dancer_2'
+    || this.name === 'dancer_3'
     || this.name === 'football') {
       xOffset = -10;
     } else if (this.name === 'pole') {
@@ -437,22 +437,23 @@ export default class Zombie {
     } else {
       xOffset = 30;
     }
- 
+
     this.position = this.trackPosition();
     this.shotTarget = this.findShotTarget();
 
     const rowCells: Cell[][] = [];
-    cells.forEach(cells => {
-      rowCells.push(cells.slice(0,1));
-    })
+    cells.forEach((cell) => {
+      rowCells.push(cell.slice(0, 1));
+    });
     const cellsArray: Cell[] = rowCells.flatMap((x) => x);
-    cellsArray.forEach(cell => {
-      if(this.position.x + xOffset > cell.node.position.x - cell.cellSize.x && this.position.x < 900) {
+    cellsArray.forEach((cell) => {
+      if (this.position.x + xOffset > cell.node.position.x - cell.cellSize.x
+        && this.position.x < 900) {
         this.column = cell.position.x;
       }
-    })
+    });
 
-  return this.column;   
+    return this.column;
   }
 
   // Set different speed for zombies
@@ -507,7 +508,6 @@ export default class Zombie {
     return position;
   }
 
-
   // Spotlight for dancing guy
   private addSpotlight(update: () => void) {
     const spotlight = this.engine.loader.files['assets/sprites/zombies/dancer/spotlight.png'] as HTMLImageElement;
@@ -552,6 +552,4 @@ export default class Zombie {
     }
     return y;
   }
-
-  
 }

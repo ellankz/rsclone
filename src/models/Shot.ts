@@ -49,8 +49,8 @@ export default class Shot {
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
       }
-      
-      if (node.position.x > zombie.shotTarget 
+
+      if (node.position.x > zombie.shotTarget
         && plant.health) {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
