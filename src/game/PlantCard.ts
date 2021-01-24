@@ -7,7 +7,7 @@ import {
   PLANT_CARD_HEIGHT_COEF,
   PLANT_CARD_WIDTH_COEF,
 } from '../constats';
-import { IImageNode, NodesType } from '../engine/types';
+import { IImageNode, ITextNode, NodesType } from '../engine/types';
 import { TEXT_BUTTONS_FONT } from './screens/ScreenCreator';
 
 export default class PlantCard {
@@ -34,6 +34,8 @@ export default class PlantCard {
   public node: IImageNode;
 
   private selection: IImageNode;
+
+  private nodeCost: NodesType;
 
   constructor(
     type: string,
@@ -77,7 +79,7 @@ export default class PlantCard {
   }
 
   public drawCost(): void {
-    this.engine.createNode({
+    this.nodeCost = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(
         this.node.position.x + this.node.dw - 35,
@@ -140,6 +142,7 @@ export default class PlantCard {
 
   public destroy() {
     this.node.destroy();
+    this.nodeCost.destroy();
     this.removeSelection();
   }
 
