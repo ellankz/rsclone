@@ -12,14 +12,6 @@ import Vector from '../engine/core/Vector';
 
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
-const X_MAX = -60;
-const Y_MIN = -5;
-const Y_MAX = -100;
-const X_MIN = {
-  all: -20,
-  dancer: 10,
-};
-
 const X_AXIS = 970;
 const Y_AXIS = {
   all: 5,
@@ -32,6 +24,8 @@ const SPEED = {
   fast: 0.25,
   superFast: 0.47,
 };
+
+const GROAN_DELAY: number = 15000;
 
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
@@ -76,6 +70,8 @@ export default class Zombie {
 
   public row: number;
 
+  public column: number;
+
   private engine: Engine;
 
   public node: ISpriteNode;
@@ -102,6 +98,10 @@ export default class Zombie {
 
   public isDestroyedFlag: boolean;
 
+  public shotTarget: number;
+
+  public groanInterval: any;
+
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
     this.health = this.zombiePresets[config.type].health;
@@ -122,7 +122,7 @@ export default class Zombie {
     this.engine = engine;
   }
 
-  public draw(cell: Cell, occupiedCells: Map<Cell, Plant>) {
+  public draw(cell: Cell, occupiedCells: Map<Cell, Plant>, cells: Cell[][]) {
     this.zombieSpeed = this.setSpeed();
     const y = this.setY();
     let start = 0;
@@ -149,8 +149,7 @@ export default class Zombie {
         X_AXIS - start, (cell.getBottom() - this.height - y),
       );
       if (this.isJump) this.node.position.x = this.trackPositionAfterJump();
-
-      this.trackPosition();
+      this.trackCurrentCell(cells);
     };
 
     const updateSpotlight = () => {
@@ -187,23 +186,32 @@ export default class Zombie {
     }
 
     this.updateZombieState();
+    this.groan();
   }
 
   public attack(occupiedCells: Map<Cell, Plant>) {
     if (this.isDestroyedFlag) return;
     occupiedCells.forEach((plant, cell) => {
+      if (plant.isDestroyedFlag) return;
+
       const positionJump = this.poleGuyPositionConditionForJump(plant);
-      const positionAttack = this.poleGuyPositionConditionForAttack(plant);
 
       // Only for pole guy
       if (this.name === 'pole') {
-        if (!this.isEndJump && positionJump) {
+        if
+        (!this.isEndJump
+          && positionJump
+          && this.row === plant.cell.position.y) {
           this.isEndJump = true;
           this.jump();
-        } else if (this.isEndJump && positionAttack) {
+        } else if
+        (this.isEndJump
+          && this.column === plant.cell.position.x
+          && this.row === plant.cell.position.y) {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
+          this.attackedPlant = plant;
 
           if (plant.health <= 0) {
             this.eatThePlant(plant);
@@ -213,23 +221,20 @@ export default class Zombie {
           }
         }
       // For all others
-      } else {
-        const xMin = this.setX();
-        if (this.node.position.x - plant.position.x < xMin
-        && this.node.position.x - plant.position.x > X_MAX
-        && this.node.position.y - plant.position.y < Y_MIN
-        && this.node.position.y - plant.position.y > Y_MAX
-        ) {
-          this.node.switchState('attack');
-          this.zombieSpeed = 0;
-          this.makeDamage(plant);
+      } else if (this.column === plant.cell.position.x
+            && this.row === plant.cell.position.y) {
+        this.node.switchState('attack');
+        this.zombieSpeed = 0;
+        this.makeDamage(plant);
+        this.attackedPlant = plant;
 
-          if (plant.health <= 0) {
+        if (plant.health <= 0) {
+          setTimeout(() => {
             this.eatThePlant(plant);
             occupiedCells.delete(cell);
-            this.node.switchState('walking');
-            this.zombieSpeed = this.setSpeed();
-          }
+          }, 200);
+          this.node.switchState('walking');
+          this.zombieSpeed = this.setSpeed();
         }
       }
     });
@@ -243,7 +248,11 @@ export default class Zombie {
 
   public walk() {
     if (this.isDestroyedFlag) return;
-    this.node.switchState('walking');
+    if (this.name === 'pole') {
+      this.node.switchState('walkingSlow');
+    } else {
+      this.node.switchState('walking');
+    }
     this.zombieSpeed = this.setSpeed();
   }
 
@@ -257,8 +266,15 @@ export default class Zombie {
     return this;
   }
 
+  public groan(): void {
+    this.groanInterval = setInterval(() => {
+      this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
+    }, GROAN_DELAY);
+  }
+
   public stop() {
     clearTimeout(this.timer);
+    clearInterval(this.groanInterval);
     if (this.isDestroyedFlag) return;
     this.node.switchState('stop');
     this.zombieSpeed = 0;
@@ -316,6 +332,7 @@ export default class Zombie {
   }
 
   public remove() {
+    clearInterval(this.groanInterval);
     clearTimeout(this.timer);
     if (this.isDestroyedFlag) return;
     this.isDestroyedFlag = true;
@@ -352,6 +369,11 @@ export default class Zombie {
       this.zombieSpeed = 0.33;
     }, 1120);
 
+    return this.node.position.x;
+  }
+
+  trackPositionAfterJump() {
+    this.node.position.x -= 150;
     return this.node.position.x;
   }
 
@@ -405,9 +427,46 @@ export default class Zombie {
     return this.position;
   }
 
-  trackPositionAfterJump() {
-    this.node.position.x -= 150;
-    return this.node.position.x;
+  private findShotTarget() {
+    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3'
+        || this.name === 'newspaper') {
+      this.shotTarget = this.position.x + this.width / 2 - 40;
+    } else {
+      this.shotTarget = this.position.x + this.width / 2;
+    }
+    return this.shotTarget;
+  }
+
+  public trackCurrentCell(cells : Cell[][]) {
+    let xOffset: number = 0;
+    if
+    (this.name === 'dancer'
+    || this.name === 'dancer_2'
+    || this.name === 'dancer_3'
+    || this.name === 'football') {
+      xOffset = -10;
+    } else if (this.name === 'pole') {
+      xOffset = 150;
+    } else {
+      xOffset = 30;
+    }
+
+    this.position = this.trackPosition();
+    this.shotTarget = this.findShotTarget();
+
+    const rowCells: Cell[][] = [];
+    cells.forEach((cell) => {
+      rowCells.push(cell.slice(0, 1));
+    });
+    const cellsArray: Cell[] = rowCells.flatMap((x) => x);
+    cellsArray.forEach((cell) => {
+      if (this.position.x + xOffset > cell.node.position.x - cell.cellSize.x
+        && this.position.x < 900) {
+        this.column = cell.position.x;
+      }
+    });
+
+    return this.column;
   }
 
   // Set different speed for zombies
@@ -462,19 +521,6 @@ export default class Zombie {
     return position;
   }
 
-  private poleGuyPositionConditionForAttack(plant: any) {
-    let position: boolean;
-    if (this.node.position.x - plant.position.x < -140
-      && this.node.position.x - plant.position.x > -210
-      && this.node.position.y - plant.position.y < -100
-      && this.node.position.y - plant.position.y > -130) {
-      position = true;
-    } else {
-      position = false;
-    }
-    return position;
-  }
-
   // Spotlight for dancing guy
   private addSpotlight(update: () => void) {
     const spotlight = this.engine.loader.files['assets/sprites/zombies/dancer/spotlight.png'] as HTMLImageElement;
@@ -510,16 +556,6 @@ export default class Zombie {
   }
 
   // Set coordinates
-  private setX() {
-    let x = 0;
-    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
-      x = X_MIN.dancer;
-    } else {
-      x = X_MIN.all;
-    }
-    return x;
-  }
-
   private setY() {
     let y = 0;
     if (this.name === 'pole') {
