@@ -270,7 +270,6 @@ export default class Zombie {
 
   public groan(): void {
     this.groanInterval = setInterval(() => {
-      console.log('groan');
       this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
     }, GROAN_DELAY);
   }
