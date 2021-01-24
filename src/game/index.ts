@@ -143,19 +143,21 @@ export default class Game {
     this.currentLevel.clearPlantsArray();
 
     setTimeout(() => {
-      this.createWinScene(() => {
-        this.currentLevel.updateSunCount(0);
-        this.destroySun();
-        this.destroyPlants();
-        this.engine.clearAllTimeouts();
-        this.clearLevel();
-        // this.engine.setScreen('startScreen');
-        this.engine.setScreen('levelSelectionScreen');
-        this.engine.stop();
-        // this.engine.start('levelSelectionScreen');
-        document.removeEventListener('visibilitychange', this.runPause);
-      });
+        this.createWinScene();
     }, 3000);
+
+    setTimeout(() => {
+      this.currentLevel.updateSunCount(0);
+      this.destroySun();
+      this.destroyPlants();
+      this.engine.clearAllTimeouts();
+      this.clearLevel();
+      // this.engine.setScreen('startScreen');
+      this.engine.setScreen('levelSelectionScreen'); 
+      this.engine.stop();
+      this.engine.start('levelSelectionScreen'); 
+      document.removeEventListener('visibilitychange', this.runPause);
+    }, 6650)
 
     clearTimeout(this.timer);
   }
@@ -224,11 +226,11 @@ export default class Game {
     });
   }
 
-  createWinScene(afterAnimationCallback: () => void) {
+  createWinScene() {
     this.win = new WinScene(this.engine, () => {
       this.win = null;
     });
-    this.win.init(afterAnimationCallback);
+    this.win.init();
   }
 
   public createLooseScene() {

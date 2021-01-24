@@ -323,9 +323,6 @@ export default class Level {
 
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-        if (zombie.health <= 0) {
-          this.reduceZombies();
-        }
         zombie.attack(this.occupiedCells);
 
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
@@ -335,6 +332,10 @@ export default class Level {
             plant.switchState('attack', zombie);
           }
         });
+
+        if (zombie.health <= 0) {
+          this.reduceZombies();
+        }
       });
 
       this.zombiesArr = this.deleteZombie();

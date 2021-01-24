@@ -74,7 +74,6 @@ export class StartLevelView {
   }
 
   private init(): void {
-    this.engine.start('scene');
     this.running = false;
 
     const viewAnimation = (node: any) => {
