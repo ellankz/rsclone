@@ -34,5 +34,9 @@
   "losegame": "assets/audio/losemusic.mp3",
   "readysetplant": "assets/audio/readysetplant.mp3",
   "levelMain": "assets/audio/levelMain.mp3",
-  "menuMain": "assets/audio/menuMain.mp3"
+  "menuMain": "assets/audio/menuMain.mp3",
+  "bucket1": "assets/audio/shieldhit(bucket).mp3",
+  "bucket2": "assets/audio/shieldhit2(bucket).mp3",
+  "cone1": "assets/audio/plastichit.mp3",
+  "cone2": "assets/audio/plastichit2.mp3"
 }
