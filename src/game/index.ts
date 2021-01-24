@@ -145,7 +145,7 @@ export default class Game {
     this.currentLevel.clearPlantsArray();
 
     setTimeout(() => {
-        this.createWinScene();
+      this.createWinScene();
     }, 3000);
 
     setTimeout(() => {
@@ -155,11 +155,11 @@ export default class Game {
       this.engine.clearAllTimeouts();
       this.clearLevel();
       // this.engine.setScreen('startScreen');
-      this.engine.setScreen('levelSelectionScreen'); 
+      this.engine.setScreen('levelSelectionScreen');
       this.engine.stop();
-      this.engine.start('levelSelectionScreen'); 
+      this.engine.start('levelSelectionScreen');
       document.removeEventListener('visibilitychange', this.runPause);
-    }, 6650)
+    }, 6650);
 
     clearTimeout(this.timer);
   }

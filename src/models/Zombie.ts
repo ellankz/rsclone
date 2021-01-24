@@ -196,18 +196,31 @@ export default class Zombie {
     occupiedCells.forEach((plant, cell) => {
       if (plant.isDestroyedFlag) return;
 
-      const positionJump = this.poleGuyPositionConditionForJump(plant);
+      const setConditionOne = () => {
+        if (!this.isEndJump && plant.name !== 'CherryBomb'
+        && this.column - plant.cell.position.x === 1
+        && this.row === plant.cell.position.y) return true;
+        return false;
+      };
+
+      const setConditionTwo = () => {
+        if (!this.isEndJump && plant.name !== 'CherryBomb' 
+          && plant.cell.position.x === 8 && this.node.position.x < 800
+          && this.row === plant.cell.position.y) return true;
+        return false;
+      };
+
+      const conditionOne = setConditionOne();
+      const conditionTwo = setConditionTwo();
 
       // Only for pole guy
       if (this.name === 'pole') {
         if
-        (!this.isEndJump
-          && positionJump
-          && this.row === plant.cell.position.y) {
+        (conditionOne || conditionTwo) {
           this.isEndJump = true;
           this.jump();
         } else if
-        (this.isEndJump
+        (this.isEndJump && plant.name !== 'CherryBomb'
           && this.column === plant.cell.position.x
           && this.row === plant.cell.position.y) {
           this.node.switchState('attack');
@@ -441,16 +454,20 @@ export default class Zombie {
 
   public trackCurrentCell(cells : Cell[][]) {
     let xOffset: number = 0;
+    let fieldStartY: number = 0;
     if
     (this.name === 'dancer'
     || this.name === 'dancer_2'
     || this.name === 'dancer_3'
     || this.name === 'football') {
       xOffset = -10;
+      fieldStartY = 900;
     } else if (this.name === 'pole') {
       xOffset = 150;
+      fieldStartY = 700;
     } else {
       xOffset = 30;
+      fieldStartY = 900;
     }
 
     this.position = this.trackPosition();
@@ -463,7 +480,7 @@ export default class Zombie {
     const cellsArray: Cell[] = rowCells.flatMap((x) => x);
     cellsArray.forEach((cell) => {
       if (this.position.x + xOffset > cell.node.position.x - cell.cellSize.x
-        && this.position.x < 900) {
+        && this.position.x < fieldStartY) {
         this.column = cell.position.x;
       }
     });
@@ -488,40 +505,26 @@ export default class Zombie {
   // Dance
   private createDancingQueen() {
     let timer;
-        if (this.name === 'dancer') {
-          timer = 800;
-        } else {
-          timer = 1800;
-        }
-      this.node.switchState('dance');
-      this.timerWalk = setTimeout(() => {
-        this.node.switchState('walking');
-      }, timer);  
+    if (this.name === 'dancer') {
+      timer = 800;
+    } else {
+      timer = 1800;
+    }
+    this.node.switchState('dance');
+    this.timerWalk = setTimeout(() => {
+      this.node.switchState('walking');
+    }, timer);
   }
 
   private updateZombieStateToDance() {
     const update = () => {
-      this.createDancingQueen();  
+      this.createDancingQueen();
       this.timerDance = setTimeout(update, 5000);
-    }
- 
+    };
+
     if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
       update();
     }
-  }
-
-  // Position conditions for pole guy
-  private poleGuyPositionConditionForJump(plant: any) {
-    let position: boolean;
-    if (this.node.position.x - plant.position.x < -80
-      && this.node.position.x - plant.position.x > -150
-      && this.node.position.y - plant.position.y < -100
-      && this.node.position.y - plant.position.y > -130) {
-      position = true;
-    } else {
-      position = false;
-    }
-    return position;
   }
 
   // Spotlight for dancing guy
@@ -571,6 +574,6 @@ export default class Zombie {
 
   private clearTimeouts() {
     if (this.timerDance) clearTimeout(this.timerDance);
-    if(this.timerWalk) clearTimeout(this.timerWalk);
+    if (this.timerWalk) clearTimeout(this.timerWalk);
   }
 }
