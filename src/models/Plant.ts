@@ -54,6 +54,8 @@ export default class Plant {
 
   public shotType?: string;
 
+  public isAttacked: boolean = false;
+
   constructor(config: PlantConfig, engine: Engine) {
     this.cost = this.plantPresets[config.type].cost;
     this.damage = this.plantPresets[config.type].damage;
@@ -167,7 +169,10 @@ export default class Plant {
   public isZombieInAttackArea(zombie: Zombie) {
     if (!this.states || !this.states.attack || !zombie.position) return false;
 
-    return zombie.row === this.cell.position.y && zombie.position.x > this.position.x;
+    if (zombie.row === this.cell.position.y
+      && zombie.column < this.cell.position.x) this.stopAttack();
+
+    return zombie.row === this.cell.position.y && zombie.column >= this.cell.position.x;
   }
 
   public destroy() {

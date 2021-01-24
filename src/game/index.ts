@@ -152,7 +152,7 @@ export default class Game {
         // this.engine.setScreen('startScreen');
         this.engine.setScreen('levelSelectionScreen');
         this.engine.stop();
-        this.engine.start('levelSelectionScreen');
+        // this.engine.start('levelSelectionScreen');
         document.removeEventListener('visibilitychange', this.runPause);
       });
     }, 3000);
