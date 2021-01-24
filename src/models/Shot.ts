@@ -1,4 +1,3 @@
-import { throws } from 'assert';
 import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
 import Engine from '../engine';
 import Vector from '../engine/core/Vector';
@@ -56,7 +55,13 @@ export default class Shot {
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();
         if (zombie.health <= 0) zombie.remove();
-        this.engine.audioPlayer.playSound('shot');
+        if (zombie.name === 'bucket') {
+          this.engine.audioPlayer.playSoundRand(['bucket1', 'bucket2']);
+        } else if (zombie.name === 'cone') {
+          this.engine.audioPlayer.playSoundRand(['cone1', 'cone2']);
+        } else {
+          this.engine.audioPlayer.playSound('shot');
+        }
       }
     };
 

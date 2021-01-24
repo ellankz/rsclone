@@ -1,4 +1,3 @@
-import { time } from 'console';
 import Engine from '../../engine';
 
 export default class WinScene {
@@ -12,8 +11,12 @@ export default class WinScene {
   }
 
   public init() {
-    this.engine.audioPlayer.stopSound('menu');
-    this.engine.audioPlayer.playSound('win');
+    this.engine.audioPlayer.stopSound('menuMain');
+    const winSound: any = this.engine.audioPlayer.getSound('win');
+    winSound.currentTime = 0;
+    winSound.play();
+    winSound.addEventListener('ended', () => this.engine.audioPlayer.playSound('menuMain'));
+
     this.createAnimation();
     return this;
   }

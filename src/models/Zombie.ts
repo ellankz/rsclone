@@ -25,6 +25,8 @@ const SPEED = {
   superFast: 0.47,
 };
 
+const GROAN_DELAY: number = 15000;
+
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
 
@@ -80,7 +82,9 @@ export default class Zombie {
 
   public opacity: number;
 
-  private timer: any;
+  private timerDance: any;
+
+  private timerWalk: any;
 
   private isJump: boolean;
 
@@ -97,6 +101,8 @@ export default class Zombie {
   public isDestroyedFlag: boolean;
 
   public shotTarget: number;
+
+  public groanInterval: any;
 
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
@@ -181,7 +187,8 @@ export default class Zombie {
       }, 100);
     }
 
-    this.updateZombieState();
+    this.updateZombieStateToDance();
+    this.groan();
   }
 
   public attack(occupiedCells: Map<Cell, Plant>) {
@@ -261,8 +268,15 @@ export default class Zombie {
     return this;
   }
 
+  public groan(): void {
+    this.groanInterval = setInterval(() => {
+      this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
+    }, GROAN_DELAY);
+  }
+
   public stop() {
-    clearTimeout(this.timer);
+    this.clearTimeouts();
+    clearInterval(this.groanInterval);
     if (this.isDestroyedFlag) return;
     this.node.switchState('stop');
     this.zombieSpeed = 0;
@@ -320,7 +334,8 @@ export default class Zombie {
   }
 
   public remove() {
-    clearTimeout(this.timer);
+    clearInterval(this.groanInterval);
+    this.clearTimeouts();
     if (this.isDestroyedFlag) return;
     this.isDestroyedFlag = true;
     this.lostHead();
@@ -365,7 +380,7 @@ export default class Zombie {
   }
 
   public burn() {
-    clearTimeout(this.timer);
+    this.clearTimeouts();
     if (this.isDestroyedFlag) return;
     this.isDestroyedFlag = true;
     this.zombieSpeed = 0;
@@ -471,24 +486,25 @@ export default class Zombie {
   }
 
   // Dance
-  private updateZombieState() {
-    const update = () => {
-      let timer;
-      if (this.name === 'dancer') {
-        timer = 5800;
-      } else {
-        timer = 6800;
-      }
-
-      setTimeout(() => {
-        this.node.switchState('dance');
-      }, 5000);
-      setTimeout(() => {
+  private createDancingQueen() {
+    let timer;
+        if (this.name === 'dancer') {
+          timer = 800;
+        } else {
+          timer = 1800;
+        }
+      this.node.switchState('dance');
+      this.timerWalk = setTimeout(() => {
         this.node.switchState('walking');
-      }, timer);
+      }, timer);  
+  }
 
-      this.timer = setTimeout(update, 10000);
-    };
+  private updateZombieStateToDance() {
+    const update = () => {
+      this.createDancingQueen();  
+      this.timerDance = setTimeout(update, 5000);
+    }
+ 
     if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
       update();
     }
@@ -551,5 +567,10 @@ export default class Zombie {
       y = Y_AXIS.all;
     }
     return y;
+  }
+
+  private clearTimeouts() {
+    if (this.timerDance) clearTimeout(this.timerDance);
+    if(this.timerWalk) clearTimeout(this.timerWalk);
   }
 }

@@ -77,13 +77,14 @@ export default class Game {
   }
 
   startGame(levelNumber: number) {
-    // this.engine.audioPlayer.playSound('menu');
     this.createCells();
     this.addPause();
     this.currentLevel = this.createLevel(levelNumber);
     this.engine.setScreen('first');
     this.engine.stop();
     this.engine.start('scene');
+    this.engine.audioPlayer.playSound('bleep');
+    this.engine.audioPlayer.stopSound('menuMain');
   }
 
   createCells() {
@@ -134,6 +135,7 @@ export default class Game {
   }
 
   endWin() {
+    this.engine.audioPlayer.stopSound('levelMain');
     this.isEnd = true;
     this.reducePlantsHealth();
     this.engine.clearAllTimeouts();
@@ -254,6 +256,10 @@ export default class Game {
   }
 
   stopGame() {
+    this.engine.audioPlayer.pauseSound('levelMain');
+    this.engine.audioPlayer.pauseSound('level');
+
+    this.currentLevel.zombiesArr.forEach((zombie) => clearInterval(zombie.groanInterval));
     this.engine.stop();
     this.engine.clearAllTimeouts();
     this.createPauseScene();
@@ -261,6 +267,16 @@ export default class Game {
   }
 
   resumeGame() {
+    const mainSound = this.engine.audioPlayer.getSound('levelMain');
+    const viewSound = this.engine.audioPlayer.getSound('level');
+    this.currentLevel.zombiesArr.forEach((zombie) => zombie.groan());
+
+    if (mainSound.currentTime !== 0) {
+      this.engine.audioPlayer.playContinue('levelMain');
+    }
+    if (viewSound.currentTime > 0 && viewSound.currentTime < 18) {
+      this.engine.audioPlayer.playContinue('level');
+    }
     this.engine.start('scene');
     this.currentLevel.resumeSunFall();
     this.currentLevel.continueCreatingZombies();
@@ -268,6 +284,7 @@ export default class Game {
   }
 
   exitGame(hasWon: boolean) {
+    this.currentLevel.zombiesArr.forEach((zombie) => clearInterval(zombie.groanInterval));
     this.isEnd = true;
     this.currentLevel.stopLevel(hasWon);
     this.destroySun();
@@ -281,6 +298,8 @@ export default class Game {
     this.engine.stop();
     this.engine.start('levelSelectionScreen');
     this.engine.setScreen('levelSelectionScreen');
+    this.engine.audioPlayer.stopSound('levelMain');
+    this.engine.audioPlayer.playSound('menuMain');
   }
 
   runPause = (event: KeyboardEvent) => {
