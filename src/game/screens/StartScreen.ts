@@ -43,6 +43,7 @@ export class StartScreen extends ScreenCreator {
     );
     this.settingsScreen = new StatisticsScreen(this.engine, this.dataService);
     this.levelSelectionScreen = new LevelSelectionScreen(this.engine, func);
+    this.engine.audioPlayer.playSound('menuMain', true);
   }
 
   public openScreen(): void {

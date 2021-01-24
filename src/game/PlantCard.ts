@@ -89,6 +89,7 @@ export default class PlantCard {
           this.isToggle = !this.isToggle;
           this.updateCardState();
         }
+        this.engine.audioPlayer.playSound('plantcard');
       }
     });
   }

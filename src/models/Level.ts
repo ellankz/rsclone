@@ -1,4 +1,3 @@
-import { platform } from 'os';
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import Engine from '../engine';
 import Cell from '../game/Cell';
