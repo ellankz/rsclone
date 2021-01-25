@@ -42,8 +42,7 @@ export default class Shot {
         node.destroy();
       }
 
-      if (node.position.x > zombie.shotTarget
-        && plant.health) {
+      if (node.position.x > zombie.shotTarget && plant.health) {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();

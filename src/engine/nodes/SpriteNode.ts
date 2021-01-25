@@ -139,6 +139,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   public switchState(stateName: string) {
     if (!this.states[stateName]) return;
+    this.interval?.destroy();
     const state = this.states[stateName];
     this.img = state.img;
     this.frames = state.frames;
@@ -157,7 +158,6 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.count = 0;
     this.finishCallbacks = [];
     this.isFinished = false;
-    this.interval?.destroy();
 
     this.animate();
 

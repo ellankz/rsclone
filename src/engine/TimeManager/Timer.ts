@@ -51,7 +51,7 @@ export default class Timer {
 
   remove(targetTimer: Timeout | Interval | Timer) {
     const timer = targetTimer;
-    if (this.isDestroyed || (this.isStarted && !this.isFinished)) return this;
+    if (this.isDestroyed) return this;
 
     const idx = this.timers.indexOf(timer);
     if (idx !== -1) {
@@ -93,7 +93,7 @@ export default class Timer {
   }
 
   pause() {
-    if (!this.isStarted || this.isPaused || this.isDestroyed || this.timers.length === 0) return;
+    if (!this.isStarted || this.isDestroyed || this.timers.length === 0) return;
 
     this.isPaused = true;
 
@@ -105,7 +105,7 @@ export default class Timer {
   }
 
   resume() {
-    if (!this.isStarted || !this.isPaused || this.isDestroyed || this.timers.length === 0) return;
+    if (!this.isStarted || this.isDestroyed || this.timers.length === 0) return;
 
     this.isPaused = false;
 

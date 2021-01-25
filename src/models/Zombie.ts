@@ -295,8 +295,8 @@ export default class Zombie {
   }
 
   public stop() {
-    this.interval?.destroy();
     if (this.isDestroyedFlag) return;
+    this.interval?.destroy();
     this.node.switchState('stop');
     this.zombieSpeed = 0;
   }

@@ -31,13 +31,15 @@ export class Peashooter extends Plant {
     const shoot = () => {
       if (zombie.health <= 0 || zombie.isDestroyedFlag) return;
       this.node.switchState('attack');
-      this.node.then(() => this.switchState('basic'));
+      this.node.then(() => {
+        this.switchState('basic');
+      });
       const timeout = this.engine.timeout(() => {
         timeout.destroy();
         this.engine.audioPlayer.playSoundRand(['pea2', 'pea']);
         this.shot = new Shot(this.shotPosition, this.engine, this.shotType);
         this.shot.draw(zombie, this);
-      }, 600);
+      }, 500);
       this.engine.getTimer('levelTimer').add(timeout);
     };
 
