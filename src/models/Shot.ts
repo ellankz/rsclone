@@ -6,7 +6,6 @@ import Plant from './Plant';
 
 const SHOT_OFFSET_X = 52;
 const SHOT_OFFSET_Y = 5;
-const SHOT_SPEED = 3.5;
 
 require.context('../assets/images/shot', true, /\.(png|jpg)$/);
 
@@ -19,10 +18,15 @@ export default class Shot {
 
   shoot: any;
 
+  savedTime: number;
+
+  probablePositionX: number;
+
   constructor(position: Vector, engine: Engine, type: string) {
     this.position = position;
     this.engine = engine;
     this.type = type;
+    this.savedTime = new Date().getTime();
   }
 
   draw(zombie: Zombie, plant: Plant) {
@@ -36,7 +40,16 @@ export default class Shot {
         return;
       }
 
-      node.move(this.engine.vector(SHOT_SPEED, 0));
+      const thisTime = new Date().getTime();
+      if (thisTime - this.savedTime > 1000) {
+        this.savedTime = thisTime;
+      }
+      this.probablePositionX = (thisTime - this.savedTime) / 7;
+      if (thisTime - this.savedTime > 30) {
+        node.move(this.engine.vector((thisTime - this.savedTime) / 7, 0));
+        this.savedTime = thisTime;
+        this.probablePositionX = node.position.x;
+      }
 
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
