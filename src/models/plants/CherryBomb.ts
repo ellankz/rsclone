@@ -15,6 +15,8 @@ export class CherryBomb extends Plant {
 
   private occupedCells: Map<Cell, Plant>;
 
+  public name: string = 'CherryBomb';
+
   constructor(
     config: PlantConfig,
     engine: Engine,

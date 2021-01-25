@@ -332,19 +332,25 @@ export default class Level {
 
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-        if (zombie.health <= 0 || zombie.isDestroyedFlag) {
-          this.reduceZombies();
-        }
-
         zombie.attack(this.occupiedCells);
 
-        if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
+        if (!(zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary)) {
+          this.plantsArr.forEach((plant) => {
+            if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
+              plant.switchState('attack', zombie);
+            }
+          });
+        }
 
         this.plantsArr.forEach((plant) => {
           if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
             plant.switchState('attack', zombie);
           }
         });
+
+        if (zombie.health <= 0 || zombie.isDestroyedFlag) {
+          this.reduceZombies();
+        }
 
         if (zombie.position) {
           if (zombie.name === 'pole') {

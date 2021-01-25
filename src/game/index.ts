@@ -118,15 +118,18 @@ export default class Game {
     this.engine.audioPlayer.stopSound('levelMain');
     const hasWon = true;
     this.currentLevel.stopLevel(hasWon);
-    this.engine
-      .timeout(() => {
-        this.createWinScene(() => {
-          this.currentLevel.updateSunCount(0);
-          this.exitGame(hasWon);
-          document.removeEventListener('visibilitychange', this.runPause);
-        });
-      }, 3000)
-      .start();
+
+    const timeout1 = this.engine.timeout(() => {
+      this.createWinScene();
+    }, 3000);
+
+    const timeout2 = this.engine.timeout(() => {
+      this.currentLevel.updateSunCount(0);
+      this.exitGame(hasWon);
+      document.removeEventListener('visibilitychange', this.runPause);
+    }, 3350);
+
+    this.engine.timer([timeout1, timeout2], true).start();
   }
 
   endLoose() {
@@ -171,11 +174,11 @@ export default class Game {
     });
   }
 
-  createWinScene(afterAnimationCallback: () => void) {
+  createWinScene() {
     this.win = new WinScene(this.engine, () => {
       this.win = null;
     });
-    this.win.init(afterAnimationCallback);
+    this.win.init();
   }
 
   public createLooseScene() {
@@ -248,7 +251,10 @@ export default class Game {
   }
 
   runPause = (event: KeyboardEvent) => {
-    if (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click') {
+    if (
+      !this.isEnd
+      && (event.type === 'visibilitychange' || event.key === 'Escape' || event.type === 'click')
+    ) {
       if (!this.menuOpen) {
         this.engine.audioPlayer.playSound('pause');
         this.menuOpen = true;

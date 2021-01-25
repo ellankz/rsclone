@@ -54,11 +54,7 @@ export class PotatoMine extends Plant {
     if (zombie.row !== this.cell.position.y || !zombie.position) return false;
     const areaOffset = offset || 0;
 
-    if (this.cell.getRight() - ATTACK_OFFSET_RIGHT + areaOffset >= zombie.position.x) {
-      if (this.cell.getLeft() - ATTACK_OFFSET_LEFT <= zombie.position.x) {
-        return true;
-      }
-    }
+    if (zombie.row === this.cell.position.y && zombie.column === this.cell.position.x) return true;
     return false;
   }
 
