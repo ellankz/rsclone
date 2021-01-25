@@ -299,42 +299,10 @@ export default class Level {
   }
 
   public createZombies(n: number) {
-    // Generate row without repeating more then (2) times
-    function getRandomNumber(min: number, max: number): number {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const random: any = {
-      prev: null,
-      count: 0,
-      consecutive: 2,
-
-      nextRandom(min: number, max: number) {
-        if (this.prev === null || this.count < this.consecutive) {
-          const res = getRandomNumber(min, max);
-          if (res === this.prev) {
-            this.count += 1;
-          } else {
-            this.prev = res;
-            this.count = 1;
-          }
-          return res;
-        }
-
-        let res = this.prev;
-        while (res === this.prev) {
-          res = getRandomNumber(min, max);
-        }
-
-        this.prev = res;
-        this.count = 1;
-        return res;
-      },
-    };
-
     const zombiesTimer = this.engine
       .timer([], true, 'createZombies')
       .finally(() => zombiesTimer.destroy());
+
     // Generate zombies
     for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
@@ -343,11 +311,11 @@ export default class Level {
       const timeout = this.engine.timeout(() => {
         if (!this.isEnd) {
           this.creatingZombies += 1;
-          row = random.nextRandom(0, ROWS_NUM - 1);
+          row = this.zombiesConfig[i].row;
           this.zombie = new Zombie(this.zombiesConfig[i], this.engine);
           cell = this.cells[0][row];
           this.zombie.row = row;
-          this.zombie.draw(cell, this.occupiedCells);
+          this.zombie.draw(cell, this.occupiedCells, this.cells);
           this.zombiesArr.push(this.zombie);
         }
       }, this.zombiesConfig[i].startDelay * MS);
@@ -365,6 +333,10 @@ export default class Level {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         if (zombie.isDestroyedFlag) return;
+        if (zombie.health <= 0) {
+          this.reduceZombies();
+        }
+
         zombie.attack(this.occupiedCells);
 
         if (zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary) return;
@@ -374,10 +346,6 @@ export default class Level {
             plant.switchState('attack', zombie);
           }
         });
-
-        if (zombie.health <= 0) {
-          this.reduceZombies();
-        }
 
         if (zombie.position) {
           if (zombie.name === 'pole') {
@@ -407,15 +375,10 @@ export default class Level {
 
   private deleteZombie() {
     return this.zombiesArr.filter((el) => el.health > 0);
-    // const index = this.zombiesArr.findIndex((el) => el.health <= 0);
-    // if (index >= 0) this.zombiesArr.splice(index, 1);
-    // return this.zombiesArr;
   }
 
   private deletePlant() {
-    const index = this.plantsArr.findIndex((el) => el.health <= 0);
-    if (index >= 0) this.plantsArr.splice(index, 1);
-    return this.plantsArr;
+    return this.plantsArr.filter((el) => el.health > 0);
   }
 
   private drawMenuButton() {

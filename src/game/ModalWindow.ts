@@ -217,7 +217,10 @@ export default class ModalWindow {
     if (this.modalWindowText !== 'game paused') return;
     this.shadowToggleButton = this.engine.createNode({
       type: 'ImageNode',
-      position: this.engine.vector(this.engine.size.x / 2 - 25, this.engine.size.y / 2.3),
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - 25 + this.shiftX,
+        this.engine.size.y / 2.3,
+      ),
       size: this.engine.vector(this.button.width, this.button.height),
       layer: 'window',
       img: this.engine.shadows.enabled ? this.buttonActive : this.button,
@@ -226,7 +229,10 @@ export default class ModalWindow {
 
     this.shadowToggleText = this.engine.createNode({
       type: 'TextNode',
-      position: this.engine.vector(this.engine.size.x / 2 - 8, this.engine.size.y / 2.3 + 8),
+      position: this.engine.vector(
+        (this.engine.size.x / 2) - 8 + this.shiftX,
+        (this.engine.size.y / 2.3) + 8,
+      ),
       text: 'shadows',
       layer: 'window',
       font: 'Samdan',

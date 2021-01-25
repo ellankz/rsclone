@@ -22,9 +22,24 @@ export default class AudioPlayer {
     }, {});
   }
 
-  public playSound(name: string) {
+  public getSound(name: string) {
+    return this.elements[name];
+  }
+
+  public playSound(name: string, loop?: boolean) {
+    if (loop) {
+      this.elements[name].loop = loop;
+    }
     this.elements[name].currentTime = 0;
     this.elements[name].play();
+  }
+
+  public stopAll() {
+    Object.values(this.elements).forEach((currentSound) => {
+      const sound = currentSound;
+      sound.pause();
+      sound.currentTime = 0;
+    });
   }
 
   public playSoundRand(names: Array<string>) {
@@ -33,6 +48,10 @@ export default class AudioPlayer {
 
     const index: number = randomInteger();
     this.playSound(names[index]);
+  }
+
+  public pauseSound(name: string) {
+    this.elements[name].pause();
   }
 
   public playContinue(name: string) {

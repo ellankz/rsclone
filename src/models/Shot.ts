@@ -30,16 +30,6 @@ export default class Shot {
       `assets/images/shot/${this.type}.png`
     ] as HTMLImageElement;
 
-    let SHOOT_LENGTH = 0;
-
-    if (zombie.name === 'dancer' || zombie.name === 'dancer_2' || zombie.name === 'dancer_3') {
-      SHOOT_LENGTH = -50;
-    } else if (zombie.name === 'pole') {
-      SHOOT_LENGTH = -180;
-    } else {
-      SHOOT_LENGTH = -80;
-    }
-
     const update = (node: any) => {
       if (zombie.health <= 0 || plant.health <= 0) {
         node.destroy();
@@ -52,24 +42,19 @@ export default class Shot {
         node.destroy();
       }
 
-      const checkPosition = () => {
-        const variant1 = zombie.position.x - node.position.x > -100 && zombie.name !== 'pole';
-        const variant2 = zombie.position.x - node.position.x > -190 && zombie.name === 'pole';
-        return variant1 || variant2;
-      };
-
-      if (
-        zombie
-        && zombie.position
-        && zombie.position.x - node.position.x < SHOOT_LENGTH
-        && plant.health > 0
-        && checkPosition()
-      ) {
+      if (node.position.x > zombie.shotTarget
+        && plant.health) {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();
-
-        this.engine.audioPlayer.playSound('shot');
+        if (zombie.health <= 0) zombie.remove();
+        if (zombie.name === 'bucket') {
+          this.engine.audioPlayer.playSoundRand(['bucket1', 'bucket2']);
+        } else if (zombie.name === 'cone') {
+          this.engine.audioPlayer.playSoundRand(['cone1', 'cone2']);
+        } else {
+          this.engine.audioPlayer.playSound('shot');
+        }
       }
 
       if (zombie && zombie.health <= 0) {

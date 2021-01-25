@@ -71,6 +71,7 @@ export class StartLevelView {
   }
 
   private init(): void {
+    this.engine.audioPlayer.playSound('level');
     this.engine.start('scene');
     this.running = false;
 
@@ -117,7 +118,13 @@ export class StartLevelView {
         this.zombies.forEach((zombie) => {
           zombie.destroy();
         });
-        this.engine.audioPlayer.playSound('zombie-comming');
+        this.engine.audioPlayer.stopSound('level');
+        this.engine.audioPlayer.playSound('readysetplant');
+        const zombieComing = this.engine.audioPlayer.getSound('zombie-comming');
+        zombieComing.play();
+        zombieComing.addEventListener('ended', () => this
+          .engine.audioPlayer
+          .playSound('levelMain', true));
         this.startLevel();
       }
     };

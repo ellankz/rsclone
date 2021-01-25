@@ -25,6 +25,10 @@ export default class LooseScene {
     this.createLooseMessage();
 
     const windowTimeout = this.engine.timeout(() => {
+      this.engine.audioPlayer.stopSound('levelMain');
+      this.engine.audioPlayer.playSound('losegame');
+      this.engine.audioPlayer.playSound('scream');
+
       this.message.destroy();
       this.createModalWindow();
     }, 5100);
