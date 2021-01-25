@@ -100,8 +100,6 @@ export default class Zombie {
 
   public shotTarget: number;
 
-  public groanInterval: any;
-
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
     this.health = this.zombiePresets[config.type].health;
@@ -212,16 +210,14 @@ export default class Zombie {
 
       // Only for pole guy
       if (this.name === 'pole') {
-        if
-        (!this.isEndJump
-          && positionJump
-          && this.row === plant.cell.position.y) {
+        if (!this.isEndJump && positionJump && this.row === plant.cell.position.y) {
           this.isEndJump = true;
           this.jump();
-        } else if
-        (this.isEndJump
+        } else if (
+          this.isEndJump
           && this.column === plant.cell.position.x
-          && this.row === plant.cell.position.y) {
+          && this.row === plant.cell.position.y
+        ) {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
@@ -235,9 +231,8 @@ export default class Zombie {
           }
         }
 
-      // For all others
-      } else if (this.column === plant.cell.position.x
-            && this.row === plant.cell.position.y) {
+        // For all others
+      } else if (this.column === plant.cell.position.x && this.row === plant.cell.position.y) {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
         this.makeDamage(plant);
@@ -285,9 +280,18 @@ export default class Zombie {
   }
 
   public groan(): void {
-    this.groanInterval = setInterval(() => {
-      this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
+    const interval = this.engine.interval(() => {
+      this.engine.audioPlayer.playSoundRand([
+        'groan1',
+        'groan2',
+        'groan3',
+        'groan4',
+        'groan5',
+        'groan6',
+      ]);
     }, GROAN_DELAY);
+
+    this.engine.getTimer('levelTimer').add(interval);
   }
 
   public stop() {
@@ -455,8 +459,12 @@ export default class Zombie {
   }
 
   private findShotTarget() {
-    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3'
-        || this.name === 'newspaper') {
+    if (
+      this.name === 'dancer'
+      || this.name === 'dancer_2'
+      || this.name === 'dancer_3'
+      || this.name === 'newspaper'
+    ) {
       this.shotTarget = this.position.x + this.width / 2 - 40;
     } else {
       this.shotTarget = this.position.x + this.width / 2;
@@ -464,13 +472,14 @@ export default class Zombie {
     return this.shotTarget;
   }
 
-  public trackCurrentCell(cells : Cell[][]) {
+  public trackCurrentCell(cells: Cell[][]) {
     let xOffset: number = 0;
-    if
-    (this.name === 'dancer'
-    || this.name === 'dancer_2'
-    || this.name === 'dancer_3'
-    || this.name === 'football') {
+    if (
+      this.name === 'dancer'
+      || this.name === 'dancer_2'
+      || this.name === 'dancer_3'
+      || this.name === 'football'
+    ) {
       xOffset = -10;
     } else if (this.name === 'pole') {
       xOffset = 150;
@@ -487,8 +496,10 @@ export default class Zombie {
     });
     const cellsArray: Cell[] = rowCells.flatMap((x) => x);
     cellsArray.forEach((cell) => {
-      if (this.position.x + xOffset > cell.node.position.x - cell.cellSize.x
-        && this.position.x < 900) {
+      if (
+        this.position.x + xOffset > cell.node.position.x - cell.cellSize.x
+        && this.position.x < 900
+      ) {
         this.column = cell.position.x;
       }
     });

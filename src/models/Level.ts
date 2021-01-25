@@ -332,8 +332,7 @@ export default class Level {
 
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
-        if (zombie.isDestroyedFlag) return;
-        if (zombie.health <= 0) {
+        if (zombie.health <= 0 || zombie.isDestroyedFlag) {
           this.reduceZombies();
         }
 

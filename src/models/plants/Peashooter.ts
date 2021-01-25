@@ -29,6 +29,7 @@ export class Peashooter extends Plant {
     if (!this.shotType || this.shooting !== null) return;
     this.isShooting = true;
     const shoot = () => {
+      if (zombie.health <= 0 || zombie.isDestroyedFlag) return;
       this.node.switchState('attack');
       this.node.then(() => this.switchState('basic'));
       const timeout = this.engine.timeout(() => {
