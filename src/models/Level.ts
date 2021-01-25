@@ -179,7 +179,7 @@ export default class Level {
     this.listenCellClicks();
     this.isEnd = false;
     this.restZombies = this.zombiesConfig.length;
-    //  this.placeLawnCleaners();
+    this.placeLawnCleaners();
     this.createZombies(this.creatingZombies);
     this.listenGameEvents();
     this.dropSuns();

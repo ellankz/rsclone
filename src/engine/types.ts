@@ -240,6 +240,11 @@ export interface ITimer {
   add: (timer: ITimeout | IInterval | ITimer) => ITimer;
   remove: (timer: ITimeout | IInterval | ITimer) => ITimer;
 
+  start: () => ITimer;
+  pause: () => void;
+  resume: () => void;
+  destroy: () => void;
+
   before: (callback: () => void) => ITimer;
   finally: (callback: () => void) => ITimer;
 }
