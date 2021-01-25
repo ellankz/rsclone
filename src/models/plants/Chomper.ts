@@ -21,6 +21,8 @@ const ATTACK_TIME = 1000;
 export class Chomper extends Plant {
   private sleeping: boolean;
 
+  private attacking: boolean;
+
   constructor(config: PlantConfig, engine: Engine) {
     super(config, engine);
     this.sleeping = false;
@@ -57,14 +59,15 @@ export class Chomper extends Plant {
   }
 
   attack(zombie: Zombie) {
-    setTimeout(() => {
-      if (this.sleeping) return;
-      this.engine.audioPlayer.playSound('chomper');
+    this.attacking = true;
+    this.node.then(() => {
       super.attack(zombie);
+      this.engine.audioPlayer.playSound('chomper');
       if (zombie.health <= 0) {
         zombie.node.destroy();
       }
-    }, ATTACK_TIME);
+      this.attacking = false;
+    });
   }
 
   stopAttack() {
@@ -72,14 +75,17 @@ export class Chomper extends Plant {
     this.sleeping = true;
     this.switchState('sleep');
 
-    setTimeout(() => {
+    const timeout = this.engine.timeout(() => {
+      timeout.destroy();
       this.switchState('basic');
       this.sleeping = false;
     }, SLEEPING_TIME);
+
+    this.engine.getTimer('levelTimer').add(timeout);
   }
 
   switchState(state: string, zombie?: Zombie) {
-    if (state === 'attack' && this.sleeping) return;
+    if (state === 'attack' && (this.sleeping || this.attacking)) return;
     super.switchState(state, zombie);
     if (state === 'basic') {
       this.node.position.plus(this.engine.vector(POSITION_ADJUST_X, POSITION_ADJUST_Y));

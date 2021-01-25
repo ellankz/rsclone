@@ -11,8 +11,6 @@ import Pause from '../models/scenes/Pause';
 import { StartScreen } from './screens/StartScreen';
 import sounds from '../data/audio.json';
 
-const X_HOME = 150;
-
 export default class Game {
   private engine: Engine;
 
@@ -44,7 +42,6 @@ export default class Game {
 
   public init() {
     this.setupGame();
-    // const loaderScreen = new LoaderScreen(this.engine, this.startGame.bind(this));
     const loaderScreen = new LoaderScreen(this.engine, this.runFirstScreen.bind(this));
     this.engine.preloadFiles(
       () => loaderScreen.create(),
@@ -102,76 +99,43 @@ export default class Game {
 
   createLevel(levelIndex: number) {
     this.isEnd = false;
+    if (this.currentLevel) this.clearLevel();
     this.currentLevel = new Level(
-      levelIndex, this.engine, this.cells, this.dataService, this.runPause,
+      levelIndex,
+      this.engine,
+      this.cells,
+      this.dataService,
+      this.runPause,
+      this.endWin.bind(this),
+      this.endLoose.bind(this),
     );
     this.currentLevel.init();
-    this.endGame();
     return this.currentLevel;
   }
 
-  endGame() {
-    const trackPosition = () => {
-      if (this.currentLevel) {
-        this.restZombies = this.currentLevel.getRestZombies();
-        if (this.restZombies <= 0) {
-          this.endWin();
-        }
-
-        this.currentLevel.zombiesArr.forEach((zombie) => {
-          if (zombie.position && zombie.name === 'pole' && zombie.position.x < 50) {
-            const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
-            if (!lawnCleanerWorked) this.endLoose();
-          } else if (zombie.position && zombie.name !== 'pole' && zombie.position.x < X_HOME) {
-            const lawnCleanerWorked = this.currentLevel.handleZombieNearHome(zombie);
-            if (!lawnCleanerWorked) this.endLoose();
-          }
-        });
-      }
-      if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
-    };
-    trackPosition();
-  }
-
   endWin() {
-    this.isEnd = true;
-    this.reducePlantsHealth();
-    this.engine.clearAllTimeouts();
     const hasWon = true;
     this.currentLevel.stopLevel(hasWon);
-    this.currentLevel.clearZombieArray();
-    this.currentLevel.clearPlantsArray();
-
-    setTimeout(() => {
-      this.createWinScene(() => {
-        this.currentLevel.updateSunCount(0);
-        this.destroySun();
-        this.destroyPlants();
-        this.engine.clearAllTimeouts();
-        this.clearLevel();
-        // this.engine.setScreen('startScreen');
-        this.engine.setScreen('levelSelectionScreen');
-        this.engine.stop();
-        this.engine.start('levelSelectionScreen');
-        document.removeEventListener('visibilitychange', this.runPause);
-      });
-    }, 3000);
-
-    clearTimeout(this.timer);
+    this.engine
+      .timeout(() => {
+        this.createWinScene(() => {
+          this.currentLevel.updateSunCount(0);
+          this.exitGame(hasWon);
+          document.removeEventListener('visibilitychange', this.runPause);
+        });
+      }, 3000)
+      .start();
   }
 
   endLoose() {
-    this.isEnd = true;
     const hasWon = false;
     this.currentLevel.stopLevel(hasWon);
     this.destroySun();
     this.reducePlantsHealth();
     this.destroyPlants();
-    this.engine.clearAllTimeouts();
     this.createLooseScene();
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
-    clearTimeout(this.timer);
   }
 
   clearLevel() {
@@ -181,8 +145,6 @@ export default class Game {
     allNodes.forEach((node) => {
       node.destroy();
     });
-
-    this.engine.clearAllTimeouts();
   }
 
   destroySun() {
@@ -200,27 +162,10 @@ export default class Game {
     });
   }
 
-  stopCreatingSuns() {
-    const plants = this.currentLevel.getPlants();
-    plants.forEach((plant) => {
-      plant.stop();
-    });
-  }
-
-  continueCreatingSuns() {
-    const plants = this.currentLevel.getPlants();
-    for (let i = 0; i < plants.length; i += 1) {
-      setTimeout(() => {
-        plants[i]?.continue();
-      }, i * 2000);
-    }
-  }
-
   reducePlantsHealth() {
     const plants = this.currentLevel.getPlants();
     plants.forEach((plant) => {
       plant.reduceAllHealth();
-      plant.stop();
     });
   }
 
@@ -232,18 +177,22 @@ export default class Game {
   }
 
   public createLooseScene() {
-    this.loose = new LooseScene(this.engine);
-    this.loose.init();
+    document.removeEventListener('visibilitychange', this.runPause);
 
-    this.loose.restartLevel(() => {
+    const restartCallback = () => {
       this.clearLevel();
       this.createLevel(this.currentLevel.levelNumber);
       this.currentLevel.updateSunCount(200);
-    }, () => {
+      document.addEventListener('visibilitychange', this.runPause);
+    };
+
+    const exitCallback = () => {
       this.clearLevel();
-      document.removeEventListener('visibilitychange', this.runPause);
       this.exitGame(false);
-    });
+    };
+
+    this.loose = new LooseScene(this.engine, restartCallback, exitCallback);
+    this.loose.init();
   }
 
   createPauseScene() {
@@ -253,29 +202,24 @@ export default class Game {
 
   stopGame() {
     this.engine.stop();
-    this.engine.clearAllTimeouts();
+    this.currentLevel.pause();
     this.createPauseScene();
-    this.stopCreatingSuns();
   }
 
   resumeGame() {
     this.engine.start('scene');
-    this.currentLevel.resumeSunFall();
-    this.currentLevel.continueCreatingZombies();
-    this.continueCreatingSuns();
+    this.currentLevel.resume();
   }
 
   exitGame(hasWon: boolean) {
     this.isEnd = true;
-    this.currentLevel.stopLevel(hasWon);
     this.destroySun();
+    this.currentLevel.stopLevel(hasWon);
     this.reducePlantsHealth();
     this.destroyPlants();
-    this.engine.clearAllTimeouts();
     this.clearLevel();
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
-    clearTimeout(this.timer);
     this.engine.stop();
     this.engine.start('levelSelectionScreen');
     this.engine.setScreen('levelSelectionScreen');
@@ -288,14 +232,17 @@ export default class Game {
         this.menuOpen = true;
         this.stopGame();
 
-        this.pause.resumeGame(() => {
-          this.menuOpen = false;
-          this.resumeGame();
-        }, () => {
-          this.menuOpen = false;
-          this.exitGame(false);
-          document.removeEventListener('visibilitychange', this.runPause);
-        });
+        this.pause.resumeGame(
+          () => {
+            this.menuOpen = false;
+            this.resumeGame();
+          },
+          () => {
+            this.menuOpen = false;
+            this.exitGame(false);
+            document.removeEventListener('visibilitychange', this.runPause);
+          },
+        );
       }
     }
   };

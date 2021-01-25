@@ -6,8 +6,6 @@ import Zombie from '../Zombie';
 
 const ATTACK_OFFSET_RIGHT = 70;
 const ATTACK_OFFSET_LEFT = 120;
-const ATTACK_TIME = 800;
-const GROW_TIME = 300;
 const READY_TIME = 15000;
 const POSITION_ADJUST_Y = 10;
 
@@ -34,18 +32,22 @@ export class PotatoMine extends Plant {
   draw(cell: Cell) {
     super.draw(cell);
     this.switchState('notReady');
-    setTimeout(() => {
+    const levelTimer = this.engine.getTimer('levelTimer');
+    const growTimeout = this.engine.timeout(() => {
+      growTimeout.destroy();
       this.grow();
     }, READY_TIME);
+
+    levelTimer.add(growTimeout);
   }
 
   grow() {
     this.switchState('grow');
-    this.engine.audioPlayer.playSound('potato-mine_grow');
-    setTimeout(() => {
+    this.node.then(() => {
       this.switchState('basic');
       this.isReady = true;
-    }, GROW_TIME);
+    });
+    this.engine.audioPlayer.playSound('potato-mine_grow');
   }
 
   isZombieInAttackArea(zombie: Zombie, offset?: number) {
@@ -63,6 +65,13 @@ export class PotatoMine extends Plant {
   attack(zombie: Zombie) {
     if (this.isDestroyedFlag) return;
     if (this.isAttack || !this.isReady) return;
+
+    this.node.then(() => {
+      this.health = 0;
+      this.destroy();
+      this.occupiedCells.delete(this.cell);
+    });
+
     this.isAttack = true;
     this.engine.audioPlayer.playSound('potato-mine');
     this.zombies.forEach((targetZombie) => {
@@ -73,17 +82,11 @@ export class PotatoMine extends Plant {
         }
       }
     });
-
-    setTimeout(() => {
-      this.health = 0;
-      this.destroy();
-      this.occupiedCells.delete(this.cell);
-    }, ATTACK_TIME);
   }
 
   public switchState(state: string, zombie?: Zombie) {
     if (state === 'attack' && (this.isAttack || !this.isReady)) return;
-    super.switchState(state, zombie);
     this.node.position.plus(this.engine.vector(0, POSITION_ADJUST_Y));
+    super.switchState(state, zombie);
   }
 }

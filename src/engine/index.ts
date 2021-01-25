@@ -15,6 +15,7 @@ import {
   NodesType,
   NodesTypeName,
   InputNodeConfig,
+  ISpriteNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
@@ -44,6 +45,16 @@ export default class Engine {
 
   loader: Loader;
 
+  audioPlayer: any;
+
+  shadows: { enabled: boolean };
+
+  vector: (x?: number, y?: number) => Vector;
+
+  timeout: (callback: () => void, timeout: number, repeat?: number) => Timeout;
+
+  interval: (callback: () => void, interval: number, repeat?: number) => Interval;
+
   private running: boolean;
 
   private scenes: { [name: string]: Scene };
@@ -62,11 +73,7 @@ export default class Engine {
 
   private timers: { [name: string]: Timer };
 
-  vector: (x?: number, y?: number) => Vector;
-
-  public audioPlayer: any;
-
-  public shadows: {enabled: boolean};
+  private spriteNodes: ISpriteNode[];
 
   constructor(
     _box: string | HTMLElement,
@@ -80,6 +87,7 @@ export default class Engine {
     this.screenZIndex = screenZIndex || 100;
     this.running = false;
     this.events = {};
+    this.spriteNodes = [];
 
     this.screens = {};
     this.layers = {};
@@ -89,8 +97,19 @@ export default class Engine {
     this.animation = null;
     this.fullscreen = false;
     this.shadows = { enabled: true };
+    this.scaleRatio = 1;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
+
+    this.timeout = (callback: () => void, timeout: number, repeat?: number) => {
+      const newTimeout = new Timeout(callback, timeout, repeat);
+      return newTimeout;
+    };
+
+    this.interval = (callback: () => void, interval: number, repeat?: number) => {
+      const newInterval = new Interval(callback, interval, repeat);
+      return newInterval;
+    };
 
     this.init(_box, config);
   }
@@ -141,6 +160,7 @@ export default class Engine {
     if (this.running) return;
     this.running = this.setScene(name);
     if (this.running) {
+      this.spriteNodes.forEach((node) => node.resume());
       this.updateScene();
     }
   }
@@ -149,6 +169,7 @@ export default class Engine {
     if (!this.running) return;
     this.running = false;
     cancelAnimationFrame(this.animation);
+    this.spriteNodes.forEach((node) => node.pause());
   }
 
   private updateScene() {
@@ -276,6 +297,10 @@ export default class Engine {
     const node = Engine.createNodeType(config, update) as NodesType;
 
     if (!node) return null;
+
+    if (node instanceof SpriteNode) {
+      this.spriteNodes.push(node);
+    }
 
     layer.nodes.push(node);
 
@@ -409,7 +434,6 @@ export default class Engine {
 
   private cancelFullscreen() {
     if (!this.container) return;
-    console.log(this.containerOffset);
     const scaleRatio = 1;
     const layers = Object.values(this.layers);
 
@@ -426,6 +450,10 @@ export default class Engine {
 
     this.event.offset = this.containerOffset;
     this.event.scaleRatio = 1;
+  }
+
+  get scale() {
+    return this.scaleRatio;
   }
 
   private setContainerPosition(isFullscreen: boolean) {
@@ -447,17 +475,21 @@ export default class Engine {
   }
 
   // Timers
-  timeout(callback: () => void, timeout: number, repeat?: number) {
-    return new Timeout(callback, timeout, repeat);
-  }
+  timer(timers: (string | Timeout | Interval | Timer)[], sequentially?: boolean, name?: string) {
+    const targetTimers = timers
+      .map((elem) => {
+        if (typeof elem === 'string') {
+          return this.timers[elem];
+        }
+        return elem;
+      })
+      .filter((elem) => elem);
 
-  interval(callback: () => void, interval: number, repeat?: number) {
-    return new Interval(callback, interval, repeat);
-  }
-
-  timer(timers: (Timeout | Interval | Timer)[], sequentially?: boolean, name?: string) {
-    const timer = new Timer(timers, sequentially);
-    if (name) this.timers[name] = timer;
+    const timer = new Timer(targetTimers, sequentially);
+    if (name) {
+      if (this.timers[name]) this.timers[name].destroy();
+      this.timers[name] = timer;
+    }
     return timer;
   }
 

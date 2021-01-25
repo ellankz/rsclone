@@ -1,4 +1,3 @@
-import { time } from 'console';
 import Interval from './Interval';
 import Timeout from './Timeout';
 
@@ -15,7 +14,7 @@ export default class Timer {
 
   isFinished: boolean;
 
-  isInTimer: boolean;
+  parentTimer: Timer;
 
   private finishedTimers: number = 0;
 
@@ -34,33 +33,44 @@ export default class Timer {
     this.sequentially = sequentially;
   }
 
-  add(timer: Timeout | Interval | Timer) {
-    if (this.isDestroyed || this.isStarted || timer.isInTimer) return;
+  add(targetTimer: Timeout | Interval | Timer) {
+    const timer = targetTimer;
+    if (this.isDestroyed || timer.parentTimer) return this;
 
-    timer.isInTimer = true;
+    timer.parentTimer = this;
     this.timers.push(timer);
 
     if (!this.sequentially) {
       this.setFinish(timer);
+      if (this.isStarted && !timer.isStarted) timer.start();
+      if (this.isPaused && !timer.isPaused) timer.pause();
     }
+
+    return this;
   }
 
-  remove(timer: Timeout | Interval | Timer) {
-    if (this.isDestroyed) return;
+  remove(targetTimer: Timeout | Interval | Timer) {
+    const timer = targetTimer;
+    if (this.isDestroyed || (this.isStarted && !this.isFinished)) return this;
 
     const idx = this.timers.indexOf(timer);
     if (idx !== -1) {
       this.timers.splice(idx, 1);
     }
 
-    timer.isInTimer = false;
+    timer.parentTimer = null;
     if (timer.onEnd) timer.onEnd();
     timer.onEnd = null;
+
+    return this;
   }
 
   start() {
-    if (this.isDestroyed || this.timers.length === 0) return;
-    if (this.isStarted) this.restart();
+    if (this.isDestroyed || this.timers.length === 0) return this;
+    if (this.isStarted) {
+      this.restart();
+      return this;
+    }
 
     if (this.startCallbacks.length > 0) {
       this.startCallbacks.forEach((callback) => callback());
@@ -71,8 +81,12 @@ export default class Timer {
     if (this.sequentially) {
       this.setSequence();
     } else {
-      this.timers.forEach((timer) => this.setFinish(timer));
-      this.timers.forEach((timer) => timer.start());
+      this.timers.forEach((timer) => {
+        this.setFinish(timer);
+      });
+      this.timers.forEach((timer) => {
+        timer.start();
+      });
     }
 
     return this;
@@ -105,6 +119,8 @@ export default class Timer {
   destroy() {
     if (this.isDestroyed || this.timers.length === 0) return;
 
+    if (this.parentTimer) this.parentTimer.remove(this);
+
     this.isDestroyed = true;
     this.timers.forEach((timer) => timer.destroy());
 
@@ -136,7 +152,10 @@ export default class Timer {
 
     if (this.sequentially) {
       this.currentTimer = undefined;
-      this.timers.forEach((timer) => (timer.onEnd = null));
+      this.timers.forEach((targetTimer) => {
+        const timer = targetTimer;
+        timer.onEnd = null;
+      });
       this.setSequence();
     } else {
       this.timers.forEach((timer) => this.setFinish(timer));
@@ -144,7 +163,8 @@ export default class Timer {
     }
   }
 
-  private setFinish(timer: Timeout | Interval | Timer) {
+  private setFinish(targetTimer: Timeout | Interval | Timer) {
+    const timer = targetTimer;
     if (timer.isDestroyed) {
       this.updateFinishedTimers();
       return;

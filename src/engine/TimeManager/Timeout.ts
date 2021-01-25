@@ -1,3 +1,5 @@
+import Timer from './Timer';
+
 export default class Timeout {
   timeout: number;
 
@@ -11,7 +13,7 @@ export default class Timeout {
 
   isPaused: boolean;
 
-  isInTimer: boolean;
+  parentTimer: Timer;
 
   private count: number = 0;
 
@@ -41,8 +43,11 @@ export default class Timeout {
   }
 
   start() {
-    if (this.isDestroyed) return;
-    if (this.isStarted) this.restart();
+    if (this.isDestroyed) return this;
+    if (this.isStarted) {
+      this.restart();
+      return this;
+    }
 
     if (this.startCallbacks.length > 0) {
       this.startCallbacks.forEach((callback) => callback());
@@ -68,7 +73,7 @@ export default class Timeout {
   resume() {
     if (!this.isStarted || this.isDestroyed || !this.isPaused) return;
 
-    this.restTime = this.restTime - (this.pauseTime - this.startTime);
+    this.restTime -= this.pauseTime - this.startTime;
     this.startTime = Date.now();
 
     this.timerId = window.setTimeout(() => this.callback(), this.restTime);
@@ -79,6 +84,8 @@ export default class Timeout {
     if (this.isDestroyed) return;
 
     if (this.timerId) clearTimeout(this.timerId);
+
+    if (this.parentTimer) this.parentTimer.remove(this);
 
     this.isDestroyed = true;
 
@@ -131,7 +138,7 @@ export default class Timeout {
     this.count += 1;
 
     if (this.repeat > this.count) {
-      const count = this.count;
+      const { count } = this;
       this.restart();
       this.count = count;
       return;

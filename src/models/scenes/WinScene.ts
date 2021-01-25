@@ -1,4 +1,3 @@
-import { time } from 'console';
 import Engine from '../../engine';
 
 export default class WinScene {
@@ -23,22 +22,27 @@ export default class WinScene {
     let opacity = 0;
     const timeInterval = INTERVAL;
 
-    const bg: any = this.engine.createNode({
-      type: 'RectNode',
-      position: this.engine.vector(0, 0),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: 'window',
+    const bg: any = this.engine
+      .createNode(
+        {
+          type: 'RectNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+          layer: 'window',
 
-      color: `rgba(255, 255, 255, ${opacity})`,
-    }, () => {
-      opacity += timeInterval;
-      bg.color = `rgba(255, 255, 255, ${opacity})`;
+          color: `rgba(255, 255, 255, ${opacity})`,
+        },
+        () => {
+          opacity += timeInterval;
+          bg.color = `rgba(255, 255, 255, ${opacity})`;
 
-      if (opacity >= 1.1) {
-        bg.destroy();
-        afterAnimationCallback();
-        this.selfDelete();
-      }
-    }).addTo('scene');
+          if (opacity >= 1.1) {
+            afterAnimationCallback();
+            bg.destroy();
+            this.selfDelete();
+          }
+        },
+      )
+      .addTo('scene');
   }
 }

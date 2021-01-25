@@ -9,7 +9,7 @@ export interface ZombiePreset {
   frames: number;
   head?: string;
   shadow?: string;
-  states?: {[dynamic: string]: ZombiesStatesPreset}
+  states?: { [dynamic: string]: ZombiesStatesPreset };
 }
 
 export interface ZombiesStatesPreset {
@@ -19,9 +19,11 @@ export interface ZombiesStatesPreset {
   width: number;
   height: number;
   dh: number;
+  repeat?: number;
   positionAdjust?: {
-    x: number, y: number
-  }
+    x: number;
+    y: number;
+  };
 }
 
 export interface ZombieHeadPreset {
@@ -33,8 +35,19 @@ export interface ZombieHeadPreset {
   dh: number;
 }
 
-export type ZombieType = 'basic' | 'basic_2' | 'cone' | 'bucket' | 'dancer' | 'dancer_2' | 'dancer_3' |
-'flag' | 'newspaper' | 'door' | 'football' | 'pole';
+export type ZombieType =
+  | 'basic'
+  | 'basic_2'
+  | 'cone'
+  | 'bucket'
+  | 'dancer'
+  | 'dancer_2'
+  | 'dancer_3'
+  | 'flag'
+  | 'newspaper'
+  | 'door'
+  | 'football'
+  | 'pole';
 
 export interface ZombieConfig {
   type: ZombieType;
@@ -56,6 +69,7 @@ export interface PlantPreset {
   frames: number;
   speed: number;
   shadow?: string;
+  repeat?: number;
   states?: { [dynamic: string]: PlantStatesPreset };
 }
 
@@ -66,6 +80,7 @@ export interface PlantStatesPreset {
   width: number;
   height: number;
   dh: number;
+  repeat?: number;
   positionAdjust: {
     x: number;
     y: number;

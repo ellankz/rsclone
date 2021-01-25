@@ -1,4 +1,3 @@
-import { cpuUsage } from 'process';
 import Plant from '../Plant';
 import Engine from '../../engine';
 import { SunCreator } from '../../game/mechanics/SunCreator';
@@ -7,8 +6,6 @@ import Cell from '../../game/Cell';
 const SUN_REPRODUCTION = 18000;
 const SUN_APPEARANCE_STATE = 350;
 const SUN_POSITION_SHIFT = 30;
-const SUN_COST = 25;
-const SUNFLOWER_GENERATE_STATE = 600;
 
 export class SunFlower extends Plant {
   isDestroyedFlag: boolean;
@@ -17,7 +14,7 @@ export class SunFlower extends Plant {
 
   sunCount?: { suns: number };
 
-  start: () => void;
+  interval: any;
 
   constructor(engine: Engine, updateSunFunc?: (sun: number) => void, sunCount?: { suns: number }) {
     super({ type: 'SunFlower' }, engine);
@@ -29,9 +26,11 @@ export class SunFlower extends Plant {
   }
 
   init(cell: Cell) {
-    this.start = () => {
+    const levelTimer = this.engine.getTimer('levelTimer');
+
+    const start = () => {
       if (this.health <= 0) {
-        clearInterval(this.timer);
+        this.interval.destroy();
       } else {
         this.switchState('generate');
         const position = this.engine.vector(
@@ -48,13 +47,12 @@ export class SunFlower extends Plant {
         ).instance;
         sun.addTo('scene');
         sun.switchState('appearance');
-
-        setTimeout(() => {
-          sun.switchState('live');
-        }, SUN_APPEARANCE_STATE);
+        sun.then(() => sun.switchState('live'));
       }
     };
-    this.timer = window.setInterval(this.start, SUN_REPRODUCTION);
+
+    this.interval = this.engine.interval(start, SUN_REPRODUCTION);
+    levelTimer.add(this.interval);
   }
 
   draw(cell: Cell): void {
@@ -64,18 +62,6 @@ export class SunFlower extends Plant {
 
   switchState(state: string) {
     this.node.switchState(state);
-    setTimeout(() => this.node.switchState('basic'), SUNFLOWER_GENERATE_STATE);
-  }
-
-  stop(): void {
-    super.stop();
-    this.isDestroyedFlag = true;
-    window.clearInterval(this.timer);
-  }
-
-  continue(): void {
-    super.continue();
-    this.isDestroyedFlag = false;
-    this.timer = window.setInterval(this.start, SUN_REPRODUCTION);
+    this.node.then(() => this.node.switchState('basic'));
   }
 }

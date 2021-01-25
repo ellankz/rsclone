@@ -1,3 +1,5 @@
+import Timer from './Timer';
+
 export default class Interval {
   interval: number;
 
@@ -11,7 +13,7 @@ export default class Interval {
 
   isPaused: boolean;
 
-  isInTimer: boolean;
+  parentTimer: Timer;
 
   private count: number = 0;
 
@@ -43,8 +45,11 @@ export default class Interval {
   }
 
   start() {
-    if (this.isDestroyed) return;
-    if (this.isStarted) this.restart();
+    if (this.isDestroyed) return this;
+    if (this.isStarted) {
+      this.restart();
+      return this;
+    }
 
     if (this.startCallbacks) {
       this.startCallbacks.forEach((callback) => callback());
@@ -71,7 +76,7 @@ export default class Interval {
   resume() {
     if (!this.isStarted || this.isDestroyed || !this.isPaused) return;
 
-    this.restTime = this.restTime - (this.pauseTime - this.startTime);
+    this.restTime -= this.pauseTime - this.startTime;
     this.startTime = Date.now();
 
     this.timeoutId = window.setTimeout(() => {
@@ -86,6 +91,8 @@ export default class Interval {
     if (this.isDestroyed) return;
 
     if (this.intervalId) clearInterval(this.intervalId);
+
+    if (this.parentTimer) this.parentTimer.remove(this);
 
     this.isDestroyed = true;
 
@@ -136,6 +143,7 @@ export default class Interval {
     });
 
     this.startTime = Date.now();
+    this.restTime = this.interval;
 
     if (!this.repeat) return;
 
