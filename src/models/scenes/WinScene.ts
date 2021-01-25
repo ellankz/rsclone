@@ -10,18 +10,18 @@ export default class WinScene {
     this.selfDelete = selfDelete;
   }
 
-  public init(afterAnimationCallback: () => void) {
+  public init() {
     this.engine.audioPlayer.stopSound('menuMain');
     const winSound: any = this.engine.audioPlayer.getSound('win');
     winSound.currentTime = 0;
     winSound.play();
     winSound.addEventListener('ended', () => this.engine.audioPlayer.playSound('menuMain'));
 
-    this.createAnimation(afterAnimationCallback);
+    this.createAnimation();
     return this;
   }
 
-  private createAnimation(afterAnimationCallback: () => void) {
+  private createAnimation() {
     const INTERVAL = 0.005;
     let opacity = 0;
 
@@ -37,7 +37,6 @@ export default class WinScene {
       bg.color = `rgba(255, 255, 255, ${opacity})`;
       if (opacity >= 1.1) {
         bg.destroy();
-        afterAnimationCallback();
         this.selfDelete();
       }
     }).addTo('scene');
