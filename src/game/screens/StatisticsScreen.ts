@@ -206,7 +206,7 @@ export class StatisticsScreen extends ScreenCreator {
         (this.engine.size.x / 2) - (BUTTON_IMG.width / 2),
         (this.engine.size.y) - (BUTTON_IMG.width / 2),
       ),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      size: this.engine.vector(BUTTON_IMG.width, BUTTON_IMG.height),
       layer: STATISTICS_SCREEN_LAYERS[1],
       img: BUTTON_IMG,
     }) as IImageNode;

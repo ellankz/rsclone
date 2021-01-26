@@ -167,10 +167,10 @@ export default class ModalWindow {
         this.engine.size.x / 2 + 30 + this.shiftX,
         this.engine.size.y / 2 + 95,
       ),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+      size: this.engine.vector(this.button.width, this.button.height),
       layer: 'window',
       img: this.button,
-      dh: 800,
+      dh: 55,
     }) as ImageNode;
 
     this.exitButtonTextNode = this.engine.createNode({
