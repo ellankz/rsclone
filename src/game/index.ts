@@ -236,7 +236,9 @@ export default class Game {
     this.currentLevel.clearZombieArray();
     this.currentLevel.clearPlantsArray();
     this.engine.audioPlayer.stopSound('levelMain');
-    this.engine.audioPlayer.playSound('menuMain');
+    if(this.engine.audioPlayer.getSound('menuMain').paused){
+		this.engine.audioPlayer.playSound('menuMain');
+	 }
     this.engine.stop();
     this.engine.setScreen('levelSelectionScreen');
     const timeout = this.engine
