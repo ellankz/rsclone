@@ -11,16 +11,6 @@ export default class WinScene {
   }
 
   public init(callback: () => void) {
-    this.engine.audioPlayer.stopSound('menuMain');
-    const winSound: any = this.engine.audioPlayer.getSound('win');
-    winSound.currentTime = 0;
-    winSound.play();
-    winSound.addEventListener('ended', () => {
-     if(this.engine.audioPlayer.getSound('menuMain').paused){
-		  this.engine.audioPlayer.playSound('menuMain');
-		}
-    });
-
     this.createAnimation(callback);
     return this;
   }
