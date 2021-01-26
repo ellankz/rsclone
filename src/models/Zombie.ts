@@ -104,6 +104,8 @@ export default class Zombie {
 
   public shotTarget: number;
 
+  private savedTime: number;
+
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
     this.health = this.zombiePresets[config.type].health;
@@ -122,6 +124,7 @@ export default class Zombie {
     this.headSpeed = this.zombieHeadPresets[config.type].speed;
     this.headDh = this.zombieHeadPresets[config.type].dh;
     this.engine = engine;
+    this.savedTime = new Date().getTime();
   }
 
   public draw(cell: Cell, occupiedCells: Map<Cell, Plant>, cells: Cell[][]) {
@@ -154,7 +157,15 @@ export default class Zombie {
     };
 
     const update = () => {
-      start += this.zombieSpeed;
+      const thisTime = new Date().getTime();
+      if (thisTime - this.savedTime > 1000) {
+        this.savedTime = thisTime;
+      }
+      if (thisTime - this.savedTime > 30) {
+        start += ((thisTime - this.savedTime) * this.zombieSpeed) / 30;
+        this.savedTime = thisTime;
+      }
+
       this.node.position = this.engine.vector(X_AXIS - start, cell.getBottom() - this.height - y);
       if (this.isJump) this.node.position.x = this.trackPositionAfterJump();
       this.trackCurrentCell(cells);
