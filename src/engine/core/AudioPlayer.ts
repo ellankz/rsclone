@@ -27,10 +27,12 @@ export default class AudioPlayer {
   }
 
   public playSound(name: string, loop?: boolean) {
-    if (loop) {
+    if (loop !== undefined && this.elements[name].loop !== loop) {
       this.elements[name].loop = loop;
     }
-    this.elements[name].currentTime = 0;
+    if (this.elements[name].currentTime !== 0) {
+      this.elements[name].currentTime = 0;
+    }
     this.elements[name].play();
   }
 
