@@ -6,7 +6,7 @@ import { ISpriteNode } from '../../engine/types';
 import Vector from '../../engine/core/Vector';
 import Zombie from './Zombie';
 
-require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
+require.context('../../assets/sprites/plants', true, /\.(png|jpg)$/);
 
 export default class Plant {
   protected plantPresets: { [dymanic: string]: PlantPreset } = plantPresets;

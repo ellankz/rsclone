@@ -7,7 +7,7 @@ import Plant from './Plant';
 const SHOT_OFFSET_X = 52;
 const SHOT_OFFSET_Y = 5;
 
-require.context('../assets/images/shot', true, /\.(png|jpg)$/);
+require.context('../../assets/images/shot', true, /\.(png|jpg)$/);
 
 export default class Shot {
   position: Vector;

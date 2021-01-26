@@ -10,7 +10,7 @@ import Plant from './Plant';
 import { ISpriteNode } from '../../engine/types';
 import Vector from '../../engine/core/Vector';
 
-require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
+require.context('../../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
 const X_AXIS = 970;
 const Y_AXIS = {
