@@ -191,7 +191,7 @@ export default class Level {
   stopLevel(hasWon: boolean) {
     if (this.isEnd) return;
     this.isEnd = true;
-    this.levelTimer.destroy();
+    this.levelTimer?.destroy();
     this.occupiedCells.clear();
     this.stopListenCellClicks();
     this.removePlantCards();
@@ -322,7 +322,7 @@ export default class Level {
 
       zombiesTimer.add(timeout);
     }
-    this.levelTimer.add(zombiesTimer);
+    this.levelTimer?.add(zombiesTimer);
 
     return this.creatingZombies;
   }
@@ -373,7 +373,7 @@ export default class Level {
       this.plantsArr = this.deletePlant();
     };
 
-    this.levelTimer.add(
+    this.levelTimer?.add(
       this.engine.interval(() => trackPosition(), 1000).before(() => trackPosition()),
     );
   }

@@ -133,14 +133,14 @@ export class LevelSelectionScreen extends ScreenCreator {
       isButtonFree = false;
       let fieldSize: number = this.engine.size.x;
       const moveDirection: number = direction ? 10 : -10;
-      const animation: any = setInterval(() => {
+      const animation: any = this.engine.interval(() => {
         levelsView.move(this.engine.vector(moveDirection));
         fieldSize -= 10;
         if (fieldSize === 0) {
-          clearInterval(animation);
+          animation.destroy();
           isButtonFree = true;
         }
-      }, 5);
+      }, 5).start();
     };
 
     this.engine.on(buttonRight, 'click', () => {

@@ -45,7 +45,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   private isFinished: boolean;
 
-  private interval: Interval;
+  interval: Interval;
 
   constructor(params: SpriteNodeConfig, update?: (node: NodesType) => void) {
     super(params, update);
@@ -83,15 +83,17 @@ export default class SpriteNode extends Node implements ISpriteNode {
   }
 
   pause() {
-    if (!this.interval.isPaused) this.interval.pause();
+    if (this.interval && !this.interval.isPaused) this.interval.pause();
   }
 
   resume() {
-    if (this.interval.isPaused) this.interval.resume();
+    if (this.interval && this.interval.isPaused) this.interval.resume();
   }
 
   private animate() {
-    if (this.interval) this.interval.destroy();
+    if (this.interval && !this.interval.isDestroyed) {
+      this.interval.destroy();
+    }
     this.interval = new Interval(() => {
       this.animation = false;
     }, this.speed).start();

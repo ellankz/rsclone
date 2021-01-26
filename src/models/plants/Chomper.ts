@@ -54,7 +54,7 @@ export class Chomper extends Plant {
       this.sleeping = false;
     }, SLEEPING_TIME);
 
-    this.engine.getTimer('levelTimer').add(timeout);
+    this.engine.getTimer('levelTimer')?.add(timeout);
   }
 
   switchState(state: string, zombie?: Zombie) {

@@ -10,35 +10,41 @@ export default class WinScene {
     this.selfDelete = selfDelete;
   }
 
-  public init() {
+  public init(callback: () => void) {
     this.engine.audioPlayer.stopSound('menuMain');
     const winSound: any = this.engine.audioPlayer.getSound('win');
     winSound.currentTime = 0;
     winSound.play();
     winSound.addEventListener('ended', () => this.engine.audioPlayer.playSound('menuMain'));
 
-    this.createAnimation();
+    this.createAnimation(callback);
     return this;
   }
 
-  private createAnimation() {
+  private createAnimation(callback: () => void) {
     const INTERVAL = 0.005;
     let opacity = 0;
 
-    const bg: any = this.engine.createNode({
-      type: 'RectNode',
-      position: this.engine.vector(0, 0),
-      size: this.engine.vector(this.engine.size.x, this.engine.size.y),
-      layer: 'window',
+    const bg: any = this.engine
+      .createNode(
+        {
+          type: 'RectNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(this.engine.size.x, this.engine.size.y),
+          layer: 'window',
 
-      color: `rgba(255, 255, 255, ${opacity})`,
-    }, () => {
-      opacity += INTERVAL;
-      bg.color = `rgba(255, 255, 255, ${opacity})`;
-      if (opacity >= 1.1) {
-        bg.destroy();
-        this.selfDelete();
-      }
-    }).addTo('scene');
+          color: `rgba(255, 255, 255, ${opacity})`,
+        },
+        () => {
+          opacity += INTERVAL;
+          bg.color = `rgba(255, 255, 255, ${opacity})`;
+          if (opacity >= 1.1) {
+            bg.destroy();
+            this.selfDelete();
+            callback();
+          }
+        },
+      )
+      .addTo('scene');
   }
 }

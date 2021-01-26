@@ -52,7 +52,7 @@ export class FallingSun {
 
     const interval = this.engine.interval(() => start(), this.delay);
 
-    this.engine.getTimer('levelTimer').add(interval);
+    this.engine.getTimer('levelTimer')?.add(interval);
   }
 
   createSun(): any {

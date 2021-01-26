@@ -48,8 +48,8 @@ export class Peashooter extends Plant {
         this.shooting.destroy();
         shoot();
       }, 1800);
-      this.engine.getTimer('levelTimer').add(timeout);
-      this.engine.getTimer('levelTimer').add(this.shooting);
+      this.engine.getTimer('levelTimer')?.add(timeout);
+      this.engine.getTimer('levelTimer')?.add(this.shooting);
     };
 
     shoot();

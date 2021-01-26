@@ -335,6 +335,9 @@ export default class Engine {
         node.layer.nodes.splice(layerIdx, 1);
         node.clearLayer();
       }
+      if (node instanceof SpriteNode) {
+        node.interval.destroy();
+      }
       node.removeAllEvents();
     }
 

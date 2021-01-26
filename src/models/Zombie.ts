@@ -198,7 +198,7 @@ export default class Zombie {
         timeout.destroy();
         this.addSpotlight(updateSpotlight);
       }, 100);
-      this.engine.getTimer('levelTimer').add(timeout);
+      this.engine.getTimer('levelTimer')?.add(timeout);
     }
 
     this.updateZombieStateToDance();
@@ -265,7 +265,7 @@ export default class Zombie {
             occupiedCells.delete(cell);
           }, 200);
 
-          this.engine.getTimer('levelTimer').add(timeout);
+          this.engine.getTimer('levelTimer')?.add(timeout);
           this.node.switchState('walking');
           this.zombieSpeed = this.setSpeed();
         }
@@ -311,7 +311,7 @@ export default class Zombie {
       ]);
     }, GROAN_DELAY);
 
-    this.engine.getTimer('levelTimer').add(interval);
+    this.engine.getTimer('levelTimer')?.add(interval);
   }
 
   public stop() {
@@ -335,7 +335,7 @@ export default class Zombie {
         timeout.destroy();
         this.node.filter = 'brightness(1)';
       }, 180);
-      this.engine.getTimer('levelTimer').add(timeout);
+      this.engine.getTimer('levelTimer')?.add(timeout);
     } else if (
       this.name === 'football'
       || this.name === 'dancer'
@@ -404,7 +404,7 @@ export default class Zombie {
       })
       .finally(() => timer.destroy());
 
-    this.engine.getTimer('levelTimer').add(timer);
+    this.engine.getTimer('levelTimer')?.add(timer);
   }
 
   public jump() {
@@ -473,7 +473,7 @@ export default class Zombie {
       this.speed = this.node.speed;
     }, 5000);
 
-    this.engine.getTimer('levelTimer').add(this.slowTimeout);
+    this.engine.getTimer('levelTimer')?.add(this.slowTimeout);
   }
 
   private trackPosition() {

@@ -79,7 +79,7 @@ export class SunCreator {
       .timer([changeStateTimeout, destroyTimeout], true)
       .finally(() => this.animationTimer.destroy());
 
-    this.engine.getTimer('levelTimer').add(this.animationTimer);
+    this.engine.getTimer('levelTimer')?.add(this.animationTimer);
   }
 
   destroySelection() {

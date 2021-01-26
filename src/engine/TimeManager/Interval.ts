@@ -92,6 +92,8 @@ export default class Interval {
 
     if (this.intervalId) clearInterval(this.intervalId);
 
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+
     if (this.parentTimer) this.parentTimer.remove(this);
 
     this.isDestroyed = true;

@@ -52,7 +52,7 @@ export class SunFlower extends Plant {
     };
 
     this.interval = this.engine.interval(start, SUN_REPRODUCTION);
-    levelTimer.add(this.interval);
+    levelTimer?.add(this.interval);
   }
 
   draw(cell: Cell): void {

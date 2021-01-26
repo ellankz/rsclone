@@ -24,8 +24,6 @@ export default class Game {
 
   public pause: Pause;
 
-  private timer: any;
-
   private isEnd: boolean;
 
   dataService: DataService;
@@ -119,17 +117,11 @@ export default class Game {
     const hasWon = true;
     this.currentLevel.stopLevel(hasWon);
 
-    const timeout1 = this.engine.timeout(() => {
-      this.createWinScene();
-    }, 3000);
-
-    const timeout2 = this.engine.timeout(() => {
-      this.currentLevel.updateSunCount(0);
-      this.exitGame(hasWon);
-      document.removeEventListener('visibilitychange', this.runPause);
-    }, 3350);
-
-    this.engine.timer([timeout1, timeout2], true).start();
+    this.engine
+      .timeout(() => {
+        this.createWinScene();
+      }, 3000)
+      .start();
   }
 
   endLoose() {
@@ -178,7 +170,12 @@ export default class Game {
     this.win = new WinScene(this.engine, () => {
       this.win = null;
     });
-    this.win.init();
+
+    this.win.init(() => {
+      this.currentLevel.updateSunCount(0);
+      this.exitGame(true);
+      document.removeEventListener('visibilitychange', this.runPause);
+    });
   }
 
   public createLooseScene() {

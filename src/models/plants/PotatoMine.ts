@@ -38,7 +38,7 @@ export class PotatoMine extends Plant {
       this.grow();
     }, READY_TIME);
 
-    levelTimer.add(growTimeout);
+    levelTimer?.add(growTimeout);
   }
 
   grow() {
