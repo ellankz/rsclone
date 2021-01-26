@@ -1,14 +1,14 @@
 import Plant from '../models/Plant';
-import { PlantPreset } from '../types';
-import plantsData from '../data/plants.json';
-import Engine from '../engine';
+import { PlantPreset } from '../../types';
+import plantsData from '../../data/plants.json';
+import Engine from '../../engine';
 import {
   LEFT_CAMERA_OFFSET_COEF,
   PLANT_CARD_HEIGHT_COEF,
   PLANT_CARD_WIDTH_COEF,
-} from '../constats';
-import { IImageNode, ITextNode, NodesType } from '../engine/types';
-import { TEXT_BUTTONS_FONT } from './screens/ScreenCreator';
+} from '../../constats';
+import { IImageNode, ITextNode, NodesType } from '../../engine/types';
+import { TEXT_BUTTONS_FONT } from '../screens/ScreenCreator';
 
 export default class PlantCard {
   public plant: Plant;

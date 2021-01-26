@@ -1,14 +1,14 @@
 import {
   ZombieConfig, ZombiePreset, ZombiesStatesPreset, ZombieHeadPreset,
-} from '../types';
-import zombiePresets from '../data/zombies.json';
-import zombieHeadPresets from '../data/zombies_head.json';
+} from '../../types';
+import zombiePresets from '../../data/zombies.json';
+import zombieHeadPresets from '../../data/zombies_head.json';
 
-import Engine from '../engine';
-import Cell from '../game/Cell';
+import Engine from '../../engine';
+import Cell from './Cell';
 import Plant from './Plant';
-import { ISpriteNode } from '../engine/types';
-import Vector from '../engine/core/Vector';
+import { ISpriteNode } from '../../engine/types';
+import Vector from '../../engine/core/Vector';
 
 require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
 

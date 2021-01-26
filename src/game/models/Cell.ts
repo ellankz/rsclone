@@ -1,5 +1,5 @@
-import Vector from '../engine/core/Vector';
-import { Engine, NodesType } from '../engine/types';
+import Vector from '../../engine/core/Vector';
+import { Engine, NodesType } from '../../engine/types';
 
 const X_OFFSET_COEF = 0.246;
 const Y_OFFSET_COEF = 0.127;

@@ -1,7 +1,7 @@
-import Engine from '../../engine';
-import Vector from '../../engine/core/Vector';
-import Cell from '../../game/Cell';
-import { PlantConfig } from '../../types';
+import Engine from '../../../engine';
+import Vector from '../../../engine/core/Vector';
+import Cell from '../Cell';
+import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 import Shot from '../Shot';
 import Zombie from '../Zombie';

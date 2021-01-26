@@ -1,12 +1,12 @@
-import { COLS_NUM, ROWS_NUM } from '../constats';
-import Engine from '../engine';
-import Cell from '../game/Cell';
-import PlantCard from '../game/PlantCard';
-import SunCount from '../game/SunCount';
-import { LevelConfig, PlantType, ZombieConfig } from '../types';
+import { COLS_NUM, ROWS_NUM } from '../../constats';
+import Engine from '../../engine';
+import Cell from './Cell';
+import PlantCard from '../mechanics/PlantCard';
+import SunCount from '../mechanics/SunCount';
+import { LevelConfig, PlantType, ZombieConfig } from '../../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
-import { FallingSun } from '../game/mechanics/FallingSun';
+import { FallingSun } from '../mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 import { WallNut } from './plants/WallNut';
@@ -15,15 +15,15 @@ import { CherryBomb } from './plants/CherryBomb';
 import { SnowPea } from './plants/SnowPea';
 import { PotatoMine } from './plants/PotatoMine';
 
-import { Shovel } from '../game/mechanics/Shovel';
-import LawnCleaner from './LawnCleaner';
+import { Shovel } from '../mechanics/Shovel';
+import LawnCleaner from '../mechanics/LawnCleaner';
 
-import levels from '../data/levels.json';
-import { DataService } from '../api-service/DataService';
-import MenuToggle from '../game/MenuToggle';
-import TextNode from '../engine/nodes/TextNode';
-import { StartLevelView } from './StartLevelView';
-import Timer from '../engine/TimeManager/Timer';
+import levels from '../../data/levels.json';
+import { DataService } from '../../api-service/DataService';
+import MenuToggle from '../mechanics/MenuToggle';
+import TextNode from '../../engine/nodes/TextNode';
+import { StartLevelView } from '../scenes/StartLevelView';
+import Timer from '../../engine/TimeManager/Timer';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;

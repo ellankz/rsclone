@@ -1,9 +1,9 @@
-import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-import plantPresets from '../data/plants.json';
-import Engine from '../engine';
-import Cell from '../game/Cell';
-import { ISpriteNode } from '../engine/types';
-import Vector from '../engine/core/Vector';
+import { PlantConfig, PlantPreset, PlantStatesPreset } from '../../types';
+import plantPresets from '../../data/plants.json';
+import Engine from '../../engine';
+import Cell from './Cell';
+import { ISpriteNode } from '../../engine/types';
+import Vector from '../../engine/core/Vector';
 import Zombie from './Zombie';
 
 require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);

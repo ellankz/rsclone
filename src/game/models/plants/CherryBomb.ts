@@ -1,10 +1,10 @@
-import Engine from '../../engine';
-import Cell from '../../game/Cell';
-import { PlantConfig } from '../../types';
+import Engine from '../../../engine';
+import Cell from '../Cell';
+import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 import Zombie from '../Zombie';
 
-import { ROWS_NUM } from '../../constats';
+import { ROWS_NUM } from '../../../constats';
 
 const ATTACK_RADIUS = 1;
 const ATTACK_OFFSET_LEFT = 40;

@@ -1,4 +1,4 @@
-import Cell from '../../game/Cell';
+import Cell from '../Cell';
 import { Peashooter } from './Peashooter';
 
 export class SnowPea extends Peashooter {
