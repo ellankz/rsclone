@@ -28,8 +28,12 @@ export class Peashooter extends Plant {
   startShooting(zombie: Zombie) {
     if (!this.shotType || this.shooting !== null) return;
     this.isShooting = true;
+
     const shoot = () => {
-      if (zombie.health <= 0 || zombie.isDestroyedFlag) return;
+      if (zombie.health <= 0 || zombie.isDestroyedFlag) {
+        this.stopAttack();
+        return;
+      }
       this.node.switchState('attack');
       this.node.then(() => {
         this.switchState('basic');
@@ -40,29 +44,15 @@ export class Peashooter extends Plant {
         this.shot = new Shot(this.shotPosition, this.engine, this.shotType);
         this.shot.draw(zombie, this);
       }, 500);
+      this.shooting = this.engine.timeout(() => {
+        this.shooting.destroy();
+        shoot();
+      }, 1800);
       this.engine.getTimer('levelTimer').add(timeout);
+      this.engine.getTimer('levelTimer').add(this.shooting);
     };
 
-    const shootingTimeout = this.engine.timeout(() => {
-      if (this.shooting === null) {
-        shootingTimeout.destroy();
-      }
-    }, 700);
-
-    const shootingInterval = this.engine
-      .interval(() => {
-        if (zombie.health <= 0 || zombie.isDestroyedFlag) {
-          shootingInterval.destroy();
-          this.stopAttack();
-        } else {
-          shoot();
-        }
-      }, 1800)
-      .before(() => shoot());
-
-    this.shooting = this.engine.timer([shootingTimeout, shootingInterval], true);
-
-    this.engine.getTimer('levelTimer').add(this.shooting);
+    shoot();
   }
 
   stopShooting() {

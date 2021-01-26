@@ -52,7 +52,6 @@ export default class Timer {
   remove(targetTimer: Timeout | Interval | Timer) {
     const timer = targetTimer;
     if (this.isDestroyed) return this;
-
     const idx = this.timers.indexOf(timer);
     if (idx !== -1) {
       this.timers.splice(idx, 1);
@@ -123,6 +122,7 @@ export default class Timer {
 
     this.isDestroyed = true;
     this.timers.forEach((timer) => timer.destroy());
+    this.timers = [];
 
     if (this.onEnd && !this.isEnd) {
       this.isEnd = true;
