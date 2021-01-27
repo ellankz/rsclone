@@ -77,6 +77,7 @@ export class Sun {
         startFrame: 0,
         size: this.size,
         dh: this.dh,
+        repeat: 1,
         positionAdjust: new Vector(0, 0),
       },
     };

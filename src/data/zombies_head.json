@@ -1,98 +1,98 @@
 {
-    "basic": {
-      "speed": 80,
-      "width": 150,
-      "height": 186,
-      "frames": 12,
-      "dh": 186,
-      "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "basic_2": {
-        "speed": 80,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "cone": {
-        "speed": 80,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "bucket": {
-        "speed": 60,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "flag": {
-        "speed": 60,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "door": {
-        "speed": 60,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/basic/head.png"
-    },
-    "newspaper": {
-        "speed": 80,
-        "width": 216,
-        "height": 164,
-        "frames": 10,
-        "dh": 164,
-        "image": "assets/sprites/zombies/newspaper/head.png"
-    },
-    "dancer": {
-        "speed": 80,
-        "width": 184,
-        "height": 182,
-        "frames": 9,
-        "dh": 182,
-        "image": "assets/sprites/zombies/dancer/head.png"
-    },
-    "dancer_2": {
-        "speed": 80,
-        "width": 184,
-        "height": 182,
-        "frames": 9,
-        "dh": 182,
-        "image": "assets/sprites/zombies/dancer_2/head.png"
-    },
-    "dancer_3": {
-        "speed": 90,
-        "width": 134,
-        "height": 172,
-        "frames": 8,
-        "dh": 172,
-        "image": "assets/sprites/zombies/dancer_3/head.png"
-    },
-    "football": {
-        "speed": 80,
-        "width": 150,
-        "height": 186,
-        "frames": 12,
-        "dh": 186,
-        "image": "assets/sprites/zombies/football/head.png"
-    },
-    "pole": {
-        "speed": 100,
-        "width": 348,
-        "height": 218,
-        "frames": 8,
-        "dh": 218,
-        "image": "assets/sprites/zombies/pole/head.png"
-    }
-}    
+  "basic": {
+    "speed": 80,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "basic_2": {
+    "speed": 80,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "cone": {
+    "speed": 80,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "bucket": {
+    "speed": 60,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "flag": {
+    "speed": 60,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "door": {
+    "speed": 60,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/basic/head.png"
+  },
+  "newspaper": {
+    "speed": 80,
+    "width": 216,
+    "height": 164,
+    "frames": 10,
+    "dh": 164,
+    "image": "assets/sprites/zombies/newspaper/head.png"
+  },
+  "dancer": {
+    "speed": 80,
+    "width": 184,
+    "height": 182,
+    "frames": 9,
+    "dh": 182,
+    "image": "assets/sprites/zombies/dancer/head.png"
+  },
+  "dancer_2": {
+    "speed": 80,
+    "width": 184,
+    "height": 182,
+    "frames": 9,
+    "dh": 182,
+    "image": "assets/sprites/zombies/dancer_2/head.png"
+  },
+  "dancer_3": {
+    "speed": 90,
+    "width": 134,
+    "height": 172,
+    "frames": 8,
+    "dh": 172,
+    "image": "assets/sprites/zombies/dancer_3/head.png"
+  },
+  "football": {
+    "speed": 80,
+    "width": 150,
+    "height": 186,
+    "frames": 12,
+    "dh": 186,
+    "image": "assets/sprites/zombies/football/head.png"
+  },
+  "pole": {
+    "speed": 100,
+    "width": 348,
+    "height": 218,
+    "frames": 8,
+    "dh": 218,
+    "image": "assets/sprites/zombies/pole/head.png"
+  }
+}

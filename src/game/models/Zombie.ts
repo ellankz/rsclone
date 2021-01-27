@@ -1,16 +1,16 @@
 import {
   ZombieConfig, ZombiePreset, ZombiesStatesPreset, ZombieHeadPreset,
-} from '../types';
-import zombiePresets from '../data/zombies.json';
-import zombieHeadPresets from '../data/zombies_head.json';
+} from '../../types';
+import zombiePresets from '../../data/zombies.json';
+import zombieHeadPresets from '../../data/zombies_head.json';
 
-import Engine from '../engine';
-import Cell from '../game/Cell';
+import Engine from '../../engine';
+import Cell from './Cell';
 import Plant from './Plant';
-import { ISpriteNode } from '../engine/types';
-import Vector from '../engine/core/Vector';
+import { ISpriteNode } from '../../engine/types';
+import Vector from '../../engine/core/Vector';
 
-require.context('../assets/sprites/zombies', true, /\.(png|jpg)$/);
+require.context('../../assets/sprites/zombies', true, /\.(png|jpg)$/);
 
 const X_AXIS = 970;
 const Y_AXIS = {
@@ -30,7 +30,7 @@ const GROAN_DELAY: number = 15000;
 export default class Zombie {
   private zombiePresets: { [dymanic: string]: ZombiePreset } = zombiePresets;
 
-  private zombieHeadPresets: {[dymanic: string]: ZombieHeadPreset} = zombieHeadPresets;
+  private zombieHeadPresets: { [dymanic: string]: ZombieHeadPreset } = zombieHeadPresets;
 
   private speed: number;
 
@@ -82,6 +82,8 @@ export default class Zombie {
 
   public opacity: number;
 
+  private groanInterval: any;
+
   private timerDance: any;
 
   private timerWalk: any;
@@ -96,13 +98,13 @@ export default class Zombie {
 
   private isSlow: boolean;
 
-  private slowTimeout: number;
+  private slowTimeout: any;
 
   public isDestroyedFlag: boolean;
 
   public shotTarget: number;
 
-  public groanInterval: any;
+  private savedTime: number;
 
   constructor(config: ZombieConfig, engine: Engine) {
     this.speed = this.zombiePresets[config.type].speed;
@@ -122,6 +124,7 @@ export default class Zombie {
     this.headSpeed = this.zombieHeadPresets[config.type].speed;
     this.headDh = this.zombieHeadPresets[config.type].dh;
     this.engine = engine;
+    this.savedTime = new Date().getTime();
   }
 
   public draw(cell: Cell, occupiedCells: Map<Cell, Plant>, cells: Cell[][]) {
@@ -136,20 +139,34 @@ export default class Zombie {
         const img = this.engine.loader.files[state[1].image];
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
-          frames, speed, dh,
+          frames, speed, dh, repeat,
         } = state[1];
-        return [state[0], {
-          img, frames, speed, size, dh,
-        }];
+        return [
+          state[0],
+          {
+            img,
+            frames,
+            speed,
+            size,
+            dh,
+            repeat,
+          },
+        ];
       });
       return Object.fromEntries(statesArr);
     };
 
     const update = () => {
-      start += this.zombieSpeed;
-      this.node.position = this.engine.vector(
-        X_AXIS - start, (cell.getBottom() - this.height - y),
-      );
+      const thisTime = new Date().getTime();
+      if (thisTime - this.savedTime > 1000) {
+        this.savedTime = thisTime;
+      }
+      if (thisTime - this.savedTime > 30) {
+        start += ((thisTime - this.savedTime) * this.zombieSpeed) / 30;
+        this.savedTime = thisTime;
+      }
+
+      this.node.position = this.engine.vector(X_AXIS - start, cell.getBottom() - this.height - y);
       if (this.isJump) this.node.position.x = this.trackPositionAfterJump();
       this.trackCurrentCell(cells);
     };
@@ -157,34 +174,42 @@ export default class Zombie {
     const updateSpotlight = () => {
       if (this.spotlight) {
         this.spotlight.position = this.engine.vector(
-          X_AXIS - start - 25, (cell.getBottom() - this.height * 3 - 70),
+          X_AXIS - start - 25,
+          cell.getBottom() - this.height * 3 - 70,
         );
 
         this.spotlightShade.position = this.engine.vector(
-          X_AXIS - start - 35, (cell.getBottom() - this.height + 110),
+          X_AXIS - start - 35,
+          cell.getBottom() - this.height + 110,
         );
       }
     };
 
-    this.node = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.engine.vector(X_AXIS, (cell.getBottom() - this.height - Y_AXIS.all)),
-      size: this.engine.vector(this.width * this.frames, this.height),
-      layer: `row-${this.row + 1}`,
-      img: image,
-      frames: this.frames,
-      startFrame: 0,
-      speed: this.speed,
-      dh: this.height,
-      states: this.states ? generateStates() : undefined,
-      shadow: this.shadow,
-    }, update)
+    this.node = this.engine
+      .createNode(
+        {
+          type: 'SpriteNode',
+          position: this.engine.vector(X_AXIS, cell.getBottom() - this.height - Y_AXIS.all),
+          size: this.engine.vector(this.width * this.frames, this.height),
+          layer: `row-${this.row + 1}`,
+          img: image,
+          frames: this.frames,
+          startFrame: 0,
+          speed: this.speed,
+          dh: this.height,
+          states: this.states ? generateStates() : undefined,
+          shadow: this.shadow,
+        },
+        update,
+      )
       .addTo('scene') as ISpriteNode;
 
     if (this.name === 'dancer_2') {
-      setTimeout(() => {
+      const timeout = this.engine.timeout(() => {
+        timeout.destroy();
         this.addSpotlight(updateSpotlight);
       }, 100);
+      this.engine.getTimer('levelTimer')?.add(timeout);
     }
 
     this.updateZombieStateToDance();
@@ -204,7 +229,7 @@ export default class Zombie {
       };
 
       const setConditionTwo = () => {
-        if (!this.isEndJump && plant.name !== 'CherryBomb' 
+        if (!this.isEndJump && plant.name !== 'CherryBomb'
           && plant.cell.position.x === 8 && this.node.position.x < 800
           && this.row === plant.cell.position.y) return true;
         return false;
@@ -222,7 +247,8 @@ export default class Zombie {
         } else if
         (this.isEndJump && plant.name !== 'CherryBomb'
           && this.column === plant.cell.position.x
-          && this.row === plant.cell.position.y) {
+          && this.row === plant.cell.position.y
+        ) {
           this.node.switchState('attack');
           this.zombieSpeed = 0;
           this.makeDamage(plant);
@@ -235,19 +261,22 @@ export default class Zombie {
             this.zombieSpeed = SPEED.normal;
           }
         }
-      // For all others
-      } else if (this.column === plant.cell.position.x
-            && this.row === plant.cell.position.y) {
+
+        // For all others
+      } else if (this.column === plant.cell.position.x && this.row === plant.cell.position.y) {
         this.node.switchState('attack');
         this.zombieSpeed = 0;
         this.makeDamage(plant);
         this.attackedPlant = plant;
 
         if (plant.health <= 0) {
-          setTimeout(() => {
+          const timeout = this.engine.timeout(() => {
+            timeout.destroy();
             this.eatThePlant(plant);
             occupiedCells.delete(cell);
           }, 200);
+
+          this.engine.getTimer('levelTimer')?.add(timeout);
           this.node.switchState('walking');
           this.zombieSpeed = this.setSpeed();
         }
@@ -282,14 +311,24 @@ export default class Zombie {
   }
 
   public groan(): void {
-    this.groanInterval = setInterval(() => {
-      this.engine.audioPlayer.playSoundRand(['groan1', 'groan2', 'groan3', 'groan4', 'groan5', 'groan6']);
+    const interval = this.engine.interval(() => {
+      this.engine.audioPlayer.playSoundRand([
+        'groan1',
+        'groan2',
+        'groan3',
+        'groan4',
+        'groan5',
+        'groan6',
+      ]);
     }, GROAN_DELAY);
+
+    this.engine.getTimer('levelTimer')?.add(interval);
   }
 
   public stop() {
     this.clearTimeouts();
-    clearInterval(this.groanInterval);
+    this.groanInterval?.destroy();
+
     if (this.isDestroyedFlag) return;
     this.node.switchState('stop');
     this.zombieSpeed = 0;
@@ -301,22 +340,22 @@ export default class Zombie {
     }
     if (this.health < 0) this.health = 0;
 
-    if (plant && plant.shotType === 'green' && !this.isSlow) {
+    if (!(plant && plant.shotType === 'snow')) {
       this.node.filter = 'brightness(1.2)';
-      setTimeout(() => {
+      const timeout = this.engine.timeout(() => {
+        timeout.destroy();
         this.node.filter = 'brightness(1)';
       }, 180);
-    } else if (plant && plant.shotType === 'snow') {
-      if (this.name === 'football' || this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
-        this.node.filter = 'hue-rotate(190deg) saturate(0.82)';
-      } else {
-        this.node.filter = 'hue-rotate(145deg) saturate(1.5)';
-      }
+      this.engine.getTimer('levelTimer')?.add(timeout);
+    } else if (
+      this.name === 'football'
+      || this.name === 'dancer'
+      || this.name === 'dancer_2'
+      || this.name === 'dancer_3'
+    ) {
+      this.node.filter = 'hue-rotate(190deg) saturate(0.82)';
     } else {
-      this.node.filter = 'brightness(1.2)';
-      setTimeout(() => {
-        this.node.filter = 'brightness(1)';
-      }, 180);
+      this.node.filter = 'hue-rotate(145deg) saturate(1.5)';
     }
   }
 
@@ -326,47 +365,57 @@ export default class Zombie {
     if (this.head) {
       const image = this.engine.loader.files[this.head] as HTMLImageElement;
 
-      const head = this.engine.createNode({
-        type: 'SpriteNode',
-        position: this.engine.vector(this.position.x + 60, this.position.y),
-        size: this.engine.vector(this.headWidth * this.headFrames, this.headHeight),
-        layer: 'top',
-        img: image,
-        frames: this.headFrames,
-        width: this.headWidth,
-        height: this.headHeight,
-        startFrame: 0,
-        speed: this.headSpeed,
-        dh: this.headDh,
-      }).addTo('scene') as ISpriteNode;
+      const head = this.engine
+        .createNode({
+          type: 'SpriteNode',
+          position: this.engine.vector(this.position.x + 60, this.position.y),
+          size: this.engine.vector(this.headWidth * this.headFrames, this.headHeight),
+          layer: 'top',
+          img: image,
+          frames: this.headFrames,
+          width: this.headWidth,
+          height: this.headHeight,
+          startFrame: 0,
+          speed: this.headSpeed,
+          dh: this.headDh,
+          repeat: 1,
+        })
+        .addTo('scene') as ISpriteNode;
 
-      setTimeout(() => {
-        head.destroy();
-      }, 600);
+      head.then(() => head.destroy());
     }
   }
 
   public remove() {
-    clearInterval(this.groanInterval);
+    this.groanInterval?.destroy();
     this.clearTimeouts();
+
     if (this.isDestroyedFlag) return;
-    this.isDestroyedFlag = true;
-    this.lostHead();
-    setTimeout(() => {
+    const death = this.engine.timeout(() => {
       this.zombieSpeed = 0;
       this.node.switchState('death');
     }, 200);
-    setTimeout(() => {
+    const end = this.engine.timeout(() => {
       this.node.switchState('end');
       this.node.opacity = 0.7;
-    }, 800);
-    setTimeout(() => {
+    }, 600);
+    const destroy = this.engine.timeout(() => {
       this.node.destroy();
       if (this.spotlight) {
         this.spotlight.destroy();
         this.spotlightShade.destroy();
       }
-    }, 1300);
+    }, 700);
+
+    const timer = this.engine
+      .timer([death, end, destroy], true)
+      .before(() => {
+        this.isDestroyedFlag = true;
+        this.lostHead();
+      })
+      .finally(() => timer.destroy());
+
+    this.engine.getTimer('levelTimer')?.add(timer);
   }
 
   public jump() {
@@ -374,15 +423,14 @@ export default class Zombie {
     this.node.switchState('jump');
     this.isJump = false;
 
-    setTimeout(() => {
+    this.node.then(() => {
       this.isJump = true;
       this.node.switchState('jumpEnd');
-    }, 800);
-
-    setTimeout(() => {
-      this.node.switchState('walkingSlow');
-      this.zombieSpeed = 0.33;
-    }, 1120);
+      this.node.then(() => {
+        this.node.switchState('walkingSlow');
+        this.zombieSpeed = 0.33;
+      });
+    });
 
     return this.node.position.x;
   }
@@ -393,18 +441,19 @@ export default class Zombie {
   }
 
   public burn() {
+    this.groanInterval?.destroy();
     this.clearTimeouts();
     if (this.isDestroyedFlag) return;
     this.isDestroyedFlag = true;
     this.zombieSpeed = 0;
     this.node.switchState('burn');
-    setTimeout(() => {
+    this.node.then(() => {
       this.node.destroy();
       if (this.spotlight) {
         this.spotlight.destroy();
         this.spotlightShade.destroy();
       }
-    }, 2200);
+    });
   }
 
   public slow() {
@@ -425,14 +474,17 @@ export default class Zombie {
       this.isSlow = true;
     }
 
-    if (this.slowTimeout) clearTimeout(this.slowTimeout);
+    this.slowTimeout?.destroy();
 
-    this.slowTimeout = window.setTimeout(() => {
+    this.slowTimeout = this.engine.timeout(() => {
+      this.slowTimeout.destroy();
       this.zombieSpeed = this.setSpeed();
       this.node.filter = '';
       this.isSlow = false;
       this.speed = this.node.speed;
     }, 5000);
+
+    this.engine.getTimer('levelTimer')?.add(this.slowTimeout);
   }
 
   private trackPosition() {
@@ -443,8 +495,12 @@ export default class Zombie {
   }
 
   private findShotTarget() {
-    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3'
-        || this.name === 'newspaper') {
+    if (
+      this.name === 'dancer'
+      || this.name === 'dancer_2'
+      || this.name === 'dancer_3'
+      || this.name === 'newspaper'
+    ) {
       this.shotTarget = this.position.x + this.width / 2 - 40;
     } else {
       this.shotTarget = this.position.x + this.width / 2;
@@ -452,7 +508,7 @@ export default class Zombie {
     return this.shotTarget;
   }
 
-  public trackCurrentCell(cells : Cell[][]) {
+  public trackCurrentCell(cells: Cell[][]) {
     let xOffset: number = 0;
     let fieldStartY: number = 0;
     if
@@ -511,54 +567,67 @@ export default class Zombie {
       timer = 1800;
     }
     this.node.switchState('dance');
-    this.timerWalk = setTimeout(() => {
+    this.timerWalk = this.engine.timeout(() => {
       this.node.switchState('walking');
-    }, timer);
+    }, timer).start();
   }
 
   private updateZombieStateToDance() {
+    if (!['dancer', 'dancer_2', 'dancer_3'].includes(this.name)) return;
+
     const update = () => {
       this.createDancingQueen();
-      this.timerDance = setTimeout(update, 5000);
+      this.timerDance = this.engine.timeout(update, 5000).start();
     };
-
-    if (this.name === 'dancer' || this.name === 'dancer_2' || this.name === 'dancer_3') {
-      update();
-    }
+    update();
   }
 
   // Spotlight for dancing guy
   private addSpotlight(update: () => void) {
-    const spotlight = this.engine.loader.files['assets/sprites/zombies/dancer/spotlight.png'] as HTMLImageElement;
-    const spotlightShade = this.engine.loader.files['assets/sprites/zombies/dancer/spotlight2.png'] as HTMLImageElement;
+    const spotlight = this.engine.loader.files[
+      'assets/sprites/zombies/dancer/spotlight.png'
+    ] as HTMLImageElement;
+    const spotlightShade = this.engine.loader.files[
+      'assets/sprites/zombies/dancer/spotlight2.png'
+    ] as HTMLImageElement;
 
-    this.spotlight = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.engine.vector(0, 0),
-      size: this.engine.vector(50 * 5, 155),
-      layer: 'main',
-      img: spotlight,
-      frames: 5,
-      width: 50,
-      height: 155,
-      startFrame: 0,
-      speed: 480,
-      dh: 600,
-    }, update).addTo('scene') as ISpriteNode;
+    this.spotlight = this.engine
+      .createNode(
+        {
+          type: 'SpriteNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(50 * 5, 155),
+          layer: 'main',
+          img: spotlight,
+          frames: 5,
+          width: 50,
+          height: 155,
+          startFrame: 0,
+          speed: 480,
+          dh: 600,
+        },
+        update,
+      )
+      .addTo('scene') as ISpriteNode;
 
-    this.spotlightShade = this.engine.createNode({
-      type: 'SpriteNode',
-      position: this.engine.vector(0, 0),
-      size: this.engine.vector(50 * 5, 155),
-      layer: 'main',
-      img: spotlightShade,
-      frames: 5,
-      width: 50,
-      height: 20,
-      startFrame: 0,
-      speed: 480,
-      dh: 600,
-    }, update).addTo('scene') as ISpriteNode;
+    this.spotlightShade = this.engine
+      .createNode(
+        {
+          type: 'SpriteNode',
+          position: this.engine.vector(0, 0),
+          size: this.engine.vector(50 * 5, 155),
+          layer: 'main',
+          img: spotlightShade,
+          frames: 5,
+          width: 50,
+          height: 20,
+          startFrame: 0,
+          speed: 480,
+          dh: 600,
+        },
+        update,
+      )
+      .addTo('scene') as ISpriteNode;
   }
 
   // Set coordinates
@@ -573,7 +642,7 @@ export default class Zombie {
   }
 
   private clearTimeouts() {
-    if (this.timerDance) clearTimeout(this.timerDance);
-    if (this.timerWalk) clearTimeout(this.timerWalk);
+    this.timerDance?.destroy();
+    this.timerWalk?.destroy();
   }
 }

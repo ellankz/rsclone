@@ -1,13 +1,11 @@
-import Engine from '../../engine';
-import Cell from '../../game/Cell';
-import { PlantConfig } from '../../types';
+import Engine from '../../../engine';
+import Cell from '../Cell';
+import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 import Zombie from '../Zombie';
 
-import { ROWS_NUM } from '../../constats';
+import { ROWS_NUM } from '../../../constats';
 
-const PRE_EXPLODE_TIME = 900;
-const EXPLODE_TIME = 800;
 const ATTACK_RADIUS = 1;
 const ATTACK_OFFSET_LEFT = 40;
 const ATTACK_OFFSET_RIGHT = 80;
@@ -33,10 +31,16 @@ export class CherryBomb extends Plant {
   putOnField(cell: Cell) {
     super.putOnField(cell);
 
-    setTimeout(() => {
+    this.node.then(() => {
       this.switchState('boom');
       this.explode();
-    }, PRE_EXPLODE_TIME);
+
+      this.node.then(() => {
+        this.health = 0;
+        this.destroy();
+        this.occupedCells.delete(this.cell);
+      });
+    });
   }
 
   explode() {
@@ -49,11 +53,6 @@ export class CherryBomb extends Plant {
       }
     });
     this.engine.audioPlayer.playSound('cherrybomb');
-    setTimeout(() => {
-      this.health = 0;
-      this.destroy();
-      this.occupedCells.delete(this.cell);
-    }, EXPLODE_TIME);
   }
 
   isZombieInAttackArea(zombie: Zombie) {

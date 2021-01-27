@@ -35,7 +35,8 @@ export default class AudioPlayer {
   }
 
   public stopAll() {
-    Object.values(this.elements).forEach((sound) => {
+    Object.values(this.elements).forEach((currentSound) => {
+      const sound = currentSound;
       sound.pause();
       sound.currentTime = 0;
     });

@@ -1,9 +1,8 @@
 import Engine from '../../engine';
 import { Sun } from './Sun';
-import Vector from '../../engine/core/Vector';
 
 const DESTROY_DELAY = 3000;
-const CHANGE_STATE_DELAY = 7100;
+const CHANGE_STATE_DELAY = 1000;
 const FLY_DELAY = 4000;
 const SUN_COST = 25;
 
@@ -20,6 +19,8 @@ export class SunCreator {
 
   public name: string;
 
+  private animationTimer: any;
+
   constructor(
     engine: Engine,
     posCoordinates: Array<number>,
@@ -33,7 +34,7 @@ export class SunCreator {
     this.name = name;
     this.posCoordinates = posCoordinates;
     this.instance = update ? this.createNode(layer, update) : this.createNode(layer);
-    this.changeAnimation(this.instance.position);
+    this.changeAnimation();
 
     this.engine.on(this.instance, 'click', () => {
       if (updateSunFunc && sunCount) {
@@ -45,6 +46,7 @@ export class SunCreator {
         this.instance.clearLayer();
       }
       this.destroySelection();
+      this.animationTimer.destroy();
     });
   }
 
@@ -60,14 +62,24 @@ export class SunCreator {
     return update ? this.engine.createNode(sunConfig, update) : this.engine.createNode(sunConfig);
   }
 
-  private changeAnimation(position: Vector): void {
-    setTimeout(() => {
-      setTimeout(() => {
-        this.instance.switchState('disappear');
-        this.instance.position = position;
-        setTimeout(() => this.instance.destroy(), DESTROY_DELAY);
-      }, FLY_DELAY);
-    }, CHANGE_STATE_DELAY);
+  private changeAnimation(): void {
+    const { position } = this.instance;
+
+    const changeStateTimeout = this.engine.timeout(() => {
+      this.instance.switchState('disappear');
+      this.instance.position = position;
+    }, FLY_DELAY + CHANGE_STATE_DELAY);
+
+    const destroyTimeout = this.engine.timeout(() => {
+      destroyTimeout.destroy();
+      this.instance.destroy();
+    }, DESTROY_DELAY);
+
+    this.animationTimer = this.engine
+      .timer([changeStateTimeout, destroyTimeout], true)
+      .finally(() => this.animationTimer.destroy());
+
+    this.engine.getTimer('levelTimer')?.add(this.animationTimer);
   }
 
   destroySelection() {

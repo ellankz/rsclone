@@ -1,5 +1,5 @@
 import Engine from '../../engine';
-import ModalWindow from '../../game/ModalWindow';
+import ModalWindow from '../mechanics/ModalWindow';
 import RectNode from '../../engine/nodes/RectNode';
 
 export default class LooseScene {
@@ -35,16 +35,18 @@ export default class LooseScene {
   }
 
   public resumeGame(resume: () => void, exit: () => void) {
-    setTimeout(() => {
-      this.engine.on(this.modalWindow.buttonNode, 'click', () => {
-        resume();
-        this.bg.destroy();
-      });
-      this.engine.on(this.modalWindow.exitButtonNode, 'click', () => {
-        this.engine.audioPlayer.stopSound('menu');
-        exit();
-        this.bg.destroy();
-      });
-    }, 100);
+    this.engine
+      .timeout(() => {
+        this.engine.on(this.modalWindow.buttonNode, 'click', () => {
+          resume();
+          this.bg.destroy();
+        });
+        this.engine.on(this.modalWindow.exitButtonNode, 'click', () => {
+          this.engine.audioPlayer.stopSound('menu');
+          exit();
+          this.bg.destroy();
+        });
+      }, 100)
+      .start();
   }
 }

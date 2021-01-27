@@ -1,4 +1,5 @@
 import Vector from '../core/Vector';
+import Interval from '../TimeManager/Interval';
 import {
   ISpriteNode,
   SpriteNodeConfig,
@@ -28,7 +29,9 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   speed: number;
 
-  interval: number;
+  private repeat: number;
+
+  private count: number = 0;
 
   private state: string;
 
@@ -38,6 +41,12 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   private initialPosition: Vector;
 
+  private finishCallbacks: (() => void)[] = [];
+
+  private isFinished: boolean;
+
+  interval: Interval;
+
   constructor(params: SpriteNodeConfig, update?: (node: NodesType) => void) {
     super(params, update);
     this.type = 'SpriteNode';
@@ -45,6 +54,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.frames = params.frames;
     this.startFrame = params.startFrame || 0;
     this.speed = params.speed || 0;
+    this.repeat = params.repeat;
     this.state = 'basic';
 
     this.frameW = this.size.x / this.frames;
@@ -66,21 +76,49 @@ export default class SpriteNode extends Node implements ISpriteNode {
       speed: this.speed,
       positionAdjust: new Vector(0, 0),
       size: this.size,
+      repeat: this.repeat,
     };
 
     this.animate();
   }
 
+  pause() {
+    if (this.interval && !this.interval.isPaused) this.interval.pause();
+  }
+
+  resume() {
+    if (this.interval && this.interval.isPaused) this.interval.resume();
+  }
+
   private animate() {
-    this.interval = window.setInterval(() => {
+    if (this.interval && !this.interval.isDestroyed) {
+      this.interval.destroy();
+    }
+    this.interval = new Interval(() => {
       this.animation = false;
-    }, this.speed);
+    }, this.speed).start();
   }
 
   public innerUpdate() {
-    if (this.animation) return;
-    this.srcX = (this.srcX + this.frameW) % this.size.x;
+    if (this.animation || this.count === this.repeat) return;
+
     this.animation = true;
+
+    if (this.srcX + this.frameW === this.size.x) {
+      if (this.repeat) {
+        this.count += 1;
+      }
+    }
+
+    if (this.count === this.repeat) {
+      if (!this.isFinished) {
+        this.isFinished = true;
+        this.finishCallbacks.forEach((callback) => callback());
+      }
+      return;
+    }
+
+    this.srcX = (this.srcX + this.frameW) % this.size.x;
   }
 
   public draw() {
@@ -103,6 +141,7 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   public switchState(stateName: string) {
     if (!this.states[stateName]) return;
+    this.interval?.destroy();
     const state = this.states[stateName];
     this.img = state.img;
     this.frames = state.frames;
@@ -117,8 +156,11 @@ export default class SpriteNode extends Node implements ISpriteNode {
     this.size = state.size || this.size;
     this.startFrame = state.startFrame || 0;
     this.speed = state.speed || this.speed;
+    this.repeat = state.repeat;
+    this.count = 0;
+    this.finishCallbacks = [];
+    this.isFinished = false;
 
-    window.clearInterval(this.interval);
     this.animate();
 
     this.frameW = this.size.x / this.frames;
@@ -133,6 +175,10 @@ export default class SpriteNode extends Node implements ISpriteNode {
 
   public get currentState() {
     return this.state;
+  }
+
+  public then(callback: () => void) {
+    this.finishCallbacks.push(callback);
   }
 
   private setDwDH(providedDH: number) {

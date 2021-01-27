@@ -16,6 +16,9 @@
   - [TextNode](#textnode)
   - [ImageNode](#imagenode)
   - [SpriteNode](#spritenode)
+- [TimeManager](#timemanager)
+  - [Timeout, Interval](#timeout,-interval)
+  - [Timer](#timer)
 - [Loader](#loader)
 - [Fullscreen](#fullscreen)
 - [Notes](#notes)
@@ -575,9 +578,17 @@ setTimeout(() => {
   speed?: number, // скорость задержки - чем меньше значение, тем быстрее анимация, default 0
   dh?: number, // желаемая высота - ширина расчитывается автоматически, default size
   border?: string,
-  opacity?: number
+  opacity?: number,
+  repeat?: number
 }
 ```
+
+`repeat` - задает количество повторений спрайта или его состояния, при смене состояния обнуляется
+
+##### Методы
+- `pause` 
+- `resume`
+- `then` - принимает коллбек который вызывается, после выполнения, если задан repeat. Можно вызывать много раз. Обнуляется при смене состояния.
 
 ##### Смена состояний спрайта
 
@@ -630,10 +641,138 @@ interface SpriteStatesConfig {
 
 ---
 
+## TimeManager
+Помогает регулировать время в игре.
+
+### Timeout, Interval
+Если не добавлены в таймер не начнутся до вызова start.
+
+#### Параметры
+```javascript
+(callback: () => void, timeout | interval: number, repeat?: number)
+```
+
+`repeat` - количество повторений, в случае интервала он остановится после выполнения заданного количества раз
+
+#### Создание
+```javascript
+const timeout = engine.timeout(() => console.log('hi'), 1000);
+const interval = engine.interval(() => console.log('hi'), 1000);
+```
+#### Свойства
+```javascript
+isStarted: boolean; // изменяется один раз при первом вызове start
+isPaused: boolean; 
+isDestroyed: boolean;
+isFinished: boolean; // изменяется после каждого повторения
+parentTimer: Timer; // ссылка на родительский таймер, если есть
+```
+
+#### Методы
+- Регулировка
+
+  `start` - запускает таймаут, при повторном вызове останавливает текущий и начинает заново
+  
+  `pause`
+  
+  `resume` 
+  
+  `destroy`
+  
+- Дополнительные
+
+  Добавляют коллбеки, которые будут вызваны в определленный период
+   
+  Принимают коллбек, и возвращают этот же таймаут
+    
+  ! Можно вызывать сколько угодно раз в любом порядке, но до первого вызова start
+
+  `before` - добавляет коллбеки, которые будут вызваны один раз перед первым вызовом start
+  
+  `then` - добавляет коллбеки, которые будут вызваны после каждого повторения
+  
+  `finally` - добавляет коллбеки, которые будут вызваны в конце всех повторений
+
+### Timer
+Группирует между собой все виды таймеров. Можно вкладывать любые Interval, Timeout, Timer в любом порядке.
+
+Если не добавлен в таймер не начнется до вызова start.
+
+#### Параметры
+```javascript
+(timers: (string | Timeout | Interval | Timer)[], sequentially?: boolean, name?: string)
+```
+
+`timers` - массив из таймеров или их имен, интервалов или таймаутов
+
+`sequentially` - выполнять последовательно, по умолчанию одновременно - false
+
+`name` - если задать имя, то таймер можно будет получить так:
+
+```javascript
+const timer = engine.getTimer('name');
+```
+
+#### Создание
+```javascript
+const timer = engine.timer([timeout, interval]);
+```
+#### Свойства
+```javascript
+isStarted: boolean; // изменяется один раз при первом вызове start
+isPaused: boolean; 
+isDestroyed: boolean;
+isFinished: boolean; // изменяется после каждого повторения
+parentTimer: Timer; // ссылка на родительский таймер, если есть
+```
+#### Методы
+- Добавление
+
+  `add` - принимает timer | interval | timeout и добавляет их к таймеру (!нельзя добавлять в несколько таймеров одновременно)
+  
+  `remove` - удаляет timer | interval | timeout из таймера
+
+- Регулировка
+
+  `start`, `pause`, `resume`, `destroy` - вызывают методы для каждого элемента, в случае sequentially === true - start будет вызываться последовательно
+  
+- Дополнительные
+
+  `before`, `finally` - работают также как и в Interval | Timeout
+  
+#### Примеры
+```javascript
+const timeout = engine.timeout(() => console.log('timeout'), 3000, 2);
+const interval = engine.interval(() => console.log('interval'), 3000, 2);
+const timer = engine.timer([interval, timeout])
+    .before(() => console.log('start'))
+    .finally(() => console.log('finish'))
+    .start();
+/*
+Выведется 'start', 
+затем два раза 'interval', 'timeout',
+затем 'finish'
+*/
+
+const timeout = engine.timeout(() => console.log('timeout'), 3000, 2);
+const interval = engine.interval(() => console.log('interval'), 2000, 2);
+const timer = engine.timer([interval, timeout], true); // таймаут начнет выполнение только после окончания интервала
+сonts timer2 = engine.timer([engine.timeout(() => console.log('delay'), 1000), timer], true).start();
+/*
+Через секунду выведется 'delay', 
+затем два раза каждые три секунды 'interval' 
+и затем два раза каждые две секунды 'timeout'
+*/
+```
+---
+
 ## Loader
 
-Загрузчик загружает все mp3, png, jpg файлы из папки src/assets и создает Image и Audio элементы для каждого.
-Получить доступ к элементу можно таким образом:
+Загружает все mp3, png, jpg, ttf файлы из папки src/assets и создает Image и Audio элементы для каждого.
+
+Чтобы использовать шрифт необходимо объявить его через правило font-face (!имя шрифта должно совпадать с названием файла)
+
+Получить доступ к изображению или аудио можно таким образом:
 
 ```javascript
 const image = engine.loader.files['assets/images/image1.png'] as HTMLImageElement;

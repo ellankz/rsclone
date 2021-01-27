@@ -1,12 +1,12 @@
-import { COLS_NUM, ROWS_NUM } from '../constats';
-import Engine from '../engine';
-import Cell from '../game/Cell';
-import PlantCard from '../game/PlantCard';
-import SunCount from '../game/SunCount';
-import { LevelConfig, PlantType, ZombieConfig } from '../types';
+import { COLS_NUM, ROWS_NUM } from '../../constats';
+import Engine from '../../engine';
+import Cell from './Cell';
+import PlantCard from '../mechanics/PlantCard';
+import SunCount from '../mechanics/SunCount';
+import { LevelConfig, PlantType, ZombieConfig } from '../../types';
 import Plant from './Plant';
 import Zombie from './Zombie';
-import { FallingSun } from '../game/mechanics/FallingSun';
+import { FallingSun } from '../mechanics/FallingSun';
 import { SunFlower } from './plants/SunFlower';
 import { Peashooter } from './plants/Peashooter';
 import { WallNut } from './plants/WallNut';
@@ -15,18 +15,20 @@ import { CherryBomb } from './plants/CherryBomb';
 import { SnowPea } from './plants/SnowPea';
 import { PotatoMine } from './plants/PotatoMine';
 
-import { Shovel } from '../game/mechanics/Shovel';
-import LawnCleaner from './LawnCleaner';
+import { Shovel } from '../mechanics/Shovel';
+import LawnCleaner from '../mechanics/LawnCleaner';
 
-import levels from '../data/levels.json';
-import { DataService } from '../api-service/DataService';
-import MenuToggle from '../game/MenuToggle';
-import TextNode from '../engine/nodes/TextNode';
-import { StartLevelView } from './StartLevelView';
+import levels from '../../data/levels.json';
+import { DataService } from '../../api-service/DataService';
+import MenuToggle from '../mechanics/MenuToggle';
+import TextNode from '../../engine/nodes/TextNode';
+import { StartLevelView } from '../scenes/StartLevelView';
+import Timer from '../../engine/TimeManager/Timer';
 
 const BG_URL = 'assets/images/interface/background1.jpg';
 const BG_LEVEL_OFFSET_X = 370;
 const MS = 1000;
+const X_HOME = 150;
 
 export default class Level {
   public zombiesArr: Zombie[] = [];
@@ -71,8 +73,6 @@ export default class Level {
 
   public timer: any;
 
-  public zombiesTimer: any;
-
   public restZombies: number;
 
   private zombiesKilled: number = 0;
@@ -93,12 +93,20 @@ export default class Level {
 
   levelNumberNode: TextNode;
 
+  private levelTimer: Timer;
+
+  private endWin: () => void;
+
+  private endLoose: () => void;
+
   constructor(
     levelNumber: number,
     engine: Engine,
     cells: Cell[][],
     dataService: DataService,
     runPause: (event: KeyboardEvent) => void,
+    endWin: () => void,
+    endLoose: () => void,
   ) {
     this.levelNumber = levelNumber;
     this.dataService = dataService;
@@ -113,6 +121,8 @@ export default class Level {
     this.cells = cells;
     this.occupiedCells = new Map();
     this.runPause = runPause;
+    this.endWin = endWin;
+    this.endLoose = endLoose;
   }
 
   public init() {
@@ -126,12 +136,12 @@ export default class Level {
     return this;
   }
 
-  stopSunFall() {
-    if (this.sunFall) this.sunFall.stop();
+  public pause() {
+    this.levelTimer?.pause();
   }
 
-  resumeSunFall() {
-    this.dropSuns();
+  public resume() {
+    this.levelTimer?.resume();
   }
 
   public getZombies() {
@@ -163,6 +173,7 @@ export default class Level {
   }
 
   startLevel() {
+    this.levelTimer = this.engine.timer([], false, 'levelTimer');
     this.drawMenuButton();
     this.createPlantCards();
     this.listenCellClicks();
@@ -174,14 +185,16 @@ export default class Level {
     this.dropSuns();
     this.drawLevelNumber();
     this.addShovel();
+    this.levelTimer.start();
   }
 
   stopLevel(hasWon: boolean) {
+    if (this.isEnd) return;
     this.isEnd = true;
+    this.levelTimer?.destroy();
     this.occupiedCells.clear();
     this.stopListenCellClicks();
     this.removePlantCards();
-    this.stopSunFall();
     this.deleteLevelNumberNode();
     this.clearLawnCleaners();
     this.removeMenuButton();
@@ -200,7 +213,6 @@ export default class Level {
     });
     this.zombiesKilled = 0;
     this.plantsPlanted = 0;
-    clearTimeout(this.timer);
   }
 
   handleZombieNearHome(zombie: Zombie) {
@@ -287,15 +299,16 @@ export default class Level {
   }
 
   public createZombies(n: number) {
-    let timer = 0;
+    const zombiesTimer = this.engine
+      .timer([], true, 'createZombies')
+      .finally(() => zombiesTimer.destroy());
 
+    // Generate zombies
     for (let i: number = n; i < this.zombiesConfig.length; i += 1) {
       let cell: Cell;
       let row: number = null;
 
-      timer += this.zombiesConfig[i].startDelay * MS;
-
-      this.zombiesTimer = setTimeout(() => {
+      const timeout = this.engine.timeout(() => {
         if (!this.isEnd) {
           this.creatingZombies += 1;
           row = this.zombiesConfig[i].row;
@@ -305,20 +318,17 @@ export default class Level {
           this.zombie.draw(cell, this.occupiedCells, this.cells);
           this.zombiesArr.push(this.zombie);
         }
-      }, timer);
+      }, this.zombiesConfig[i].startDelay * MS);
 
-      this.engine.newSetTimeout(this.zombiesTimer);
+      zombiesTimer.add(timeout);
     }
-    return this.creatingZombies;
-  }
+    this.levelTimer?.add(zombiesTimer);
 
-  continueCreatingZombies() {
-    this.createZombies(this.creatingZombies);
+    return this.creatingZombies;
   }
 
   public listenGameEvents() {
     const fieldBoundary = this.cells[this.cells.length - 1][0].getRight();
-    if (this.timer) clearTimeout(this.timer);
 
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
@@ -332,18 +342,40 @@ export default class Level {
           });
         }
 
-        if (zombie.health <= 0) {
+        this.plantsArr.forEach((plant) => {
+          if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
+            plant.switchState('attack', zombie);
+          }
+        });
+
+        if (zombie.health <= 0 || zombie.isDestroyedFlag) {
           this.reduceZombies();
+        }
+
+        if (zombie.position) {
+          if (zombie.name === 'pole') {
+            if (zombie.position.x < 50) {
+              if (!this.handleZombieNearHome(zombie)) this.endLoose();
+            }
+          } else if (zombie.position.x < X_HOME) {
+            if (!this.handleZombieNearHome(zombie)) this.endLoose();
+          }
         }
       });
 
+      this.restZombies = this.getRestZombies();
+      if (this.restZombies <= 0) {
+        this.endWin();
+        return;
+      }
+
       this.zombiesArr = this.deleteZombie();
       this.plantsArr = this.deletePlant();
-
-      if (!this.isEnd) this.timer = setTimeout(trackPosition, 1000);
     };
 
-    trackPosition();
+    this.levelTimer?.add(
+      this.engine.interval(() => trackPosition(), 1000).before(() => trackPosition()),
+    );
   }
 
   private deleteZombie() {
@@ -478,7 +510,11 @@ export default class Level {
 
   private startAnimation(): void {
     const typesArray: Array<string> = this.zombiesConfig.map((zombie) => zombie.type);
-    const start: any = new StartLevelView(this.engine, this.startLevel.bind(this),
-      typesArray, this.cells);
+    const start: any = new StartLevelView(
+      this.engine,
+      this.startLevel.bind(this),
+      typesArray,
+      this.cells,
+    );
   }
 }

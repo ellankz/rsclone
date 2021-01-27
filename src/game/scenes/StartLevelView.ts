@@ -1,8 +1,8 @@
-import Engine from '../engine';
-import zombiePresets from '../data/zombies.json';
-import { ZombieType } from '../types';
-import Cell from '../game/Cell';
-import { ROWS_NUM } from '../constats';
+import Engine from '../../engine';
+import zombiePresets from '../../data/zombies.json';
+import { ZombieType } from '../../types';
+import Cell from '../models/Cell';
+import { ROWS_NUM } from '../../constats';
 
 const ZOMBIES_COUNT: number = 10;
 const VIEW_SHIFT: number = 350;
@@ -33,15 +33,18 @@ export class StartLevelView {
   }
 
   private createNodes(cells: Cell[][]): void {
-    const randomInteger = (min: number, max: number): number => Math
-      .floor(min + Math.random() * (max + 1 - min));
+    const randomInteger = (min: number, max: number) => {
+      const num = min + Math.random() * (max + 1 - min);
+      return Math.floor(num);
+    };
 
     const type: ZombieType[] = Array.from(this.zombiesTypes);
 
     for (let i: number = 0; i < ZOMBIES_COUNT; i += 1) {
       const typeIndex: number = randomInteger(0, type.length - 1);
-      const zombieImg = this.engine
-        .loader.files[`assets/sprites/zombies/${type[typeIndex]}/stop.png`] as HTMLImageElement;
+      const zombieImg = this.engine.loader.files[
+        `assets/sprites/zombies/${type[typeIndex]}/stop.png`
+      ] as HTMLImageElement;
 
       const zombieType: ZombieType = type[typeIndex];
       const stateObj: any = zombiePresets[zombieType].states.stop;
@@ -54,14 +57,8 @@ export class StartLevelView {
       const zombieInstance: any = this.engine
         .createNode({
           type: 'SpriteNode',
-          position: this.engine.vector(
-            SCREEN_SIZE + X[i],
-            (cell.getBottom() - stateObj.height),
-          ),
-          size: this.engine.vector(
-            stateObj.width * stateObj.frames,
-            stateObj.height,
-          ),
+          position: this.engine.vector(SCREEN_SIZE + X[i], cell.getBottom() - stateObj.height),
+          size: this.engine.vector(stateObj.width * stateObj.frames, stateObj.height),
           dh: stateObj.dh,
           frames: stateObj.frames,
           speed: stateObj.speed,
@@ -85,20 +82,23 @@ export class StartLevelView {
       copyNode.update = () => {
         if (view.position.x >= VIEW_SLOW_MODE_X) {
           if (view.position.x >= VIEW_SHIFT) {
-            setTimeout(() => {
-              copyNode.update = () => {
-                if (view.position.x >= VIEW_SLOW_MODE_X) {
-                  view.move(this.engine.vector(-1.5, 0));
-                } else {
-                  if (view.position.x <= 0) {
-                    delete copyNode.update;
-                    view.position.x = 0;
-                    this.running = false;
+            this.engine
+              .timeout(() => {
+                copyNode.update = () => {
+                  if (view.position.x >= VIEW_SLOW_MODE_X) {
+                    view.move(this.engine.vector(-1.5, 0));
+                  } else {
+                    if (view.position.x <= 0) {
+                      delete copyNode.update;
+                      view.position.x = 0;
+                      this.running = false;
+                      return;
+                    }
+                    view.move(this.engine.vector(-2.5, 0));
                   }
-                  view.move(this.engine.vector(-2.5, 0));
-                }
-              };
-            }, 100);
+                };
+              }, 100)
+              .start();
           } else {
             view.move(this.engine.vector(1.5, 0));
           }
@@ -109,8 +109,7 @@ export class StartLevelView {
     };
     const rowsLayers = new Array(ROWS_NUM + 1).fill(0).map((elem, idx) => `row-${idx}`);
 
-    const view = this.engine.createView(['back', 'main', ...rowsLayers, 'top', 'window']);
-    view.move(this.engine.vector(0));
+    const view = this.engine.createView(['back', 'main', ...rowsLayers, 'top']);
     viewAnimation(this.zombies[0]);
 
     this.zombies[1].update = () => {

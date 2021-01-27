@@ -7,8 +7,16 @@ export interface Engine {
   container: HTMLElement;
   events: { [event: string]: { [option: string]: any } };
   fullscreen: boolean;
+  readonly scale: number;
 
   vector: (x?: number, y?: number) => IVector;
+  timeout: (callback: () => void, timeout: number, repeat?: number) => ITimeout;
+  interval: (callback: () => void, interval: number, repeat?: number) => IInterval;
+  timer: (
+    timers: (string | ITimeout | IInterval | ITimer)[],
+    sequentially?: boolean,
+    name?: string,
+  ) => ITimer;
 
   on: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
   off: (node: NodesType, event: string, callback: (e: any) => void) => boolean;
@@ -114,6 +122,7 @@ export interface SpriteStatesConfig {
     startFrame?: number;
     positionAdjust?: IVector;
     size?: IVector;
+    repeat?: number;
   };
 }
 
@@ -128,9 +137,13 @@ export interface ISpriteNode extends INode {
   frames: number;
   startFrame: number;
   speed: number;
+  interval: IInterval;
 
   readonly currentState: string;
 
+  pause: () => void;
+  resume: () => void;
+  then: (callback: () => void) => void;
   draw: () => void;
   innerUpdate: () => void;
   switchState: (state: string) => void;
@@ -184,6 +197,59 @@ export interface IView {
   getPosition: (IVector: any) => IVector;
 }
 
+export interface ITimeout {
+  isStarted: boolean;
+  isPaused: boolean;
+  isDestroyed: boolean;
+  isFinished: boolean;
+  parentTimer: ITimer;
+
+  start: () => ITimeout;
+  pause: () => void;
+  resume: () => void;
+  destroy: () => void;
+
+  before: (callback: () => void) => ITimeout;
+  then: (callback: () => void) => ITimeout;
+  finally: (callback: () => void) => ITimeout;
+}
+
+export interface IInterval {
+  isStarted: boolean;
+  isPaused: boolean;
+  isDestroyed: boolean;
+  isFinished: boolean;
+  parentTimer: ITimer;
+
+  start: () => IInterval;
+  pause: () => void;
+  resume: () => void;
+  destroy: () => void;
+
+  before: (callback: () => void) => IInterval;
+  then: (callback: () => void) => IInterval;
+  finally: (callback: () => void) => IInterval;
+}
+
+export interface ITimer {
+  isStarted: boolean;
+  isPaused: boolean;
+  isDestroyed: boolean;
+  isFinished: boolean;
+  parentTimer: ITimer;
+
+  add: (timer: ITimeout | IInterval | ITimer) => ITimer;
+  remove: (timer: ITimeout | IInterval | ITimer) => ITimer;
+
+  start: () => ITimer;
+  pause: () => void;
+  resume: () => void;
+  destroy: () => void;
+
+  before: (callback: () => void) => ITimer;
+  finally: (callback: () => void) => ITimer;
+}
+
 export interface NodeConfig {
   position: IVector;
   size: IVector;
@@ -192,7 +258,7 @@ export interface NodeConfig {
   border?: string;
   opacity?: number;
   filter?: string;
-  shadow?: string
+  shadow?: string;
   name?: string;
   removeEventBubbling?: string[];
 }
@@ -227,6 +293,7 @@ export interface SpriteNodeConfig extends NodeConfig {
   speed?: number;
   states: SpriteStatesConfig;
   name?: string;
+  repeat?: number;
 }
 
 export interface InputNodeConfig extends NodeConfig {
@@ -279,7 +346,7 @@ export interface ImageConfig {
   border?: string;
   opacity?: number;
   filter?: string;
-  shadow?: string,
+  shadow?: string;
 }
 
 export interface SceneConfig {

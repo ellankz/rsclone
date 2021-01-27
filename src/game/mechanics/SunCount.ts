@@ -4,9 +4,9 @@ import {
   SUN_COUNT_HEIGHT_COEF,
   SUN_COUNT_WIDTH_COEF,
   TOP_OFFSET_COEF,
-} from '../constats';
-import Engine from '../engine';
-import { ITextNode } from '../engine/types';
+} from '../../constats';
+import Engine from '../../engine';
+import { ITextNode } from '../../engine/types';
 
 const SUNBACK_URL = 'assets/images/interface/SunBack.png';
 

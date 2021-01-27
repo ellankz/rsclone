@@ -1,6 +1,6 @@
-import Engine from '../engine';
-import ImageNode from '../engine/nodes/ImageNode';
-import TextNode from '../engine/nodes/TextNode';
+import Engine from '../../engine';
+import ImageNode from '../../engine/nodes/ImageNode';
+import TextNode from '../../engine/nodes/TextNode';
 
 export default class MenuToggle {
   engine: Engine;

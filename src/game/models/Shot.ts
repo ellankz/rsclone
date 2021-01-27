@@ -1,14 +1,13 @@
-import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
-import Engine from '../engine';
-import Vector from '../engine/core/Vector';
+import { LEFT_CAMERA_OFFSET_COEF } from '../../constats';
+import Engine from '../../engine';
+import Vector from '../../engine/core/Vector';
 import Zombie from './Zombie';
 import Plant from './Plant';
 
 const SHOT_OFFSET_X = 52;
 const SHOT_OFFSET_Y = 5;
-const SHOT_SPEED = 3.5;
 
-require.context('../assets/images/shot', true, /\.(png|jpg)$/);
+require.context('../../assets/images/shot', true, /\.(png|jpg)$/);
 
 export default class Shot {
   position: Vector;
@@ -31,26 +30,32 @@ export default class Shot {
   }
 
   draw(zombie: Zombie, plant: Plant) {
-    const image = this.engine.loader.files[`assets/images/shot/${this.type}.png`] as HTMLImageElement;
+    const image = this.engine.loader.files[
+      `assets/images/shot/${this.type}.png`
+    ] as HTMLImageElement;
 
     const update = (node: any) => {
       if (zombie.health <= 0 || plant.health <= 0) {
         node.destroy();
         return;
       }
+
       const thisTime = new Date().getTime();
+      if (thisTime - this.savedTime > 1000) {
+        this.savedTime = thisTime;
+      }
       this.probablePositionX = (thisTime - this.savedTime) / 7;
       if (thisTime - this.savedTime > 30) {
         node.move(this.engine.vector((thisTime - this.savedTime) / 7, 0));
         this.savedTime = thisTime;
         this.probablePositionX = node.position.x;
       }
+
       if (node.position.x >= this.engine.size.x + LEFT_CAMERA_OFFSET_COEF * this.engine.size.x) {
         node.destroy();
       }
 
-      if (node.position.x > zombie.shotTarget
-        && plant.health) {
+      if (node.position.x > zombie.shotTarget && plant.health) {
         node.destroy();
         zombie.reduceHealth(plant.damage, plant);
         if (this.type === 'snow') zombie.slow();
@@ -62,6 +67,11 @@ export default class Shot {
         } else {
           this.engine.audioPlayer.playSound('shot');
         }
+      }
+
+      if (zombie && zombie.health <= 0) {
+        zombie.remove();
+        plant.stopAttack();
       }
     };
 

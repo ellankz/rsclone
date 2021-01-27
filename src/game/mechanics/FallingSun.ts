@@ -1,4 +1,4 @@
-import Cell from '../Cell';
+import Cell from '../models/Cell';
 import Engine from '../../engine';
 import Vector from '../../engine/core/Vector';
 import { SunCreator } from './SunCreator';
@@ -23,9 +23,9 @@ export class FallingSun {
 
   name: string;
 
-  updateSunCountInLevel: (count: number) => void;
+  sun: any;
 
-  sunFallingTimer: any;
+  updateSunCountInLevel: (count: number) => void;
 
   constructor(
     engine: Engine,
@@ -46,17 +46,13 @@ export class FallingSun {
   init(): void {
     this.isStopped = false;
     const start = (): void => {
-      const sun: any = this.createSun();
-      sun.addTo(this.scene);
-
-      if (this.isStopped) {
-        clearTimeout(this.sunFallingTimer);
-      }
-
-      this.sunFallingTimer = setTimeout(start, this.delay);
-      this.engine.newSetTimeout(this.sunFallingTimer);
+      this.sun = this.createSun();
+      this.sun.instance.addTo(this.scene);
     };
-    start();
+
+    const interval = this.engine.interval(() => start(), this.delay);
+
+    this.engine.getTimer('levelTimer')?.add(interval);
   }
 
   createSun(): any {
@@ -66,11 +62,14 @@ export class FallingSun {
     );
     const sunPositionCoordinates: Array<number> = [coordinates.x, SUN_INITIAL_POSITION];
     const sun: any = new SunCreator(
-      this.engine, sunPositionCoordinates,
-      this.layer, this.name, this.updateSunCountInLevel,
+      this.engine,
+      sunPositionCoordinates,
+      this.layer,
+      this.name,
+      this.updateSunCountInLevel,
       this.sunCount,
-      () => this.updateSun(sun, coordinates.y),
-    ).instance;
+      () => this.updateSun(sun.instance, coordinates.y),
+    );
 
     return sun;
   }
@@ -83,21 +82,23 @@ export class FallingSun {
       currentCell.getLeft(),
       currentCell.getRight(),
     ];
-    const centerY: number = position[1]
-      - ((position[1] - position[0]) / FallingSun.randomInteger(1, 2));
-    const centerX: number = position[3]
-      - ((position[3] - position[2]) / FallingSun.randomInteger(1, 2));
+
+    const randX = FallingSun.randomInteger(1, 2);
+    const randY = FallingSun.randomInteger(1, 2);
+    const centerY: number = position[1] - (position[1] - position[0]) / randX;
+    const centerX: number = position[3] - (position[3] - position[2]) / randY;
 
     return this.engine.vector(centerX, centerY);
   }
 
   private updateSun(node: any, centerY: number): void {
+    if (this.isStopped) return;
     if (node.position.y <= centerY) {
       node.move(this.engine.vector(0, SUN_MOVING_SPEED));
     }
   }
 
-  stop(): void {
+  pause(): void {
     this.isStopped = true;
   }
 

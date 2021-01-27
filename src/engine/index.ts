@@ -15,13 +15,16 @@ import {
   NodesType,
   NodesTypeName,
   InputNodeConfig,
+  ISpriteNode,
 } from './types';
 import View from './core/View';
 import Event from './core/Event';
 import Loader from './core/Loader';
 import AudioPlayer from './core/AudioPlayer';
-import Timeout from './core/Timeout';
 import InputNode from './nodes/InputNode';
+import Timeout from './TimeManager/Timeout';
+import Interval from './TimeManager/Interval';
+import Timer from './TimeManager/Timer';
 
 export default class Engine {
   size: Vector;
@@ -42,6 +45,16 @@ export default class Engine {
 
   loader: Loader;
 
+  audioPlayer: any;
+
+  shadows: { enabled: boolean };
+
+  vector: (x?: number, y?: number) => Vector;
+
+  timeout: (callback: () => void, timeout: number, repeat?: number) => Timeout;
+
+  interval: (callback: () => void, interval: number, repeat?: number) => Interval;
+
   private running: boolean;
 
   private scenes: { [name: string]: Scene };
@@ -58,17 +71,9 @@ export default class Engine {
 
   private resizeCallback: () => void;
 
-  vector: (x?: number, y?: number) => Vector;
+  private timers: { [name: string]: Timer };
 
-  public audioPlayer: any;
-
-  timeout: any;
-
-  timeouts: Timeout[];
-
-  timeoutArray: number[];
-
-  public shadows: {enabled: boolean};
+  private spriteNodes: ISpriteNode[];
 
   constructor(
     _box: string | HTMLElement,
@@ -82,21 +87,31 @@ export default class Engine {
     this.screenZIndex = screenZIndex || 100;
     this.running = false;
     this.events = {};
+    this.spriteNodes = [];
 
     this.screens = {};
     this.layers = {};
     this.scenes = {};
+    this.timers = {};
     this.event = null;
     this.animation = null;
     this.fullscreen = false;
     this.shadows = { enabled: true };
+    this.scaleRatio = 1;
 
     this.vector = (x?: number, y?: number) => new Vector(x, y);
 
-    this.init(_box, config);
+    this.timeout = (callback: () => void, timeout: number, repeat?: number) => {
+      const newTimeout = new Timeout(callback, timeout, repeat);
+      return newTimeout;
+    };
 
-    this.timeouts = [];
-    this.timeoutArray = [];
+    this.interval = (callback: () => void, interval: number, repeat?: number) => {
+      const newInterval = new Interval(callback, interval, repeat);
+      return newInterval;
+    };
+
+    this.init(_box, config);
   }
 
   // Events
@@ -145,6 +160,7 @@ export default class Engine {
     if (this.running) return;
     this.running = this.setScene(name);
     if (this.running) {
+      this.spriteNodes.forEach((node) => node.resume());
       this.updateScene();
     }
   }
@@ -153,6 +169,7 @@ export default class Engine {
     if (!this.running) return;
     this.running = false;
     cancelAnimationFrame(this.animation);
+    this.spriteNodes.forEach((node) => node.pause());
   }
 
   private updateScene() {
@@ -281,6 +298,10 @@ export default class Engine {
 
     if (!node) return null;
 
+    if (node instanceof SpriteNode) {
+      this.spriteNodes.push(node);
+    }
+
     layer.nodes.push(node);
 
     node.draw();
@@ -313,6 +334,9 @@ export default class Engine {
       if (layerIdx !== -1) {
         node.layer.nodes.splice(layerIdx, 1);
         node.clearLayer();
+      }
+      if (node instanceof SpriteNode) {
+        node.interval.destroy();
       }
       node.removeAllEvents();
     }
@@ -413,7 +437,6 @@ export default class Engine {
 
   private cancelFullscreen() {
     if (!this.container) return;
-
     const scaleRatio = 1;
     const layers = Object.values(this.layers);
 
@@ -430,6 +453,10 @@ export default class Engine {
 
     this.event.offset = this.containerOffset;
     this.event.scaleRatio = 1;
+  }
+
+  get scale() {
+    return this.scaleRatio;
   }
 
   private setContainerPosition(isFullscreen: boolean) {
@@ -450,51 +477,26 @@ export default class Engine {
     }
   }
 
-  // For setTimeout as usual
+  // Timers
+  timer(timers: (string | Timeout | Interval | Timer)[], sequentially?: boolean, name?: string) {
+    const targetTimers = timers
+      .map((elem) => {
+        if (typeof elem === 'string') {
+          return this.timers[elem];
+        }
+        return elem;
+      })
+      .filter((elem) => elem);
 
-  public newSetTimeout(timerId: number) {
-    this.timeoutArray.push(timerId);
-    return this.timeoutArray;
-  }
-
-  public clearAllTimeouts() {
-    for (let i = 0; i < this.timeoutArray.length; i += 1) {
-      window.clearTimeout(this.timeoutArray[i]);
+    const timer = new Timer(targetTimers, sequentially);
+    if (name) {
+      if (this.timers[name]) this.timers[name].destroy();
+      this.timers[name] = timer;
     }
-    this.timeoutArray = [];
-    return this.timeoutArray;
+    return timer;
   }
 
-  // For setTimeout with pause
-
-  public setTimeout(callback: () => void, delay: number) {
-    this.timeout = new Timeout(callback, delay);
-    this.timeout.resume();
-    this.timeouts.push(this.timeout);
-    return this.timeout;
-  }
-
-  public pauseTimeout() {
-    for (let i = 0; i < this.timeouts.length; i += 1) {
-      this.timeouts[i].pause();
-    }
-  }
-
-  public resumeTimeout() {
-    for (let i = 0; i < this.timeouts.length; i += 1) {
-      this.timeouts[i].resume();
-    }
-  }
-
-  public getTimeouts() {
-    return this.timeouts;
-  }
-
-  public clearTimeouts() {
-    for (let i = 0; i < this.timeouts.length; i += 1) {
-      this.timeouts[i].clearTimeout();
-    }
-    this.timeouts = [];
-    return this.timeouts;
+  getTimer(name: string) {
+    return this.timers[name] || null;
   }
 }

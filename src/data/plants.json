@@ -16,10 +16,11 @@
     "states": {
       "attack": {
         "image": "assets/sprites/plants/Peashooter/1.png",
-        "frames": 8,
-        "speed": 225,
+        "frames": 6,
+        "speed": 150,
         "width": 84,
         "height": 81,
+        "repeat": 1,
         "dh": 75,
         "positionAdjust": {
           "x": -5,
@@ -46,11 +47,12 @@
       "generate": {
         "image": "assets/sprites/plants/SunFlower/sun-creator.png",
         "frames": 18,
-        "speed": 50,
+        "speed": 60,
         "width": 73,
         "height": 74,
         "startFrame": 0,
         "dh": 74,
+        "repeat": 1,
         "positionAdjust": {
           "x": 0,
           "y": 0
@@ -119,6 +121,7 @@
         "width": 130,
         "height": 114,
         "dh": 114,
+        "repeat": 1,
         "positionAdjust": {
           "x": 17,
           "y": -20
@@ -151,6 +154,7 @@
     "frames": 7,
     "speed": 140,
     "shadow": "",
+    "repeat": 1,
     "states": {
       "boom": {
         "image": "assets/sprites/plants/CherryBomb/1.png",
@@ -159,6 +163,7 @@
         "width": 200,
         "height": 197,
         "dh": 197,
+        "repeat": 1,
         "positionAdjust": {
           "x": -45,
           "y": -120
@@ -184,10 +189,11 @@
       "attack": {
         "image": "assets/sprites/plants/SnowPea/1.png",
         "frames": 8,
-        "speed": 225,
+        "speed": 150,
         "width": 84,
         "height": 80,
         "dh": 75,
+        "repeat": 1,
         "positionAdjust": {
           "x": -5,
           "y": 0
@@ -228,6 +234,7 @@
         "width": 68,
         "height": 50,
         "dh": 50,
+        "repeat": 1,
         "positionAdjust": {
           "x": 0,
           "y": 0
@@ -240,6 +247,7 @@
         "width": 263,
         "height": 125,
         "dh": 110,
+        "repeat": 1,
         "positionAdjust": {
           "x": -65,
           "y": -50

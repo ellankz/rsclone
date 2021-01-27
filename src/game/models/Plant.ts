@@ -1,13 +1,12 @@
-import { PlantConfig, PlantPreset, PlantStatesPreset } from '../types';
-import plantPresets from '../data/plants.json';
-import Engine from '../engine';
-import Cell from '../game/Cell';
-import { ISpriteNode } from '../engine/types';
-import Vector from '../engine/core/Vector';
+import { PlantConfig, PlantPreset, PlantStatesPreset } from '../../types';
+import plantPresets from '../../data/plants.json';
+import Engine from '../../engine';
+import Cell from './Cell';
+import { ISpriteNode } from '../../engine/types';
+import Vector from '../../engine/core/Vector';
 import Zombie from './Zombie';
-import Shot from './Shot';
 
-require.context('../assets/sprites/plants', true, /\.(png|jpg)$/);
+require.context('../../assets/sprites/plants', true, /\.(png|jpg)$/);
 
 export default class Plant {
   protected plantPresets: { [dymanic: string]: PlantPreset } = plantPresets;
@@ -42,6 +41,8 @@ export default class Plant {
 
   protected speed: number;
 
+  protected repeat?: number;
+
   protected node: ISpriteNode;
 
   protected states: { [dynamic: string]: PlantStatesPreset };
@@ -68,6 +69,7 @@ export default class Plant {
     this.frames = this.plantPresets[config.type].frames;
     this.shadow = this.plantPresets[config.type].shadow;
     this.speed = this.plantPresets[config.type].speed;
+    this.repeat = this.plantPresets[config.type].repeat;
     this.states = this.plantPresets[config.type].states;
 
     this.engine = engine;
@@ -92,11 +94,25 @@ export default class Plant {
         const img = this.engine.loader.files[path] as HTMLImageElement;
         const size = new Vector(state[1].width * state[1].frames, state[1].height);
         const {
-          frames, speed, dh, positionAdjust,
+          frames,
+          speed,
+          dh,
+          positionAdjust,
+          repeat,
         } = state[1];
-        return [state[0], {
-          img, frames, speed, size, dh, positionAdjust,
-        }];
+
+        return [
+          state[0],
+          {
+            img,
+            frames,
+            speed,
+            size,
+            dh,
+            positionAdjust,
+            repeat,
+          },
+        ];
       });
       return Object.fromEntries(statesArr);
     };
@@ -119,6 +135,7 @@ export default class Plant {
         dh: this.height,
         states: this.states ? generateStates() : undefined,
         shadow: this.shadow,
+        repeat: this.repeat,
       })
       .addTo('scene') as ISpriteNode;
   }
@@ -126,22 +143,24 @@ export default class Plant {
   public switchState(state: string, zombie?: Zombie) {
     if (state in this.states || state === 'basic') {
       this.node.switchState(state);
-      if (state === 'attack') this.attack(zombie);
+      if (state === 'attack') {
+        this.attack(zombie);
+      }
     }
   }
 
   public attack(zombie: Zombie) {
     zombie.reduceHealth(this.damage);
 
-    if (zombie.health <= 0) {
+    if (zombie.health <= 0 && !zombie.isDestroyedFlag) {
       zombie.remove();
       this.stopAttack();
     }
   }
 
   public stopAttack() {
-    this.stopShooting();
-    this.switchState('basic');
+    if (this.isShooting) this.stopShooting();
+    if (this.node.currentState !== 'basic') this.switchState('basic');
   }
 
   public stopShooting() {
@@ -160,10 +179,6 @@ export default class Plant {
 
   public stop() {
     this.isDestroyedFlag = true;
-  }
-
-  public continue() {
-    this.isDestroyedFlag = false;
   }
 
   public isZombieInAttackArea(zombie: Zombie) {
