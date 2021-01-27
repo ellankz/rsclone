@@ -40,253 +40,253 @@ Author: *ellankz*
 Sun Dec 27 2020    **Merge pull request #1 from ellankz/specification    Specification**
 
 Author: *ellankz*  
-Sun Dec 27 2020    **feat: game classes: Level, Plant, Zombie and types for them**
+Sun Dec 27 2020    **feat: game classes: Level, Plant, Zombie and types for the**m
 
 Author: *Liza-Veis*  
 Mon Dec 28 2020    **Merge pull request #2 from ellankz/file-structure    File structure**
 
 Author: *ellankz*  
-Mon Dec 28 2020    **Merge pull request #3 from ellankz/levels    game classes: Level, Plant, Zombie and types for them**
+Mon Dec 28 2020    **Merge pull request #3 from ellankz/levels    game classes: Level, Plant, Zombie and types for the**m
 
 Author: *Liza Veis*  
 Thu Dec 31 2020    **feat: create engine**
 
 Author: *ellankz*  
-Fri Jan 1 2021    f**ix: typescript eslint issue**
+Fri Jan 1 2021    **fix: typescript eslint issue**
 
 Author: *Liza Veis*  
-Sat Jan 2 2021    f**eat: add textNode and additional methods**
+Sat Jan 2 2021    **feat: add textNode and additional methods**
 
 Author: *Liza Veis*  
-Sat Jan 2 2021    f**ix: fix eslint errors**
+Sat Jan 2 2021    **fix: fix eslint errors**
 
 Author: *Liza Veis*  
-Sun Jan 3 2021    f**ix: fix some types**
+Sun Jan 3 2021    **fix: fix some types**
 
 Author: *Liza Veis*  
-Sun Jan 3 2021    d**ocs: add docs for engine**
+Sun Jan 3 2021    **docs: add docs for engine**
 
 Author: *Liza-Veis*  
-Sun Jan 3 2021    d**ocs: update links**
+Sun Jan 3 2021    **docs: update links**
 
 Author: *Liza-Veis*  
-Sun Jan 3 2021    d**ocs: update docs**
+Sun Jan 3 2021    **docs: update docs**
 
 Author: *Liza-Veis*  
-Sun Jan 3 2021    d**ocs: fix mistakes**
+Sun Jan 3 2021    **docs: fix mistakes**
 
 Author: *Liza-Veis*  
-Sun Jan 3 2021    d**ocs: fix mistakes**
+Sun Jan 3 2021    **docs: fix mistakes**
 
 Author: *Liza-Veis*  
-Sun Jan 3 2021    d**ocs: change example value**
+Sun Jan 3 2021    **docs: change example value**
 
 Author: *Liza Veis*  
-Sun Jan 3 2021    f**eat: fix update function and image load**
+Sun Jan 3 2021    **feat: fix update function and image load**
 
 Author: *Liza Veis*  
-Sun Jan 3 2021    M**erge branch 'engine' of https://github.com/ellankz/rsclone into engine**
+Sun Jan 3 2021    **Merge branch 'engine' of https://github.com/ellankz/rsclone into engine**
 
 Author: *ellankz*  
-Sun Jan 3 2021    f**eat: add background and field cells**
+Sun Jan 3 2021    **feat: add background and field cells**
 
 Author: *ellankz*  
-Sun Jan 3 2021    M**erge pull request #4 from ellankz/engine   feat: create engine**
+Sun Jan 3 2021    **Merge pull request #4 from ellankz/engine   feat: create engine**
 
 Author: *ellankz*  
-Sun Jan 3 2021    f**eat: get coords methods for Cell**
+Sun Jan 3 2021    **feat: get coords methods for Cell**
 
 Author: *ellankz*  
-Mon Jan 4 2021    f**eat: display plants cards and sun counter**
+Mon Jan 4 2021    **feat: display plants cards and sun counter**
 
 Author: *Liza Veis*  
-Mon Jan 4 2021    f**eat: clear layer when view move**
+Mon Jan 4 2021    **feat: clear layer when view move**
 
 Author: *ellankz*  
-Mon Jan 4 2021    f**eat: put plant on field**
+Mon Jan 4 2021    **feat: put plant on field**
 
 Author: *VVladislaVLL*  
-Mon Jan 4 2021    M**erge branch 'game-setup' of https://github.com/ellankz/rsclone into feature/sunFall**
+Mon Jan 4 2021    **Merge branch 'game-setup' of https://github.com/ellankz/rsclone into feature/sunFall**
 
 Author: *ellankz*  
-Mon Jan 4 2021    f**eat: put plant on field**
+Mon Jan 4 2021    **feat: put plant on field**
 
 Author: *ellankz*  
-Mon Jan 4 2021    f**eat: put plant on field**
+Mon Jan 4 2021    **feat: put plant on field**
 
 Author: *ellankz*  
-Mon Jan 4 2021    M**erge branch 'game-setup' of github.com:ellankz/rsclone into game-setup**
+Mon Jan 4 2021    **Merge branch 'game-setup' of github.com:ellankz/rsclone into game-setup**
 
 Author: *VVladislaVLL*  
-Mon Jan 4 2021    M**erge branch 'game-setup' of https://github.com/ellankz/rsclone into feature/sunFall**
+Mon Jan 4 2021    **Merge branch 'game-setup' of https://github.com/ellankz/rsclone into feature/sunFall**
 
 Author: *ellankz*  
-Mon Jan 4 2021    f**ix: update static nodes (cards, sun count) on event and not by scene**
+Mon Jan 4 2021    **fix: update static nodes (cards, sun count) on event and not by scene**
 
 Author: *ellankz*  
-Tue Jan 5 2021    M**erge pull request #5 from ellankz/game-setup    Game basic setup (create scene, add bg and field cells, plangts, cards, sun counter)**
+Tue Jan 5 2021    **Merge pull request #5 from ellankz/game-setup    Game basic setup (create scene, add bg and field cells, plangts, cards, sun counter)**
 
 Author: *VVladislaVLL*  
-Tue Jan 5 2021    f**eat: implement feature <sun falling>**
+Tue Jan 5 2021    **feat: implement feature <sun falling>**
 
 Author: *ellankz*  
-Tue Jan 5 2021    r**efactor: move sun logic to game and start from level**
+Tue Jan 5 2021    **refactor: move sun logic to game and start from level**
 
 Author: *VVladislaVLL*  
-Tue Jan 5 2021    f**eat: implement feature <sun falling>**
+Tue Jan 5 2021    **feat: implement feature <sun falling>**
 
 Author: *ellankz*  
-Tue Jan 5 2021    r**efactor: move sun logic to game and start from level**
+Tue Jan 5 2021    **refactor: move sun logic to game and start from level**
 
 Author: *ellankz*  
-Tue Jan 5 2021    M**erge branch 'feature/sunFall' of github.com:ellankz/rsclone into feature/sunFall**
+Tue Jan 5 2021    **Merge branch 'feature/sunFall' of github.com:ellankz/rsclone into feature/sunFall**
 
 Author: *ellankz*  
-Tue Jan 5 2021    f**ix: integrate with new cards/sunCount update logic**
+Tue Jan 5 2021    **fix: integrate with new cards/sunCount update logic**
 
 Author: *Liza Veis*  
-Tue Jan 5 2021    f**eat: add ability to remove event listeners**
+Tue Jan 5 2021    **feat: add ability to remove event listeners**
 
 Author: *VVladislaVLL*  
-Tue Jan 5 2021    M**erge branch 'engine' of https://github.com/ellankz/rsclone into feature/sunFall**
+Tue Jan 5 2021    **Merge branch 'engine' of https://github.com/ellankz/rsclone into feature/sunFall**
 
 Author: *Ulyana Zhivotenkova*  
-Wed Jan 6 2021    f**eat: add loose scene, modal window**
+Wed Jan 6 2021    **feat: add loose scene, modal window**
 
 Author: *Ulyana Zhivotenkova*  
-Wed Jan 6 2021    M**erge branch 'engine' into end-of-the-game**
+Wed Jan 6 2021    **Merge branch 'engine' into end-of-the-game**
 
 Author: *VVladislaVLL*  
-Wed Jan 6 2021    f**eat: sun disappearance implemented**
+Wed Jan 6 2021    **feat: sun disappearance implemented**
 
 Author: *ellankz*  
-Wed Jan 6 2021    f**eat: add state change for sprites**
+Wed Jan 6 2021    **feat: add state change for sprites**
 
 Author: *ellankz*  
-Wed Jan 6 2021    d**ocs: add description for sprite config**
+Wed Jan 6 2021    **docs: add description for sprite config**
 
 Author: *ellankz*  
-Wed Jan 6 2021    f**ix: bug in sprites with no additional states, replace sunflower sprite**
+Wed Jan 6 2021    **fix: bug in sprites with no additional states, replace sunflower sprite**
 
 Author: *ellankz*  
-Wed Jan 6 2021    M**erge pull request #6 from ellankz/node-states    Node states**
+Wed Jan 6 2021    **Merge pull request #6 from ellankz/node-states    Node states**
 
 Author: *VVladislaVLL*  
-Wed Jan 6 2021    M**erge branch 'develop' of https://github.com/ellankz/rsclone into feature/sunFall**
+Wed Jan 6 2021    **Merge branch 'develop' of https://github.com/ellankz/rsclone into feature/sunFall**
 
 Author: *VVladislaVLL*  
-Thu Jan 7 2021    f**eat: implement class SunCreator and rewrite classes Falling sun and Sun using new class SunCreator**
+Thu Jan 7 2021    **feat: implement class SunCreator and rewrite classes Falling sun and Sun using new class SunCreator**
 
 Author: *VVladislaVLL*  
-Thu Jan 7 2021    f**eat: implement sun lifecycle method**
+Thu Jan 7 2021    **feat: implement sun lifecycle method**
 
 Author: *ellankz*  
-Tue Jan 5 2021    f**eat: create shot**
+Tue Jan 5 2021    **feat: create shot**
 
 Author: *ellankz*  
-Wed Jan 6 2021    f**ix: move numbers to constants**
+Wed Jan 6 2021    **fix: move numbers to constants**
 
 Author: *Ulyana Zhivotenkova*  
-Fri Jan 8 2021    f**eat: add animation for loose scene, add pause modal window, fix win scene**
+Fri Jan 8 2021    **feat: add animation for loose scene, add pause modal window, fix win scene**
 
 Author: *Ulyana Zhivotenkova*  
-Fri Jan 8 2021    M**erge branch 'develop' into end-of-the-game**
+Fri Jan 8 2021    **Merge branch 'develop' into end-of-the-game**
 
 Author: *Liza Veis*  
-Fri Jan 8 2021    f**eat: create engine screens**
+Fri Jan 8 2021    **feat: create engine screens**
 
 Author: *ellankz*  
-Fri Jan 8 2021    f**ix: shot length, cleanup updateSunCount from SunCount**
+Fri Jan 8 2021    **fix: shot length, cleanup updateSunCount from SunCount**
 
 Author: *Liza Veis*  
-Fri Jan 8 2021    M**erge branch 'develop' into engine**
+Fri Jan 8 2021    **Merge branch 'develop' into engine**
 
 Author: *Liza Veis*  
-Fri Jan 8 2021    f**eat: replace setTimeout in spriteNode  with setInterval**
+Fri Jan 8 2021    **feat: replace setTimeout in spriteNode  with setInterval**
 
 Author: *ellankz*  
-Fri Jan 82021    fe**at: add AudioPlayer class to play sounds, add sounds**
+Fri Jan 82021    **feat: add AudioPlayer class to play sounds, add sounds**
 
 Author: *Liza Veis*  
-Fri Jan 8 2021    f**eat: replace setTimeout in spriteNode  with setInterval **
+Fri Jan 8 2021    **feat: replace setTimeout in spriteNode  with setInterval**
 
 Author: *Ulyana Zhivotenkova*  
-Fri Jan 8 2021    f**ix: fix animation in loose scene**
+Fri Jan 8 2021    **fix: fix animation in loose scene**
 
 Author: *ellankz*  
-Fri Jan 8 2021    f**ix: sync pea and peashooter**
+Fri Jan 8 2021    **fix: sync pea and peashooter**
 
 Author: *VVladislaVLL*  
-Fri Jan 8 2021    f**eat: create new sprites for SunFlower**
+Fri Jan 8 2021    **feat: create new sprites for SunFlower**
 
 Author: *VVladislaVLL*  
-Fri Jan 8 2021    f**eat: The logic of the sunflower was implemented**
+Fri Jan 8 2021    **feat: The logic of the sunflower was implemented**
 
 Author: *VVladislaVLL*  
-Fri Jan 8 2021    M**erge branch 'engine' of https://github.com/ellankz/rsclone into feature/sunFall**
+Fri Jan 8 2021    **Merge branch 'engine' of https://github.com/ellankz/rsclone into feature/sunFall**
 
 Author: *VVladislaVLL*  
-Fri Jan 8 2021    r**efactor: delete all comments**
+Fri Jan 8 2021    **refactor: delete all comments**
 
 Author: *Ulyana Zhivotenkova*  
-Sat Jan 9 2021    f**eat: add zombies to the game field**
+Sat Jan 9 2021    **feat: add zombies to the game field**
 
 Author: *Ulyana Zhivotenkova*  
-Sat Jan 9 2021    f**eat: add kinds of zombies**
+Sat Jan 9 2021    **feat: add kinds of zombies**
 
 Author: *Liza Veis*  
-Sat Jan 9 2021    M**erge branch 'engine' into engine-screens**
+Sat Jan 9 2021    **Merge branch 'engine' into engine-screens**
 
 Author: *Liza Veis*  
-Sat Jan 9 2021    f**eat: change update method, update docs**
+Sat Jan 9 2021    **feat: change update method, update docs**
 
 Author: *Liza Veis*  
-Sat Jan 9 2021    d**ocs: update info**
+Sat Jan 9 2021    **docs: update info**
 
 Author: *Vladislav Kochurko*  
-Sat Jan 9 2021    M**erge pull request #8 from ellankz/feature/sunFall    Sunflower creating suns**
+Sat Jan 9 2021    **Merge pull request #8 from ellankz/feature/sunFall    Sunflower creating suns**
 
 Author: *ellankz*  
-Sat Jan 9 2021    f**eat: create loader function**
+Sat Jan 9 2021    **feat: create loader function**
 
 Author: *ellankz*  
-Sat Jan 9 2021    M**erge branch 'develop' into shot**
+Sat Jan 9 2021    **Merge branch 'develop' into shot**
 
 Author: *ellankz*  
-Sat Jan 9 2021    f**ix: move static object to main-static layer**
+Sat Jan 9 2021    **fix: move static object to main-static layer**
 
 Author: *ellankz*  
-Sat Jan  2021    fi**x: disbale left background cut**
+Sat Jan  2021    **fix: disbale left background cut**
 
 Author: *ellankz*  
-Sat Jan 9 2021    R**evert "fix: move static object to main-static layer"    This reverts **
+Sat Jan 9 2021    **Revert "fix: move static object to main-static layer"    This reverts**
 
 Author: *ellankz*  
-Sat Jan 9 2021    r**efactor: move Peashooter to separate class**
+Sat Jan 9 2021    **refactor: move Peashooter to separate class**
 
 Author: *ellankz*  
-Sat Jan 9 2021    f**ix: move shooter properties to peashooter**
+Sat Jan 9 2021    **fix: move shooter properties to peashooter**
 
 Author: *ellankz*  
-Sat Jan 9 2021    M**erge pull request #7 from ellankz/shot    Peashooter shooting peas**
+Sat Jan 9 2021    **Merge pull request #7 from ellankz/shot    Peashooter shooting peas**
 
 Author: *Ulyana Zhivotenkova*  
-Sat Jan 9 2021    f**eat: add zombies states**
+Sat Jan 9 2021    **feat: add zombies states**
 
 Author: *ellankz*  
-Sat Jan 9 2021    M**erge branch 'develop' into loader**
+Sat Jan 9 2021    **Merge branch 'develop' into loader**
 
 Author: *ellankz*  
-Sat Jan 9 2021    f**eat: load game after files loaded**
+Sat Jan 9 2021    **feat: load game after files loaded**
 
 Author: *ellankz*  
-Sat Jan 9 2021    f**ix: replace images with files from loader**
+Sat Jan 9 2021    **fix: replace images with files from loader**
 
 Author: *ellankz*  
-Sat Jan 9 2021    M**erge branch 'engine-screens' into loader**
+Sat Jan 9 2021    **Merge branch 'engine-screens' into loader**
 
 Author: *VVladislaVLL*  
-Sat Jan 9 2021    M**erge branch 'engine-screens' of https://github.com/ellankz/rsclone into feature/start-screen**
+Sat Jan 9 2021    **Merge branch 'engine-screens' of https://github.com/ellankz/rsclone into feature/start-screen**
 
 Author: *Ulyana Zhivotenkova*  
 Sun Jan 10 2021    **refactor: merge develop**
@@ -958,7 +958,7 @@ Author: *Ulyana Zhivotenkova*
 Sun Jan 24 2021    **fix: fix actions after win scene**
 
 Author: *Ulyana Zhivotenkova*  
-Sun Jan 24 2021    **fix: fix dancer remove problem**
+Sun Jan 24 2021    **fix: fix dancer remove proble**m
 
 Author: *Ulyana Zhivotenkova*  
 Sun Jan 24 2021    **fix: fix pole zombie**
