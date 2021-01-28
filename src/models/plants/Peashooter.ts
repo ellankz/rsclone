@@ -1,10 +1,10 @@
-import Engine from '../../engine';
-import Vector from '../../engine/core/Vector';
-import Cell from '../../game/Cell';
-import { PlantConfig } from '../../types';
 import Plant from '../Plant';
 import Shot from '../Shot';
 import Zombie from '../Zombie';
+import Engine from '../../engine';
+import { PlantConfig } from '../../types';
+import Cell from '../../game/Cell';
+import Vector from '../../engine/core/Vector';
 
 export class Peashooter extends Plant {
   public shot: Shot;
@@ -44,24 +44,22 @@ export class Peashooter extends Plant {
         this.shot = new Shot(this.shotPosition, this.engine, this.shotType);
         this.shot.draw(zombie, this);
       }, 500);
-      this.shooting = this.engine.timeout(() => {
-        this.shooting.destroy();
-        shoot();
-      }, 1800);
+
       this.engine.getTimer('levelTimer')?.add(timeout);
-      this.engine.getTimer('levelTimer')?.add(this.shooting);
     };
 
-    shoot();
+    this.shooting = this.engine.interval(() => {
+      shoot();
+    }, 1800);
+
+    this.engine.getTimer('levelTimer')?.add(this.shooting);
   }
 
   stopShooting() {
     super.stopShooting();
     if (this.shot) this.shot.destroy();
-    if (this.shotType && this.shooting) {
-      this.shooting.destroy();
-      this.shooting = null;
-    }
+    this.shooting.destroy();
+    this.shooting = null;
   }
 
   attack(zombie: Zombie) {
