@@ -1,5 +1,5 @@
 import Engine from '../../engine';
-import ModalWindow from '../../game/ModalWindow';
+import ModalWindow from '../mechanics/ModalWindow';
 
 export default class LooseScene {
   private engine: Engine;

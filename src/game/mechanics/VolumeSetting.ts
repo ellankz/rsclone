@@ -1,6 +1,6 @@
-import Engine from '../engine';
-import RectNode from '../engine/nodes/RectNode';
-import TextNode from '../engine/nodes/TextNode';
+import Engine from '../../engine';
+import RectNode from '../../engine/nodes/RectNode';
+import TextNode from '../../engine/nodes/TextNode';
 
 export default class VolumeSetting {
   engine: Engine;

@@ -1,6 +1,6 @@
-import Engine from '../../engine';
-import Cell from '../../game/Cell';
-import { PlantConfig } from '../../types';
+import Engine from '../../../engine';
+import Cell from '../Cell';
+import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 
 const CRACKED1_HEALTH = 600;

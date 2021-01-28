@@ -1,5 +1,5 @@
 import Engine from '../../engine';
-import ModalWindow from '../../game/ModalWindow';
+import ModalWindow from '../mechanics/ModalWindow';
 import RectNode from '../../engine/nodes/RectNode';
 
 export default class LooseScene {

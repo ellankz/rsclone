@@ -1,7 +1,7 @@
-import Engine from '../engine';
-import { IImageNode } from '../engine/types';
-import Cell from '../game/Cell';
-import Zombie from './Zombie';
+import Engine from '../../engine';
+import { IImageNode } from '../../engine/types';
+import Cell from '../models/Cell';
+import Zombie from '../models/Zombie';
 
 const SPEED = 18;
 const RIGHT_OFFSET = -10;

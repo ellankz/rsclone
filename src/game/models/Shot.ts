@@ -1,13 +1,13 @@
-import { LEFT_CAMERA_OFFSET_COEF } from '../constats';
-import Engine from '../engine';
-import Vector from '../engine/core/Vector';
+import { LEFT_CAMERA_OFFSET_COEF } from '../../constats';
+import Engine from '../../engine';
+import Vector from '../../engine/core/Vector';
 import Zombie from './Zombie';
 import Plant from './Plant';
 
 const SHOT_OFFSET_X = 52;
 const SHOT_OFFSET_Y = 5;
 
-require.context('../assets/images/shot', true, /\.(png|jpg)$/);
+require.context('../../assets/images/shot', true, /\.(png|jpg)$/);
 
 export default class Shot {
   position: Vector;

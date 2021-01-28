@@ -1,10 +1,10 @@
+import Engine from '../../../engine';
+import Vector from '../../../engine/core/Vector';
+import Cell from '../Cell';
+import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 import Shot from '../Shot';
 import Zombie from '../Zombie';
-import Engine from '../../engine';
-import { PlantConfig } from '../../types';
-import Cell from '../../game/Cell';
-import Vector from '../../engine/core/Vector';
 
 export class Peashooter extends Plant {
   public shot: Shot;

@@ -1,8 +1,8 @@
-import Engine from '../engine';
-import zombiePresets from '../data/zombies.json';
-import { ZombieType } from '../types';
-import Cell from '../game/Cell';
-import { ROWS_NUM } from '../constats';
+import Engine from '../../engine';
+import zombiePresets from '../../data/zombies.json';
+import { ZombieType } from '../../types';
+import Cell from '../models/Cell';
+import { ROWS_NUM } from '../../constats';
 
 const ZOMBIES_COUNT: number = 10;
 const VIEW_SHIFT: number = 350;

@@ -43,22 +43,7 @@ export class StatisticsScreen extends ScreenCreator {
       all: Stats,
     };
     this.createColumn('All Players', data.all, this.engine.size.x * 0.2);
-    let myData;
-    if (data.mine) {
-      myData = data.mine;
-    } else {
-      // load from localStorage, this is dummy data
-      myData = {
-        gamesPlayed: 0,
-        highestLevel: 1,
-        gamesWon: 1,
-        gamesLost: 0,
-        percentWon: 100,
-        killedZombies: 14,
-        plantedPlants: 33,
-      };
-    }
-    this.createColumn('My Games', myData, this.engine.size.x * 0.6);
+    this.createColumn('My Games', data.mine, this.engine.size.x * 0.6);
   }
 
   createColumn(title: string, data: Stats, posX: number) {
@@ -230,6 +215,7 @@ export class StatisticsScreen extends ScreenCreator {
       'assets/images/interface/Button.png',
     );
     this.setEvent(buttonClose, 'click', () => {
+      this.setLoading(false);
       this.engine.audioPlayer.playSound('bleep');
       this.engine.setScreen('startScreen');
     });

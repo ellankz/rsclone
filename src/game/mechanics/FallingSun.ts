@@ -1,4 +1,4 @@
-import Cell from '../Cell';
+import Cell from '../models/Cell';
 import Engine from '../../engine';
 import Vector from '../../engine/core/Vector';
 import { SunCreator } from './SunCreator';

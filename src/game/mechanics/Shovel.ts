@@ -1,9 +1,9 @@
 import Engine from '../../engine';
 import { LEFT_CAMERA_OFFSET_COEF, PLANT_CARD_WIDTH_COEF, TOP_OFFSET_COEF } from '../../constats';
-import Cell from '../Cell';
-import Plant from '../../models/Plant';
-import { SunFlower } from '../../models/plants/SunFlower';
-import PlantCard from '../PlantCard';
+import Cell from '../models/Cell';
+import Plant from '../models/Plant';
+import { SunFlower } from '../models/plants/SunFlower';
+import PlantCard from './PlantCard';
 
 const LAYER_NAME: string = 'main';
 const SCENE_NAME: string = 'scene';

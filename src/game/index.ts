@@ -1,13 +1,13 @@
 import Engine from '../engine';
-import Level from '../models/Level';
-import Cell from './Cell';
+import Level from './models/Level';
+import Cell from './models/Cell';
 
 import { COLS_NUM, ROWS_NUM } from '../constats';
 import LoaderScreen from './screens/LoaderScreen';
 import { DataService } from '../api-service/DataService';
-import WinScene from '../models/scenes/WinScene';
-import LooseScene from '../models/scenes/LooseScene';
-import Pause from '../models/scenes/Pause';
+import WinScene from './scenes/WinScene';
+import LooseScene from './scenes/LooseScene';
+import Pause from './scenes/Pause';
 import { StartScreen } from './screens/StartScreen';
 import sounds from '../data/audio.json';
 
