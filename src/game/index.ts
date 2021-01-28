@@ -203,6 +203,7 @@ export default class Game {
   }
 
   stopGame() {
+    this.engine.audioPlayer.pauseSound('zombie-comming');
     this.engine.audioPlayer.pauseSound('levelMain');
     this.engine.audioPlayer.pauseSound('level');
 
@@ -214,6 +215,7 @@ export default class Game {
   resumeGame() {
     const mainSound = this.engine.audioPlayer.getSound('levelMain');
     const viewSound = this.engine.audioPlayer.getSound('level');
+    const zombieComming = this.engine.audioPlayer.getSound('zombie-comming');
     this.currentLevel.zombiesArr.forEach((zombie) => zombie.groan());
 
     if (mainSound.currentTime !== 0) {
@@ -221,6 +223,9 @@ export default class Game {
     }
     if (viewSound.currentTime > 0 && viewSound.currentTime < 18) {
       this.engine.audioPlayer.playContinue('level');
+    }
+    if (zombieComming.currentTime > 0 && zombieComming.currentTime < 4) {
+      this.engine.audioPlayer.playContinue('zombie-comming');
     }
     this.engine.start('scene');
     this.currentLevel.resume();
@@ -237,8 +242,8 @@ export default class Game {
     this.currentLevel.clearPlantsArray();
     this.engine.audioPlayer.stopSound('levelMain');
     this.engine.audioPlayer.playSound('menuMain');
-    this.engine.stop();
     this.engine.setScreen('levelSelectionScreen');
+    this.engine.stop();
     const timeout = this.engine
       .timeout(() => {
         timeout.destroy();

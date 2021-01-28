@@ -253,7 +253,7 @@ export default class Level {
     this.levelNumberNode = this.engine.createNode({
       type: 'TextNode',
       position: this.engine.vector(this.engine.size.x - 130, this.engine.size.y - 40),
-      layer: 'main',
+      layer: 'top',
       text: `Level ${this.levelNumber + 1}`,
       font: 'Samdan',
       fontSize: 40,
@@ -287,7 +287,7 @@ export default class Level {
         newPlant = new SnowPea({ type }, this.engine);
         break;
       case 'PotatoMine':
-        newPlant = new PotatoMine({ type }, this.engine, this.zombiesArr, this.occupiedCells);
+        newPlant = new PotatoMine({ type }, this.engine, this, this.occupiedCells);
         break;
       default:
         newPlant = new Plant({ type }, this.engine);
@@ -333,14 +333,6 @@ export default class Level {
     const trackPosition = () => {
       this.zombiesArr.forEach((zombie) => {
         zombie.attack(this.occupiedCells);
-
-        if (!(zombie.position && zombie.position.x + zombie.width / 3 > fieldBoundary)) {
-          this.plantsArr.forEach((plant) => {
-            if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {
-              plant.switchState('attack', zombie);
-            }
-          });
-        }
 
         this.plantsArr.forEach((plant) => {
           if (plant.isZombieInAttackArea(zombie) && !this.isEnd) {

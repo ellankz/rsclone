@@ -300,7 +300,6 @@ export default class Layer implements ILayer {
     ctx.save();
     ctx.beginPath();
 
-    //  ctx.shadowBlur = 5;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
     ctx.shadowColor = 'black';

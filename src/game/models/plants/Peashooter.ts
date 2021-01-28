@@ -51,8 +51,9 @@ export class Peashooter extends Plant {
     this.shooting = this.engine.interval(() => {
       shoot();
     }, 1800);
+    shoot();
 
-    this.engine.getTimer('levelTimer')?.add(this.shooting);
+    if (this.shooting) this.engine.getTimer('levelTimer')?.add(this.shooting);
   }
 
   stopShooting() {

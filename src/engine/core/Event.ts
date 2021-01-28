@@ -120,8 +120,8 @@ export default class Event {
 
             const isInside = this.isPointInside(point, pos, size);
 
-            if (isInside && this.events[event].has(node)) {
-              this.events[event].get(node).forEach((cb) => cb(e));
+            if (isInside) {
+              if (this.events[event].has(node)) this.events[event].get(node).forEach((cb) => cb(e));
               if (!this.engine.events[event].eventBubbling) return;
               if (node.layer.removeEventBubbling.includes(event)) return;
               if (node.removeEventBubbling.includes(event)) return;

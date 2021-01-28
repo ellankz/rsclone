@@ -16,6 +16,7 @@ export default class WinScene {
   }
 
   private createAnimation(callback: () => void) {
+    this.engine.audioPlayer.playSound('win');
     const INTERVAL = 0.005;
     let opacity = 0;
 

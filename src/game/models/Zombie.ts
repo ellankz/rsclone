@@ -436,7 +436,7 @@ export default class Zombie {
   }
 
   trackPositionAfterJump() {
-    this.node.position.x -= 150;
+    this.node.position.x -= 160;
     return this.node.position.x;
   }
 
