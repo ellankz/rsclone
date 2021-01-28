@@ -65,15 +65,15 @@ export default class Event {
 
     const moveEvents = ['mouseenter', 'mouseleave'];
 
-    if (!this.eventsNames.includes(event) && !moveEvents.includes(event)) return;
+    if (!this.eventsNames.includes(event) && !moveEvents.includes(event)) return false;
 
     if (node instanceof TextNode && !this.textNodes.includes(node)) this.textNodes.push(node);
 
     if (!this.events[event]) {
       if (moveEvents.includes(event) && !moveEvents.some((eventName) => this.events[eventName])) {
-        this.engine.container.addEventListener('mousemove', (e) =>
-          this.handleMoveEvent('mousemove', e),
-        );
+        this.engine.container.addEventListener('mousemove', (e) => {
+          this.handleMoveEvent('mousemove', e);
+        });
         this.engine.container.addEventListener('mouseout', (e) => {
           if (this.events.mouseleave) {
             this.hovered.forEach((eventNode) => {
@@ -105,28 +105,28 @@ export default class Event {
   private handleClickEvent(event: string, e: any) {
     const layers = this.getLayers();
     for (let i = 0; i < layers.length; i += 1) {
-      const nodes = layers[i].nodes;
-      if (!nodes.length) continue;
+      const { nodes } = layers[i];
+      if (nodes.length) {
+        for (let j = nodes.length - 1; j >= 0; j -= 1) {
+          const node = nodes[j];
+          if (!(node instanceof TextNode && !this.textNodes.includes(node))) {
+            const pos = {
+              x: node.position.x - node.layer.view.position.x,
+              y: node.position.y - node.layer.view.position.y,
+            };
 
-      for (let j = nodes.length - 1; j >= 0; j -= 1) {
-        const node = nodes[j];
-        if (node instanceof TextNode && !this.textNodes.includes(node)) continue;
+            const point = { x: e.pageX - this.offset.x, y: e.pageY - this.offset.y };
+            const size = 'dh' in node && 'dw' in node ? { x: node.dw, y: node.dh } : node.size;
 
-        const pos = {
-          x: node.position.x - node.layer.view.position.x,
-          y: node.position.y - node.layer.view.position.y,
-        };
+            const isInside = this.isPointInside(point, pos, size);
 
-        const point = { x: e.pageX - this.offset.x, y: e.pageY - this.offset.y };
-        const size = 'dh' in node && 'dw' in node ? { x: node.dw, y: node.dh } : node.size;
-
-        const isInside = this.isPointInside(point, pos, size);
-
-        if (isInside && this.events[event].has(node)) {
-          this.events[event].get(node).forEach((cb) => cb(e));
-          if (!this.engine.events[event].eventBubbling) return;
-          if (node.layer.removeEventBubbling.includes(event)) return;
-          if (node.removeEventBubbling.includes(event)) return;
+            if (isInside && this.events[event].has(node)) {
+              this.events[event].get(node).forEach((cb) => cb(e));
+              if (!this.engine.events[event].eventBubbling) return;
+              if (node.layer.removeEventBubbling.includes(event)) return;
+              if (node.removeEventBubbling.includes(event)) return;
+            }
+          }
         }
       }
     }
@@ -135,43 +135,44 @@ export default class Event {
   private handleMoveEvent(event: string, e: any) {
     const layers = this.getLayers();
     for (let i = 0; i < layers.length; i += 1) {
-      const nodes = layers[i].nodes;
-      if (!nodes.length) continue;
+      const { nodes } = layers[i];
+      if (nodes.length) {
+        for (let j = nodes.length - 1; j >= 0; j -= 1) {
+          const node = nodes[j];
+          if (!(node instanceof TextNode && !this.textNodes.includes(node))) {
+            const pos = {
+              x: node.position.x - node.layer.view.position.x,
+              y: node.position.y - node.layer.view.position.y,
+            };
 
-      for (let j = nodes.length - 1; j >= 0; j -= 1) {
-        const node = nodes[j];
-        if (node instanceof TextNode && !this.textNodes.includes(node)) continue;
-        const pos = {
-          x: node.position.x - node.layer.view.position.x,
-          y: node.position.y - node.layer.view.position.y,
-        };
+            const point = { x: e.pageX - this.offset.x, y: e.pageY - this.offset.y };
+            const size = 'dh' in node && 'dw' in node ? { x: node.dw, y: node.dh } : node.size;
 
-        const point = { x: e.pageX - this.offset.x, y: e.pageY - this.offset.y };
-        const size = 'dh' in node && 'dw' in node ? { x: node.dw, y: node.dh } : node.size;
-
-        const isInside = this.isPointInside(point, pos, size);
-        if (isInside) {
-          if (this.events.mouseenter.has(node) && !this.hovered.includes(node)) {
-            this.hovered.push(node);
-            this.events.mouseenter.get(node).forEach((cb) => cb(e));
-          }
-
-          if (!this.hovered.includes(node) && !this.engine.events[event].eventBubbling) {
-            this.hovered.forEach((targetNode) => {
-              if (this.events.mouseleave && this.events.mouseleave.has(targetNode)) {
-                this.events.mouseleave.get(targetNode).forEach((cb) => cb(e));
+            const isInside = this.isPointInside(point, pos, size);
+            if (isInside) {
+              if (this.events.mouseenter.has(node) && !this.hovered.includes(node)) {
+                this.hovered.push(node);
+                this.events.mouseenter.get(node).forEach((cb) => cb(e));
               }
-            });
-            this.hovered = [];
-          }
-          if (!this.engine.events[event].eventBubbling) return;
-          if (node.layer.removeEventBubbling.includes(event)) return;
-          if (node.removeEventBubbling.includes(event)) return;
-        } else if (this.hovered.includes(node)) {
-          this.hovered.splice(this.hovered.indexOf(node), 1);
 
-          if (this.events.mouseleave && this.events.mouseleave.has(node)) {
-            this.events.mouseleave.get(node).forEach((cb) => cb(e));
+              if (!this.hovered.includes(node) && !this.engine.events[event].eventBubbling) {
+                this.hovered.forEach((targetNode) => {
+                  if (this.events.mouseleave && this.events.mouseleave.has(targetNode)) {
+                    this.events.mouseleave.get(targetNode).forEach((cb) => cb(e));
+                  }
+                });
+                this.hovered = [];
+              }
+              if (!this.engine.events[event].eventBubbling) return;
+              if (node.layer.removeEventBubbling.includes(event)) return;
+              if (node.removeEventBubbling.includes(event)) return;
+            } else if (this.hovered.includes(node)) {
+              this.hovered.splice(this.hovered.indexOf(node), 1);
+
+              if (this.events.mouseleave && this.events.mouseleave.has(node)) {
+                this.events.mouseleave.get(node).forEach((cb) => cb(e));
+              }
+            }
           }
         }
       }
