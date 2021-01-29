@@ -119,11 +119,11 @@ export class StartLevelView {
         });
         this.engine.audioPlayer.stopSound('level');
         this.engine.audioPlayer.playSound('readysetplant');
-        const zombieComing = this.engine.audioPlayer.getSound('zombie-comming');
-        zombieComing.play();
-        zombieComing.addEventListener('ended', () => this
-          .engine.audioPlayer
-          .playSound('levelMain', true));
+        const zombieComming = this.engine.audioPlayer.getSound('zombie-comming');
+        zombieComming.play();
+        zombieComming.addEventListener('ended', () => {
+          this.engine.audioPlayer.playSound('levelMain', true);
+        });
         this.startLevel();
       }
     };

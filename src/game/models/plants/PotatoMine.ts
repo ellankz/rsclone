@@ -3,9 +3,8 @@ import Cell from '../Cell';
 import { PlantConfig } from '../../../types';
 import Plant from '../Plant';
 import Zombie from '../Zombie';
+import Level from '../Level';
 
-const ATTACK_OFFSET_RIGHT = 70;
-const ATTACK_OFFSET_LEFT = 120;
 const READY_TIME = 15000;
 const POSITION_ADJUST_Y = 10;
 
@@ -16,17 +15,12 @@ export class PotatoMine extends Plant {
 
   private occupiedCells: Map<Cell, Plant>;
 
-  zombies: Zombie[];
+  private level: Level;
 
-  constructor(
-    config: PlantConfig,
-    engine: Engine,
-    zombies: Zombie[],
-    occupiedCells: Map<Cell, Plant>,
-  ) {
+  constructor(config: PlantConfig, engine: Engine, level: Level, occupiedCells: Map<Cell, Plant>) {
     super(config, engine);
     this.occupiedCells = occupiedCells;
-    this.zombies = zombies;
+    this.level = level;
   }
 
   draw(cell: Cell) {
@@ -50,10 +44,8 @@ export class PotatoMine extends Plant {
     this.engine.audioPlayer.playSound('potato-mine_grow');
   }
 
-  isZombieInAttackArea(zombie: Zombie, offset?: number) {
+  isZombieInAttackArea(zombie: Zombie) {
     if (zombie.row !== this.cell.position.y || !zombie.position) return false;
-    const areaOffset = offset || 0;
-
     if (zombie.row === this.cell.position.y && zombie.column === this.cell.position.x) return true;
     return false;
   }
@@ -61,17 +53,15 @@ export class PotatoMine extends Plant {
   attack(zombie: Zombie) {
     if (this.isDestroyedFlag) return;
     if (this.isAttack || !this.isReady) return;
-
+    this.isAttack = true;
+    this.engine.audioPlayer.playSound('potato-mine');
     this.node.then(() => {
       this.health = 0;
       this.destroy();
       this.occupiedCells.delete(this.cell);
     });
-
-    this.isAttack = true;
-    this.engine.audioPlayer.playSound('potato-mine');
-    this.zombies.forEach((targetZombie) => {
-      if (targetZombie.health > 0 && this.isZombieInAttackArea(targetZombie, 20)) {
+    this.level.zombiesArr.forEach((targetZombie) => {
+      if (this.isZombieInAttackArea(targetZombie) && targetZombie.health > 0) {
         targetZombie.reduceHealth(this.damage);
         if (targetZombie.health <= 0) {
           targetZombie.burn();

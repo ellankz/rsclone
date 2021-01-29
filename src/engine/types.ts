@@ -175,6 +175,7 @@ export interface ILayer {
   nodes: NodesType[];
   screen: string;
   removeEventBubbling: string[];
+  isUpdated: boolean;
 
   toTop: (n?: number) => void;
   toBack: (n?: number) => void;

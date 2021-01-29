@@ -178,7 +178,11 @@ export default class SpriteNode extends Node implements ISpriteNode {
   }
 
   public then(callback: () => void) {
-    this.finishCallbacks.push(callback);
+    if (this.isFinished) {
+      callback();
+    } else {
+      this.finishCallbacks.push(callback);
+    }
   }
 
   private setDwDH(providedDH: number) {

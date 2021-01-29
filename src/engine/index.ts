@@ -226,11 +226,13 @@ export default class Engine {
     this.layers[name] = layer;
 
     layer.update = () => {
+      if (layer.isUpdated) return;
       layer.nodes.forEach((node) => {
         if (!this.activeScene || !this.activeScene.scene.nodes.includes(node)) {
           node.draw();
         }
       });
+      layer.isUpdated = true;
     };
   }
 

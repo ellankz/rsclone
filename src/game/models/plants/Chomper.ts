@@ -8,7 +8,6 @@ const MS = 1000;
 const POSITION_ADJUST_X = 17;
 const POSITION_ADJUST_Y = -20;
 const SLEEPING_TIME = 40 * MS;
-const ATTACK_TIME = 1000;
 
 export class Chomper extends Plant {
   private sleeping: boolean;
@@ -28,6 +27,7 @@ export class Chomper extends Plant {
   isZombieInAttackArea(zombie: Zombie) {
     if (zombie.row !== this.cell.position.y) return false;
     if (this.cell.position.x === zombie.column) return true;
+    if (this.cell.position.x + 1 === zombie.column) return true;
     return false;
   }
 

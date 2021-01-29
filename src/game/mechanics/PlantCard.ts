@@ -90,7 +90,7 @@ export default class PlantCard {
       fontSize: 15,
       color: '#000',
       font: TEXT_BUTTONS_FONT,
-    }).addTo('scene');
+    });
   }
 
   public addEventListener(plantCards: PlantCard[]) {

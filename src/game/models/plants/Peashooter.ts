@@ -44,24 +44,23 @@ export class Peashooter extends Plant {
         this.shot = new Shot(this.shotPosition, this.engine, this.shotType);
         this.shot.draw(zombie, this);
       }, 500);
-      this.shooting = this.engine.timeout(() => {
-        this.shooting.destroy();
-        shoot();
-      }, 1800);
+
       this.engine.getTimer('levelTimer')?.add(timeout);
-      this.engine.getTimer('levelTimer')?.add(this.shooting);
     };
 
+    this.shooting = this.engine.interval(() => {
+      shoot();
+    }, 1800);
     shoot();
+
+    if (this.shooting) this.engine.getTimer('levelTimer')?.add(this.shooting);
   }
 
   stopShooting() {
     super.stopShooting();
     if (this.shot) this.shot.destroy();
-    if (this.shotType && this.shooting) {
-      this.shooting.destroy();
-      this.shooting = null;
-    }
+    this.shooting.destroy();
+    this.shooting = null;
   }
 
   attack(zombie: Zombie) {

@@ -31,12 +31,20 @@ export default class Layer implements ILayer {
 
   private isLoading: boolean;
 
+  private isCleared: boolean = true;
+
+  isUpdated: boolean = false;
+
   removeEventBubbling: string[] = [];
 
-  shadows: { enabled: boolean; };
+  shadows: { enabled: boolean };
 
   constructor(
-    index: number, size: IVector, container: HTMLElement, shadows: {enabled: boolean}, view?: IView,
+    index: number,
+    size: IVector,
+    container: HTMLElement,
+    shadows: { enabled: boolean },
+    view?: IView,
   ) {
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position: absolute; left: 0; top: 0';
@@ -65,6 +73,9 @@ export default class Layer implements ILayer {
   }
 
   public clear() {
+    if (this.isCleared) return;
+    this.isCleared = true;
+    this.isUpdated = false;
     this.ctx.clearRect(0, 0, this.size.x, this.size.y);
   }
 
@@ -73,6 +84,9 @@ export default class Layer implements ILayer {
       this.queue.push(() => this.drawRect(params));
       return;
     }
+
+    this.isCleared = false;
+    this.isUpdated = false;
 
     this.ctx.save();
 
@@ -104,6 +118,9 @@ export default class Layer implements ILayer {
       this.queue.push(() => this.drawCircle(params));
       return;
     }
+
+    this.isCleared = false;
+    this.isUpdated = false;
 
     this.ctx.save();
 
@@ -146,6 +163,9 @@ export default class Layer implements ILayer {
       return;
     }
 
+    this.isCleared = false;
+    this.isUpdated = false;
+
     this.ctx.save();
 
     const pos = this.view.getPosition(new Vector(params.x, params.y));
@@ -185,21 +205,31 @@ export default class Layer implements ILayer {
       return;
     }
 
-    this.ctx.save();
-
     const pos = this.view.getPosition(new Vector(params.x, params.y));
 
-    if (params.opacity) {
-      this.ctx.globalAlpha = params.opacity;
-    }
-
-    if (params.filter) {
-      this.ctx.filter = params.filter;
-    }
-
-    const isLoaded = params.img.complete && params.img.naturalHeight !== 0;
-
     const draw = () => {
+      this.isCleared = false;
+      this.isUpdated = false;
+
+      this.ctx.save();
+
+      if (params.opacity) {
+        this.ctx.globalAlpha = params.opacity;
+      }
+
+      if (params.filter) {
+        this.ctx.filter = params.filter;
+      }
+
+      if (params.border) {
+        Layer.setBorder(params.border, this.ctx);
+        this.ctx.strokeRect(pos.x, pos.y, params.dw, params.dh);
+      }
+
+      if (params.shadow && this.shadows.enabled) {
+        Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
+      }
+
       this.ctx.drawImage(
         params.img,
         params.srcX,
@@ -212,15 +242,8 @@ export default class Layer implements ILayer {
         params.dh,
       );
 
-      if (params.border) {
-        Layer.setBorder(params.border, this.ctx);
-        this.ctx.strokeRect(pos.x, pos.y, params.dw, params.dh);
-      }
+      this.ctx.restore();
     };
-
-    if (params.shadow && this.shadows.enabled) {
-      Layer.setShadow(params.shadow, pos.x, pos.y, this.ctx);
-    }
 
     const isImgLoaded = params.img.complete && params.img.naturalHeight !== 0;
 
@@ -228,8 +251,6 @@ export default class Layer implements ILayer {
       this.isLoading = true;
       this.awaitImageLoad(params.img, draw);
     } else draw();
-
-    this.ctx.restore();
   }
 
   public resize(scaleRatio: number, size: Vector) {
@@ -264,8 +285,12 @@ export default class Layer implements ILayer {
     });
   }
 
-  private static setShadow(shadow: string, posX: number,
-    posY: number, ctx: CanvasRenderingContext2D) {
+  private static setShadow(
+    shadow: string,
+    posX: number,
+    posY: number,
+    ctx: CanvasRenderingContext2D,
+  ) {
     const shadowParams = shadow.split(' ');
     const cx = posX + parseInt(shadowParams[0], 10);
     const cy = posY + parseInt(shadowParams[1], 10);
@@ -275,12 +300,11 @@ export default class Layer implements ILayer {
     ctx.save();
     ctx.beginPath();
 
-    ctx.shadowBlur = 5;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
     ctx.shadowColor = 'black';
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
 
     ctx.translate(cx - rx, cy - ry);
     ctx.scale(rx, ry);
