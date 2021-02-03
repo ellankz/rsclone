@@ -2,6 +2,8 @@
 
 Демо: [https://plants-vs-zombies-rsclone.netlify.app/](https://plants-vs-zombies-rsclone.netlify.app/)
 
+Документация движка: https://github.com/ellankz/rsclone/blob/develop/src/engine/docs.md
+
 Для запуска игры:
 
 ` $ git clone https://github.com/ellankz/rsclone `
