@@ -34,4 +34,6 @@
 
 Для отрисовки всех элементов игры задействован HTML5 элемент canvas. Он позволяет содавать анимации при помощи покадровой отрисовки на canvas-элементе.
 
+В данной игре используется кастомный движок на основе canvas. Документация к движку с примерами находится [здесь](https://github.com/ellankz/rsclone/blob/develop/src/engine/docs.md)
+
 Для добавления полей ввода на canvas использован [canvasinput](https://www.npmjs.com/package/canvasinput)
