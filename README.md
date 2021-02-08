@@ -21,3 +21,16 @@
 Игра запустится локально, но за данными пользователей будет обращаться на удаленный сервер.
 
 Репозиторий серверной части кода находится [здесь](https://github.com/ellankz/rsclone-be).
+
+## Стек технологий
+
+Игра написана на TypeScript.
+
+Для сборки проекта используется Webpack.
+Для отлова ошибок ESLint с конфигурацией airbnb-typescript/base.
+
+Для хранения данных игра обращается к LocalStorage и к серверу https://rs-plants-vs-zombies.herokuapp.com/
+
+Для отрисовки всех элементов игры задействован HTML5 элемент canvas. 
+
+Для добавления полей ввода на canvas использован [canvasinput](https://www.npmjs.com/package/canvasinput)
